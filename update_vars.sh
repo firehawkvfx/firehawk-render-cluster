@@ -124,7 +124,7 @@ else
   return
 fi
 
-export TF_VAR_common_tags_map=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
+export TF_VAR_common_tags=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
   --arg environment "$TF_VAR_environment" \
   --arg resourcetier "$TF_VAR_resourcetier" \
   --arg conflictkey "$TF_VAR_conflictkey" \
@@ -133,6 +133,6 @@ export TF_VAR_common_tags_map=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
   --arg vpc "${TF_VAR_resourcetier}_render_vpc" \
   --arg accountid "${TF_VAR_account_id}" )
 
-echo "TF_VAR_common_tags_map: $TF_VAR_common_tags_map"
+echo "TF_VAR_common_tags: $TF_VAR_common_tags"
 
 log_info "Done sourcing vars."
