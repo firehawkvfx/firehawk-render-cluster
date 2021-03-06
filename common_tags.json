@@ -4,6 +4,7 @@
     "conflictkey": "\($conflictkey)",
     "pipelineid": "\($pipelineid)",
     "accountid": "\($accountid)",
+    "owner": "\($owner)",
     "region": "\($region)",
     "vpcname": "\($vpcname)",
     "terraform": "true"

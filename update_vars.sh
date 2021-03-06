@@ -43,6 +43,7 @@ macid=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
 export TF_VAR_vpc_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/${macid}/vpc-id) # Aquire the cloud 9 instance's VPC ID to peer with Main VPC
 export TF_VAR_instance_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 export TF_VAR_account_id=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -oP '(?<="accountId" : ")[^"]*(?=")')
+export TF_VAR_owner="$(aws s3api list-buckets --query Owner.DisplayName --output text)"
 # region specific vars
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/\(.*\)[a-z]/\1/')
 export PKR_VAR_aws_region="$AWS_DEFAULT_REGION"
@@ -132,7 +133,8 @@ export TF_VAR_common_tags=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
   --arg pipelineid "$TF_VAR_pipelineid" \
   --arg region "$AWS_DEFAULT_REGION" \
   --arg vpcname "$TF_VAR_vpcname" \
-  --arg accountid "${TF_VAR_account_id}" )
+  --arg accountid "${TF_VAR_account_id}" \
+  --arg owner "$TF_VAR_owner" )
 
 echo "TF_VAR_common_tags: $TF_VAR_common_tags"
 
