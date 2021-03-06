@@ -7,14 +7,6 @@ provider "aws" {
   # in a dev environment these version locks below can be disabled.  in production, they should be locked based on the suggested versions from terraform init.
   version = "~> 3.15.0"
 }
-
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-data "aws_canonical_user_id" "current" {}
-locals {
-  common_tags = merge(map("owner", data.aws_canonical_user_id.current.display_name), var.common_tags)
-}
-
 data "aws_vpc" "primary" {
   default = false
   tags    = local.common_tags
@@ -73,9 +65,10 @@ data "aws_security_group" "bastion" { # Aquire the security group ID for externa
 }
 
 locals {
-  mount_path           = var.resourcetier
-  vpc_id               = data.aws_vpc.primary.id
-  vpc_cidr             = data.aws_vpc.primary.cidr_block
+  common_tags = var.common_tags
+  mount_path  = var.resourcetier
+  vpc_id      = data.aws_vpc.primary.id
+  vpc_cidr    = data.aws_vpc.primary.cidr_block
 
   vpn_cidr                   = var.vpn_cidr
   onsite_private_subnet_cidr = var.onsite_private_subnet_cidr

@@ -3,10 +3,8 @@ provider "aws" {
   # in a dev environment these version locks below can be disabled.  in production, they should be locked based on the suggested versions from terraform init.
   version = "~> 3.15.0"
 }
-data "aws_caller_identity" "current" {}
-data "aws_canonical_user_id" "current" {}
 locals {
-  common_tags = merge(map("owner", data.aws_canonical_user_id.current.display_name), var.common_tags)
+  common_tags = var.common_tags
 }
 data "aws_vpc" "primary" { # The primary is the VPC defined by the common tags var.  In this current instance - the render_vpc for the current resource tier.
   default = false
