@@ -40,6 +40,7 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # 
 # Region is required for AWS CLI
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/\(.*\)[a-z]/\1/')
 # Get the resourcetier from the instance tag.
+export TF_VAR_instance_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 export TF_VAR_resourcetier="$(aws ec2 describe-tags --filters Name=resource-id,Values=$TF_VAR_instance_id_main_cloud9 --out=json|jq '.Tags[]| select(.Key == "resourcetier")|.Value' --raw-output)" # Can be dev,green,blue,main.  it is pulled from this instance's tags by default
 export TF_VAR_vpcname="${TF_VAR_resourcetier}${vpcname}" # Why no underscores? Because the vpc name is used to label terraform state S3 buckets
 export TF_VAR_vpcname_vault="${TF_VAR_resourcetier}vaultvpc" # if vault is deployed in a seperate tier for use, then this will need to become an SSM cloudformation driven parameter.
@@ -50,7 +51,7 @@ export TF_VAR_remote_cloud_public_ip_cidr="$(curl http://169.254.169.254/latest/
 export TF_VAR_remote_cloud_private_ip_cidr="$(curl http://169.254.169.254/latest/meta-data/local-ipv4)/32"
 macid=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
 export TF_VAR_vpc_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/${macid}/vpc-id) # Aquire the cloud 9 instance's VPC ID to peer with Main VPC
-export TF_VAR_instance_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+export TF_VAR_cloud9_instance_name="$(aws ec2 describe-tags --filters Name=resource-id,Values=$TF_VAR_instance_id_main_cloud9 --out=json|jq '.Tags[]| select(.Key == "Name")|.Value' --raw-output)"
 export TF_VAR_account_id=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -oP '(?<="accountId" : ")[^"]*(?=")')
 export TF_VAR_owner="$(aws s3api list-buckets --query Owner.DisplayName --output text)"
 # region specific vars
@@ -86,12 +87,17 @@ export PKR_VAR_provisioner_iam_profile_name="provisioner_instance_role_$TF_VAR_c
 
 # Terraform Vars
 export TF_VAR_general_use_ssh_key="$HOME/.ssh/id_rsa" # For debugging deployment of most resources- not for production use.
+
 export TF_VAR_aws_private_key_path="$TF_VAR_general_use_ssh_key"
+export TF_VAR_aws_key_name="cloud9_$TF_VAR_cloud9_instance_name"
 public_key_path="$HOME/.ssh/id_rsa.pub"
 if [[ ! -f $public_key_path ]] ; then
     echo "File $public_key_path is not there, aborting. Ensure you have initialised a keypair with ssh-keygen"
+    # ssh-keygen -t rsa -C "my-key" -f ~/.ssh/my-key
     return
 fi
+echo "Importing Public Key: $TF_VAR_aws_key_name"
+aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
 export TF_VAR_vault_public_key=$(cat $public_key_path)
 
 export TF_VAR_log_dir="$SCRIPTDIR/tmp/log"; mkdir -p $TF_VAR_log_dir
