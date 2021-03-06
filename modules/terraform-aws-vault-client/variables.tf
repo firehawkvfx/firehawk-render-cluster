@@ -78,3 +78,8 @@ variable "onsite_private_subnet_cidr" {
   description = "The subnet CIDR Range of your onsite private subnet. This is also the subnet where your VPN client resides in. eg: 192.168.1.0/24"
   type        = string
 }
+
+variable "common_tags" {
+  description = "Common tags for all resources in a deployment run."
+  type        = map(string)
+}
