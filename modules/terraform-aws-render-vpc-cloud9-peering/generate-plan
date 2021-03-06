@@ -13,7 +13,7 @@ exit_if_error() {
 }
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # The directory of this script
-namespace="$(basename $SCRIPTDIR)"
+namespace="$TF_VAR_vpcname-$(basename $SCRIPTDIR)"
 echo "Namespace for terraform remote state: $namespace"
 
 # Raise error if var isn't defined.

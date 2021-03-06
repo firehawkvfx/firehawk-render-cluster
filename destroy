@@ -6,10 +6,11 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # 
 source $SCRIPTDIR/update_vars.sh
 
 cd $SCRIPTDIR/modules/terraform-aws-vault-client
+export TF_VAR_vault_client_ami_id=none
 terraform plan -out=tfplan -input=false -destroy
 terraform apply -input=false tfplan
 
-cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc
+cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc-peering
 terraform plan -out=tfplan -input=false -destroy
 terraform apply -input=false tfplan
 

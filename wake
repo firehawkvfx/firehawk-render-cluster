@@ -32,7 +32,7 @@ cd $SCRIPTDIR/modules/terraform-aws-render-vpc-cloud9-peering
 ./generate-plan
 terraform apply -input=false tfplan # Ensure VPC is peered with this cloud9 VPC
 
-cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc
+cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc-peering
 ./generate-plan
 terraform apply -input=false tfplan # Ensure Render VPC is peered with Vault VPC
 
