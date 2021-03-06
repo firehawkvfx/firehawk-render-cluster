@@ -1,0 +1,60 @@
+#!/bin/bash
+set -e
+
+exit_if_error() {
+  local exit_code=$1
+  shift
+  [[ $exit_code ]] &&               # do nothing if no error code passed
+    ((exit_code != 0)) && {         # do nothing if error code is 0
+      printf 'ERROR: %s\n' "$@" >&2 # we can use better logging here
+      exit "$exit_code"             # we could also check to make sure
+                                    # error code is numeric when passed
+    }
+}
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # The directory of this script
+
+source $SCRIPTDIR/update_vars.sh
+
+# Raise error if var isn't defined.
+if [[ -z "$AWS_DEFAULT_REGION" ]]; then
+    exit_if_error 1 "AWS_DEFAULT_REGION not defined."
+fi
+if [[ -z "$TF_VAR_bucket_extension" ]]; then
+    exit_if_error 1 "TF_VAR_bucket_extension not defined."
+fi
+
+cd $SCRIPTDIR/modules/terraform-aws-render-vpc
+./generate-plan
+terraform apply -input=false tfplan # Ensure Main VPC exists
+
+cd $SCRIPTDIR/modules/terraform-aws-render-vpc-cloud9-peering
+./generate-plan
+terraform apply -input=false tfplan # Ensure VPC is peered with this cloud9 VPC
+
+# if [[ ! -f "/opt/consul/bin/run-consul" ]]; then
+#     echo "You have not yet installed consul."
+#     exit 0 # if the user hasn't installed consul yet, this step must be performed manually.
+# fi
+
+# echo "Running Consul..."
+# sudo /opt/consul/bin/run-consul --client --cluster-tag-key "${consul_cluster_tag_key}" --cluster-tag-value "${consul_cluster_tag_value}"
+
+# assuming we are already logged in, but we will need to revisit this.
+# if [[ -z "$VAULT_TOKEN" ]]; then
+#     echo "Instances from this point require you to login to vault.  To avoid this message you can define the var VAULT_TOKEN"
+# fi
+# echo "Waiting for consul vault service..."
+# until consul catalog services | grep -m 1 "vault"; do sleep 1 ; done
+# until vault status | grep -m 1 "Initialized.*"; do sleep 1 ; done
+# initialised=true
+# vault status | grep -m 1 "Initialized.*true" || initialised=false
+# if [[ "$initialised" == false ]]; then
+#     echo "Vault is not Initialized.  Aborting. You will need to login and initialise the vault"
+#     exit 1
+# fi
+# vault login --no-print $VAULT_TOKEN
+
+cd $SCRIPTDIR/modules/terraform-aws-vault-client
+./generate-plan
+terraform apply -input=false tfplan # Ensure Vault / Consul instances are running, and configure VPC peering with the current cloud 9 VPC.
