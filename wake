@@ -32,6 +32,10 @@ cd $SCRIPTDIR/modules/terraform-aws-render-vpc-cloud9-peering
 ./generate-plan
 terraform apply -input=false tfplan # Ensure VPC is peered with this cloud9 VPC
 
+cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc
+./generate-plan
+terraform apply -input=false tfplan # Ensure Render VPC is peered with Vault VPC
+
 # if [[ ! -f "/opt/consul/bin/run-consul" ]]; then
 #     echo "You have not yet installed consul."
 #     exit 0 # if the user hasn't installed consul yet, this step must be performed manually.
