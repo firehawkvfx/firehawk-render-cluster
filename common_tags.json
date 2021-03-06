@@ -1,10 +1,10 @@
 {
-    "environment":"\($environment)",
-    "resourcetier":"\($resourcetier)",
-    "conflictkey":"\($conflictkey)",
-    "pipelineid":"\($pipelineid)",
-    "accountid":"\($accountid)",
-    "region":"\($region)",
-    "vpc":"\($vpc)",
-    "terraform":"terraform",
+    "environment": "\($environment)",
+    "resourcetier": "\($resourcetier)",
+    "conflictkey": "\($conflictkey)",
+    "pipelineid": "\($pipelineid)",
+    "accountid": "\($accountid)",
+    "region": "\($region)",
+    "vpc": "\($vpc)",
+    "terraform": "true"
 }
