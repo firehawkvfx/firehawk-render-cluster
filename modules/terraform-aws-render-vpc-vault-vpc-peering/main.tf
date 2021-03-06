@@ -69,14 +69,14 @@ data "aws_route_table" "secondary_public" {
     "area" : "public",
   }
 }
-resource "aws_route" "primaryprivate2primary" {
+resource "aws_route" "secondaryprivate2primary" {
   route_table_id            = data.aws_route_table.secondary_private.id
-  destination_cidr_block    = data.aws_vpc.secondary.cidr_block               # CIDR block / IP range for VPC 2.
+  destination_cidr_block    = data.aws_vpc.primary.cidr_block               # CIDR block / IP range for VPC 2.
   vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
 }
 resource "aws_route" "secondarypublic2primary" {
   route_table_id            = data.aws_route_table.secondary_public.id
-  destination_cidr_block    = data.aws_vpc.secondary.cidr_block               # CIDR block / IP range for VPC 2.
+  destination_cidr_block    = data.aws_vpc.primary.cidr_block               # CIDR block / IP range for VPC 2.
   vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
 }
 
