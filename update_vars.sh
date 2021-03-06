@@ -130,7 +130,7 @@ export TF_VAR_common_tags=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
   --arg conflictkey "$TF_VAR_conflictkey" \
   --arg pipelineid "$TF_VAR_pipelineid" \
   --arg region "$AWS_DEFAULT_REGION" \
-  --arg vpc "${TF_VAR_resourcetier}_render_vpc" \
+  --arg vpcname "${TF_VAR_resourcetier}_render_vpc" \
   --arg accountid "${TF_VAR_account_id}" )
 
 echo "TF_VAR_common_tags: $TF_VAR_common_tags"

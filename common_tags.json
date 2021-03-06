@@ -5,6 +5,6 @@
     "pipelineid": "\($pipelineid)",
     "accountid": "\($accountid)",
     "region": "\($region)",
-    "vpc": "\($vpc)",
+    "vpcname": "\($vpcname)",
     "terraform": "true"
 }
