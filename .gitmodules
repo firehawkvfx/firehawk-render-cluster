@@ -1,9 +1,6 @@
 [submodule "vpc/modules/terraform-aws-vpc"]
 	path = vpc/modules/terraform-aws-vpc
 	url = git@github.com:firehawkvfx/terraform-aws-vpc.git
-[submodule "vpc/modules/consul-client-security-group"]
-	path = vpc/modules/consul-client-security-group
-	url = git@github.com:firehawkvfx/consul-client-security-group.git
 [submodule "terraform-aws-deadline-db"]
 	path = terraform-aws-deadline-db
 	url = git@github.com:firehawkvfx/terraform-aws-deadline-db.git
