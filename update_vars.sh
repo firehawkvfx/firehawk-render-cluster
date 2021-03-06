@@ -123,6 +123,6 @@ else
   return
 fi
 
-export TF_VAR_common_tags_test="{'json':'blah','something':'blah'}"
+export TF_VAR_common_tags_test=$(jq '.' common_tags.json)
 
 log_info "Done sourcing vars."
