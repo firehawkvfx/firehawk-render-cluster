@@ -111,3 +111,8 @@ variable "combined_vpcs_cidr" {
   description = "Terraform will automatically configure multiple VPCs and subnets within this CIDR range for any resourcetier ( dev / green / blue / main )."
   type        = string
 }
+
+variable "common_tags_test" {
+  description = "Common tags for all resources in a deployment run."
+  type = map(string)
+}

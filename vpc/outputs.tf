@@ -33,3 +33,7 @@ output "vaultvpc_all_public_subnet_cidr_list" {
 output "vaultvpc_all_private_subnet_cidr_list" {
   value = module.vaultvpc_all_private_subnet_cidrs.networks[*].cidr_block
 }
+
+output "common_tags_test" {
+  value = var.common_tags_test
+}
