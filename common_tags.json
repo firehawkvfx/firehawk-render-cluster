@@ -1,4 +1,10 @@
 {
-    "json":"blah",
-    "something":"blah"
+    "environment":"\($environment)",
+    "resourcetier":"\($resourcetier)",
+    "conflictkey":"\($conflictkey)",
+    "pipelineid":"\($pipelineid)",
+    "accountid":"\($accountid)",
+    "region":"\($region)",
+    "vpc":"\($vpc)",
+    "terraform":"terraform",
 }

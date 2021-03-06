@@ -42,6 +42,7 @@ export TF_VAR_remote_cloud_private_ip_cidr="$(curl http://169.254.169.254/latest
 macid=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/)
 export TF_VAR_vpc_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/${macid}/vpc-id) # Aquire the cloud 9 instance's VPC ID to peer with Main VPC
 export TF_VAR_instance_id_main_cloud9=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+export TF_VAR_account_id=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep -oP '(?<="accountId" : ")[^"]*(?=")')
 # region specific vars
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/\(.*\)[a-z]/\1/')
 export PKR_VAR_aws_region="$AWS_DEFAULT_REGION"
@@ -123,6 +124,15 @@ else
   return
 fi
 
-export TF_VAR_common_tags_test=$(jq '.' "$SCRIPTDIR/common_tags.json")
+export TF_VAR_common_tags_map=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
+  --arg environment "$TF_VAR_environment" \
+  --arg resourcetier "$TF_VAR_resourcetier" \
+  --arg conflictkey "$TF_VAR_conflictkey" \
+  --arg pipelineid "$TF_VAR_pipelineid" \
+  --arg region "$AWS_DEFAULT_REGION" \
+  --arg vpc "${TF_VAR_resourcetier}_render_vpc" \
+  --arg accountid "${TF_VAR_account_id}" )
+
+echo "TF_VAR_common_tags_map: $TF_VAR_common_tags_map"
 
 log_info "Done sourcing vars."
