@@ -7,7 +7,7 @@ provider "aws" {
   # in a dev environment these version locks below can be disabled.  in production, they should be locked based on the suggested versions from terraform init.
   version = "~> 3.15.0"
 }
-data "aws_vpc" "primary" {
+data "aws_vpc" "primary" { # render vpc
   default = false
   tags    = local.common_tags
 }
@@ -59,12 +59,19 @@ data "vault_generic_secret" "private_domain" { # Get the map of data at the path
 # data "vault_generic_secret" "onsite_private_subnet_cidr" { # Get the map of data at the path
 #   path = "${local.mount_path}/network/onsite_private_subnet_cidr"
 # }
+
 data "aws_security_group" "bastion" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
-  tags   = map("Name", "bastion_pipeid${lookup(local.common_tags, "pipelineid", "0")}")
+  tags = merge( local.common_tags, local.bastion_tags ) # Since we deploy vault alongside this account, pipelineid will probably not be an issue...  At some point we will need to create a dependency of the vault vpc output and what tags we should be using with multi account and CI.
+  # map("Name", "bastion_pipeid${lookup(local.common_tags, "pipelineid", "0")}")
   vpc_id = data.aws_vpc.primary.id
 }
 
 locals {
+  bastion_tags = {
+    vpcname = var.vpcname_vault
+    role    = "bastion"
+    route   = "public"
+  }
   common_tags = var.common_tags
   mount_path  = var.resourcetier
   vpc_id      = data.aws_vpc.primary.id

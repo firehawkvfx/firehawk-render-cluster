@@ -83,3 +83,8 @@ variable "common_tags" {
   description = "Common tags for all resources in a deployment run."
   type        = map(string)
 }
+
+variable "vpcname_vault" {
+  description = "The VPC name containing Vault"
+  type = string
+}
