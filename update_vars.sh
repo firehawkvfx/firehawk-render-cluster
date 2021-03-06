@@ -96,8 +96,13 @@ if [[ ! -f $public_key_path ]] ; then
     # ssh-keygen -t rsa -C "my-key" -f ~/.ssh/my-key
     return
 fi
-echo "Importing Public Key: $TF_VAR_aws_key_name"
-aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
+$(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name"); code=$?
+if [[ $code -eq 0 ]]; then
+  echo "Already imported public key: $TF_VAR_aws_key_name"
+else
+  echo "Importing Public Key: $TF_VAR_aws_key_name"
+  aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
+fi
 export TF_VAR_vault_public_key=$(cat $public_key_path)
 
 export TF_VAR_log_dir="$SCRIPTDIR/tmp/log"; mkdir -p $TF_VAR_log_dir
