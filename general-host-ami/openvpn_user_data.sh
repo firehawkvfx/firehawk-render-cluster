@@ -1,0 +1,2 @@
+admin_user=openvpnas
+admin_pw=openvpnas
