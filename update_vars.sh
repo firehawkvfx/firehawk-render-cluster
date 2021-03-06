@@ -64,6 +64,7 @@ if [[ "$TF_VAR_resourcetier"=="dev" ]]; then
 else
   export TF_VAR_environment="prod"
 fi
+export TF_VAR_vpcname="${TF_VAR_resourcetier}rendervpc" # Why no underscores? Because the vpc name is used to label terraform state S3 buckets
 export TF_VAR_firehawk_path=$SCRIPTDIR
 
 # Packer Vars
@@ -130,7 +131,7 @@ export TF_VAR_common_tags=$(jq -n -f "$SCRIPTDIR/common_tags.json" \
   --arg conflictkey "$TF_VAR_conflictkey" \
   --arg pipelineid "$TF_VAR_pipelineid" \
   --arg region "$AWS_DEFAULT_REGION" \
-  --arg vpcname "${TF_VAR_resourcetier}_render_vpc" \
+  --arg vpcname "$TF_VAR_vpcname" \
   --arg accountid "${TF_VAR_account_id}" )
 
 echo "TF_VAR_common_tags: $TF_VAR_common_tags"
