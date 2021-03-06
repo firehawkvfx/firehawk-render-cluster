@@ -1,6 +1,3 @@
-[submodule "vpc/modules/terraform-aws-vpc"]
-	path = vpc/modules/terraform-aws-vpc
-	url = git@github.com:firehawkvfx/terraform-aws-vpc.git
 [submodule "terraform-aws-deadline-db"]
 	path = terraform-aws-deadline-db
 	url = git@github.com:firehawkvfx/terraform-aws-deadline-db.git
