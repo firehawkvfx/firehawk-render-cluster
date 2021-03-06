@@ -97,7 +97,7 @@ if [[ ! -f $public_key_path ]] ; then
     return
 fi
 echo "Checking your AWS public keys for: $TF_VAR_aws_key_name"
-(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name" 2>/dev/null); code=$?
+(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name" &>/dev/null); code=$?
 if [[ $code -eq 0 ]]; then
   echo "Already imported public key: $TF_VAR_aws_key_name"
 else
