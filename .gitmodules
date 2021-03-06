@@ -8,3 +8,6 @@
 	path = terraform-aws-deadline-db
 	url = git@github.com:firehawkvfx/terraform-aws-deadline-db.git
 	branch = dev
+[submodule "terraform-aws-render-vpc"]
+	path = terraform-aws-render-vpc
+	url = git@github.com:firehawkvfx/terraform-aws-render-vpc.git
