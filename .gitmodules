@@ -1,5 +1,5 @@
 [submodule "terraform-aws-deadline-db"]
-	path = terraform-aws-deadline-db
+	path = modules/terraform-aws-deadline-db
 	url = git@github.com:firehawkvfx/terraform-aws-deadline-db.git
 	branch = dev
 [submodule "terraform-aws-render-vpc"]
