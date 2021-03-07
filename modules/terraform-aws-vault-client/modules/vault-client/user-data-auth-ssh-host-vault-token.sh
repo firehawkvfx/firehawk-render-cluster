@@ -148,7 +148,7 @@ function ensure_known_hosts {
   log "Added CA to $ssh_known_hosts_path."
 }
 ensure_known_hosts /etc/ssh/ssh_known_hosts
-ensure_known_hosts /home/centos/.ssh/known_hosts
+# ensure_known_hosts /home/centos/.ssh/known_hosts
 
 systemctl stop sshd
 systemctl stop network # This can be used to avoid unknown host warnings caused by a race condition, at the expense of speed.
