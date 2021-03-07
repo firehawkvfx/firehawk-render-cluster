@@ -68,8 +68,13 @@ export VAULT_ADDR=https://vault.service.consul:8200
 # because the Vault server is still booting and unsealing, or because run-consul
 # running on the background didn't finish yet
 
+# This method uses a token provided by terraform, useful for testing one off hosts, but not appropriate for auto scaling.
+# retry \
+#   "vault login --no-print $VAULT_TOKEN" \
+#   "Waiting for Vault login"
+
 retry \
-  "vault login --no-print $VAULT_TOKEN" \
+  "vault login -method=aws header_value=vault.service.consul role=${example_role_name}" \
   "Waiting for Vault login"
 
 log "Aquiring vault data..."
