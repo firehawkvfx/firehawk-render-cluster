@@ -89,7 +89,8 @@ export PKR_VAR_provisioner_iam_profile_name="provisioner_instance_role_$TF_VAR_c
 export TF_VAR_general_use_ssh_key="$HOME/.ssh/id_rsa" # For debugging deployment of most resources- not for production use.
 
 export TF_VAR_aws_private_key_path="$TF_VAR_general_use_ssh_key"
-export TF_VAR_aws_key_name="cloud9_$TF_VAR_cloud9_instance_name"
+# export TF_VAR_aws_key_name="cloud9_$TF_VAR_cloud9_instance_name"
+export TF_VAR_aws_key_name="deployer-key-$TF_VAR_resourcetier"
 public_key_path="$HOME/.ssh/id_rsa.pub"
 if [[ ! -f $public_key_path ]] ; then
     echo "File $public_key_path is not there, aborting. Ensure you have initialised a keypair with ssh-keygen"
