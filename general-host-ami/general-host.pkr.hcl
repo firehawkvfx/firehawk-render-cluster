@@ -91,7 +91,7 @@ source "amazon-ebs" "general-host-ubuntu18-ami" {
 
 # source "amazon-ebs" "openvpn-server-ami" { # Open vpn server requires vault and consul, so we build it here as well.
 #   ami_description = "An Open VPN Access Server AMI configured for Firehawk"
-#   ami_name        = "firehawk-openvpn-server-base-${local.timestamp}-{{uuid}}"
+#   ami_name        = "firehawk-base-openvpn-server-${local.timestamp}-{{uuid}}"
 #   instance_type   = "t2.micro"
 #   region          = "${var.aws_region}"
 #   # user_data = "admin_user=openvpnas; admin_pw=openvpnas"
