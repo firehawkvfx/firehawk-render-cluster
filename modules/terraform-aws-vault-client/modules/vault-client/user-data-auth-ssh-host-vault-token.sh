@@ -150,17 +150,17 @@ function ensure_known_hosts {
 ensure_known_hosts /etc/ssh/ssh_known_hosts
 # ensure_known_hosts /home/centos/.ssh/known_hosts
 
-systemctl stop sshd
-systemctl stop network # This can be used to avoid unknown host warnings caused by a race condition, at the expense of speed.
+# systemctl stop sshd
+# systemctl stop network # This can be used to avoid unknown host warnings caused by a race condition, at the expense of speed.
 ### Finally allow users with signed client certs to login.
 # If TrustedUserCAKeys not defined, then add it to sshd_config
 grep -q "^TrustedUserCAKeys" /etc/ssh/sshd_config || echo 'TrustedUserCAKeys' | tee --append /etc/ssh/sshd_config
 # Ensure the value for TrustedUserCAKeys is configured correctly
 sed -i "s@TrustedUserCAKeys.*@TrustedUserCAKeys $trusted_ca@g" /etc/ssh/sshd_config 
 systemctl daemon-reload
-systemctl start sshd
+systemctl restart sshd
 sleep 5 # Wait 5 seconds for the ssh settings to update, preventing unknown host warnings.
-systemctl start network # Allow users to connect!
+# systemctl restart network # Allow users to connect!
 
 log "Signing SSH host key done. Revoking vault token..."
 vault token revoke -self
