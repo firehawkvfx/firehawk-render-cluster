@@ -97,12 +97,15 @@ if [[ ! -f $public_key_path ]] ; then
     return
 fi
 echo "Checking your AWS public keys for: $TF_VAR_aws_key_name"
-(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name" &>/dev/null); code=$?
+result=$(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name"); code=$?
 if [[ $code -eq 0 ]]; then
   echo "Already imported public key: $TF_VAR_aws_key_name"
-else
+elif [[ $code -eq 255 ]]; then
   echo "Importing Public Key: $TF_VAR_aws_key_name"
   aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
+else
+  echo "Something went wrong while determining the key pair's existence"
+  echo $result
 fi
 
 export TF_VAR_vault_public_key=$(cat $public_key_path)
