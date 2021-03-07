@@ -54,6 +54,9 @@ variable "vault_download_url" {
   default = ""
 }
 
+variable "vault_module_version" { # The hashicorp github module version to clone.
+  default = "v0.13.11"
+}
 variable "vault_version" {
   type    = string
   default = "1.5.5"
@@ -274,10 +277,10 @@ build {
     inline = ["mkdir -p /tmp/terraform-aws-vault/modules"]
   }
 
-  provisioner "file" {
-    destination = "/tmp/terraform-aws-vault/modules"
-    source      = "${local.template_dir}/../terraform-aws-vault/modules/"
-  }
+  # provisioner "file" {
+  #   destination = "/tmp/terraform-aws-vault/modules"
+  #   source      = "${local.template_dir}/../terraform-aws-vault/modules/"
+  # }
 
   provisioner "file" {
     destination = "/tmp/sign-request.py"
@@ -292,6 +295,7 @@ build {
 
   provisioner "shell" { # Vault client probably wont be installed on bastions in future, but most hosts that will authenticate will require it.
     inline = [
+      "git clone --branch ${var.vault_module_version} https://github.com/hashicorp/terraform-aws-vault.git /tmp/terraform-aws-vault"
       "if test -n '${var.vault_download_url}'; then",
       " /tmp/terraform-aws-vault/modules/install-vault/install-vault --download-url ${var.vault_download_url};",
       "else",
