@@ -88,8 +88,9 @@ export PKR_VAR_provisioner_iam_profile_name="provisioner_instance_role_$TF_VAR_c
 
 # Terraform Vars
 export TF_VAR_general_use_ssh_key="$HOME/.ssh/id_rsa" # For debugging deployment of most resources- not for production use.
-
 export TF_VAR_aws_private_key_path="$TF_VAR_general_use_ssh_key"
+
+# SSH Public Key is used for debugging instances only.  Not for general use.  Use SSH Certificates instead.
 export TF_VAR_aws_key_name="cloud9_$TF_VAR_cloud9_instance_name"
 # export TF_VAR_aws_key_name="deployer-key-$TF_VAR_resourcetier"
 public_key_path="$HOME/.ssh/id_rsa.pub"
@@ -144,7 +145,9 @@ if [[ num_invalid -eq 0 ]]; then
   error_if_empty "SSM Parameter missing: vpn_cidr" "$TF_VAR_vpn_cidr"
 
   export TF_VAR_bucket_extension="$TF_VAR_resourcetier.$TF_VAR_global_bucket_extension"
+  export TF_VAR_installers_bucket="software.$TF_VAR_resourcetier.$TF_VAR_global_bucket_extension" # All installers should be kept in the same bucket.  If a main account is present, packer builds should trigger from the main account.
   export TF_VAR_bucket_extension_vault="$TF_VAR_resourcetier.$TF_VAR_global_bucket_extension" # WARNING: if vault is deployed in a seperate tier for use, then this will probably need to become an SSM driven parameter from the template
+  # export PKR_VAR_installers_bucket="$TF_VAR_installers_bucket"
 else
   log_error "SSM parameters are not yet initialised.  You can init SSM parameters with the cloudformation template modules/cloudformation-cloud9-vault-iam/cloudformation_ssm_parameters_firehawk.yaml"
   return
