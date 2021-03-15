@@ -99,17 +99,17 @@ if [[ ! -f $public_key_path ]] ; then
     # ssh-keygen -t rsa -C "my-key" -f ~/.ssh/my-key
     return
 fi
-echo "Checking your AWS public keys for: $TF_VAR_aws_key_name"
-result=$(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name"); code=$?
-if [[ $code -eq 0 ]]; then
-  echo "Already imported public key: $TF_VAR_aws_key_name"
-elif [[ $code -eq 255 ]]; then
-  echo "Importing Public Key: $TF_VAR_aws_key_name"
-  aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
-else
-  echo "Something went wrong while determining the key pair's existence"
-  echo $result
-fi
+# echo "Checking your AWS public keys for: $TF_VAR_aws_key_name"
+# result=$(aws ec2 describe-key-pairs --key-name "$TF_VAR_aws_key_name"); code=$?
+# if [[ $code -eq 0 ]]; then
+#   echo "Already imported public key: $TF_VAR_aws_key_name"
+# elif [[ $code -eq 255 ]]; then
+#   echo "Importing Public Key: $TF_VAR_aws_key_name"
+#   aws ec2 import-key-pair --key-name "$TF_VAR_aws_key_name" --public-key-material fileb://$public_key_path
+# else
+#   echo "Something went wrong while determining the key pair's existence"
+#   echo $result
+# fi
 
 export TF_VAR_vault_public_key=$(cat $public_key_path)
 
@@ -131,7 +131,6 @@ get_parameters=$( aws ssm get-parameters --names \
     "/firehawk/resourcetier/${TF_VAR_resourcetier}/vpn_cidr" )
 
 num_invalid=$(echo $get_parameters | jq '.InvalidParameters| length')
-
 if [[ $num_invalid -eq 0 ]]; then
   export TF_VAR_onsite_public_ip=$(echo $get_parameters | jq ".Parameters[]| select(.Name == \"/firehawk/resourcetier/${TF_VAR_resourcetier}/onsite_public_ip\")|.Value" --raw-output)
   error_if_empty "SSM Parameter missing: onsite_public_ip" "$TF_VAR_onsite_public_ip"
