@@ -1,1 +1,3 @@
 *.retry
+# plan files are temporary
+**/tfplan
