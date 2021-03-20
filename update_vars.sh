@@ -130,6 +130,10 @@ fi
 # AMI query by commit - Vault and Consul Servers
 export TF_VAR_ami_commit_hash="$(cd $TF_VAR_firehawk_path/../packer-firehawk-amis/modules/firehawk-ami; git rev-parse HEAD)" 
 
+# AMI query by commit - Vault and Consul Client
+ami_role="firehawk_centos7_ami"
+export TF_VAR_vault_client_ami_id=$(retrieve_ami $latest_ami $ami_role $TF_VAR_ami_commit_hash)
+warn_if_invalid "$ami_role" "$TF_VAR_vault_client_ami_id" "TF_VAR_vault_client_ami_id"
 # AMI query by commit - Deadline DB
 ami_role="firehawk_deadlinedb_ami"
 export TF_VAR_deadline_db_ami_id=$(retrieve_ami $latest_ami $ami_role $TF_VAR_ami_commit_hash)
