@@ -69,7 +69,7 @@ locals {
     route = "public"
   })
   common_tags = var.common_tags
-  vpcname     = var.common_tags["vpcname"]
+  vpcname     = local.common_tags["vpcname"]
   mount_path  = var.resourcetier
   vpc_id      = data.aws_vpc.primary.id
   vpc_cidr    = data.aws_vpc.primary.cidr_block
@@ -99,7 +99,6 @@ module "vault_client" {
 
   aws_key_name           = var.aws_key_name
   common_tags            = local.common_tags
-  vpcname                = local.common_tags["vpcname"]
   bucket_extension_vault = var.bucket_extension_vault
   resourcetier_vault     = var.resourcetier_vault
   vpcname_vault          = var.vpcname_vault
