@@ -53,7 +53,7 @@ data "aws_security_group" "bastion" { # Aquire the security group ID for externa
 locals {
   vaultvpc_tags = {
     vpcname = var.vpcname_vault,
-    projectname = firehawk-main
+    projectname = "firehawk-main"
   }
   bastion_tags = {
     vpcname = var.vpcname_vault
@@ -75,7 +75,7 @@ locals {
 }
 module "vault_client" {
   source              = "../../../firehawk-main/modules/terraform-aws-vault-client/modules/vault-client" # this should reference a tgged version of the git hub repo in production.
-  name                = "vaultclient_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
+  name                = "${var.var.vpcname}_vaultclient_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
   vault_client_ami_id = var.vault_client_ami_id
 
   consul_cluster_name    = var.consul_cluster_name
