@@ -46,7 +46,7 @@ data "aws_route_tables" "private" {
 }
 
 data "aws_security_group" "bastion" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
-  tags = merge( local.common_tags, local.bastion_tags ) # Since we deploy vault alongside this account, pipelineid will probably not be an issue...  At some point we will need to create a dependency of the vault vpc output and what tags we should be using with multi account and CI.
+  tags = local.bastion_tags # Since we deploy vault alongside this account, pipelineid will probably not be an issue...  At some point we will need to create a dependency of the vault vpc output and what tags we should be using with multi account and CI.
   vpc_id = data.aws_vpc.vaultvpc.id
 }
 
@@ -55,11 +55,10 @@ locals {
     vpcname = var.vpcname_vault,
     projectname = "firehawk-main"
   }
-  bastion_tags = {
-    vpcname = var.vpcname_vault
+  bastion_tags = merge( local.vaultvpc_tags, {
     role    = "bastion"
     route   = "public"
-  }
+  } )
   common_tags = var.common_tags
   vpcname = var.common_tags["vpcname"]
   mount_path  = var.resourcetier
