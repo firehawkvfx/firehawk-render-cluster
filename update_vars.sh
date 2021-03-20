@@ -1,6 +1,8 @@
 #!/bin/bash
 
 vpcname="rendervpc"
+projectname="firehawk-render-cluster" # A tag to recognise resources created in this project
+
 
 to_abs_path() {
   python3 -c "import os; print(os.path.abspath('$1'))"
@@ -79,6 +81,7 @@ export TF_VAR_resourcetier="$(aws ec2 describe-tags --filters Name=resource-id,V
 export TF_VAR_resourcetier_vault="$TF_VAR_resourcetier" # WARNING: if vault is deployed in a seperate tier for use, then this will probably need to become an SSM driven parameter from the template
 export TF_VAR_vpcname="${TF_VAR_resourcetier}${vpcname}" # Why no underscores? Because the vpc name is used to label terraform state S3 buckets
 export TF_VAR_vpcname_vault="${TF_VAR_resourcetier}vaultvpc" # WARNING: if vault is deployed in a seperate tier for use, then this will probably need to become an SSM driven parameter from the template
+export TF_VAR_projectname="$projectname"
 
 # Instance and vpc data
 export TF_VAR_deployer_ip_cidr="$(curl http://169.254.169.254/latest/meta-data/public-ipv4)/32" # Initially there will be no remote ip onsite, so we use the cloud 9 ip.
@@ -213,6 +216,7 @@ export TF_VAR_common_tags=$(jq -n -f "$common_tags_path" \
   --arg pipelineid "$TF_VAR_pipelineid" \
   --arg region "$AWS_DEFAULT_REGION" \
   --arg vpcname "$TF_VAR_vpcname" \
+  --arg projectname "$TF_VAR_projectname" \
   --arg accountid "$TF_VAR_account_id" \
   --arg owner "$TF_VAR_owner" )
 

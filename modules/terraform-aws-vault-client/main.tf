@@ -94,7 +94,8 @@ locals {
   private_route_table_ids    = data.aws_route_tables.private.ids
 }
 module "vault_client" {
-  source              = "./modules/vault-client"
+  # source              = "./modules/vault-client"
+  source              = "../firehawk-main/modules/terraform-aws-vault-client" # this should reference a tgged version of the git hub repo in production.
   name                = "vaultclient_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
   vault_client_ami_id = var.vault_client_ami_id
 
