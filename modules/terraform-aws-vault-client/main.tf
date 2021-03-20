@@ -50,6 +50,15 @@ data "aws_security_group" "bastion" { # Aquire the security group ID for externa
   vpc_id = data.aws_vpc.vaultvpc.id
 }
 
+data "terraform_remote_state" "bastion_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension_vault}"
+    key    = "${var.resourcetier_vault}/${var.vpcname_vault}-terraform-aws-sg-bastion/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
+}
+
 locals {
   vaultvpc_tags = {
     vpcname = var.vpcname_vault,
@@ -86,7 +95,7 @@ module "vault_client" {
 
   private_subnet_ids  = local.private_subnet_ids
   permitted_cidr_list = ["${local.onsite_public_ip}/32", var.remote_cloud_public_ip_cidr, var.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr]
-  security_group_ids  = [data.aws_security_group.bastion.id]
+  security_group_ids  = [ data.terraform_remote_state.bastion_security_group.outputs.security_group_id ]
 
   aws_key_name = var.aws_key_name
   common_tags = local.common_tags
