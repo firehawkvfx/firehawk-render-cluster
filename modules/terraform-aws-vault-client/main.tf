@@ -75,7 +75,7 @@ locals {
 }
 module "vault_client" {
   source              = "../../../firehawk-main/modules/terraform-aws-vault-client/modules/vault-client" # this should reference a tgged version of the git hub repo in production.
-  name                = "${var.var.vpcname}_vaultclient_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
+  name                = "${local.vpcname}_vaultclient_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
   vault_client_ami_id = var.vault_client_ami_id
 
   consul_cluster_name    = var.consul_cluster_name
@@ -94,4 +94,5 @@ module "vault_client" {
   bucket_extension_vault = var.bucket_extension_vault
   resourcetier_vault = var.resourcetier_vault
   vpcname_vault = var.vpcname_vault
+  vpcname = var.common_tags["vpcname"]
 }
