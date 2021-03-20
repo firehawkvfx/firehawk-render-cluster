@@ -1,12 +1,12 @@
 provider "null" {
   version = "~> 3.0"
 }
-
 provider "aws" {
   #  if you haven't installed and configured the aws cli, you will need to provide your aws access key and secret key.
   # in a dev environment these version locks below can be disabled.  in production, they should be locked based on the suggested versions from terraform init.
   version = "~> 3.15.0"
 }
+data "aws_region" "current" {}
 data "aws_vpc" "primary" { # this vpc
   default = false
   tags    = local.common_tags
@@ -45,10 +45,10 @@ data "aws_route_tables" "private" {
   tags = merge( local.common_tags, { "area" : "public" } )
 }
 
-data "aws_security_group" "bastion" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
-  tags = local.bastion_tags # Since we deploy vault alongside this account, pipelineid will probably not be an issue...  At some point we will need to create a dependency of the vault vpc output and what tags we should be using with multi account and CI.
-  vpc_id = data.aws_vpc.vaultvpc.id
-}
+# data "aws_security_group" "bastion" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
+#   tags = local.bastion_tags # Since we deploy vault alongside this account, pipelineid will probably not be an issue...  At some point we will need to create a dependency of the vault vpc output and what tags we should be using with multi account and CI.
+#   vpc_id = data.aws_vpc.vaultvpc.id
+# }
 
 data "terraform_remote_state" "bastion_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
