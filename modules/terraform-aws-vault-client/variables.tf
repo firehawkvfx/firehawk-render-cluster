@@ -3,7 +3,7 @@ variable "aws_key_name" {
 }
 
 variable "vault_client_ami_id" {
-  description = "The prebuilt AMI for the vault client host. This should be a private ami you have build with packer."
+  description = "The prebuilt AMI for the vault client host. This should be a private ami you have built with packer."
   type        = string
 }
 

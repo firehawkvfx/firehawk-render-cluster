@@ -4,7 +4,7 @@ variable "name" {
   default     = "vault_client"
 }
 variable "vault_client_ami_id" {
-  description = "The prebuilt AMI for the vault client host. This should be a private ami you have build with packer."
+  description = "The prebuilt AMI for the vault client host. This should be a private ami you have built with packer."
   type        = string
 }
 variable "create_vpc" {
