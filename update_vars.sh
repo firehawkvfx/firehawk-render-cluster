@@ -176,7 +176,7 @@ get_parameters=$( aws ssm get-parameters --names \
     "/firehawk/resourcetier/${TF_VAR_resourcetier}/global_bucket_extension" \
     "/firehawk/resourcetier/${TF_VAR_resourcetier}/combined_vpcs_cidr" \
     "/firehawk/resourcetier/${TF_VAR_resourcetier}/vpn_cidr" \
-    "/firehawk/resourcetier/${TF_VAR_resourcetier}/houdini_license_server_address"
+    "/firehawk/resourcetier/${TF_VAR_resourcetier}/houdini_license_server_address" )
 
 num_invalid=$(echo $get_parameters | jq '.InvalidParameters| length')
 if [[ $num_invalid -eq 0 ]]; then
