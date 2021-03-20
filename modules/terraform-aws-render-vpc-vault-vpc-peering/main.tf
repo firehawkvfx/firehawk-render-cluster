@@ -31,22 +31,10 @@ resource "aws_vpc_peering_connection" "primary2secondary" {
   # peer_owner_id = "${data.aws_caller_identity.current.account_id}"
 }
 data "aws_route_table" "primary_private" {
-  tags = {
-    "conflictkey" : local.common_tags["conflictkey"],
-    "pipelineid" : local.common_tags["pipelineid"],
-    "vpcname" : local.common_tags["vpcname"],
-    "projectname" : ocal.common_tags["projectname"],
-    "area" : "private",
-  }
+  tags = merge( local.common_tags, { "area" : "private" } )
 }
 data "aws_route_table" "primary_public" {
-  tags = {
-    "conflictkey" : local.common_tags["conflictkey"],
-    "pipelineid" : local.common_tags["pipelineid"],
-    "vpcname" : local.common_tags["vpcname"],
-    "projectname" : local.common_tags["projectname"],
-    "area" : "public",
-  }
+  tags = merge( local.common_tags, { "area" : "public" } )
 }
 resource "aws_route" "primaryprivate2secondary" {
   route_table_id            = data.aws_route_table.primary_private.id

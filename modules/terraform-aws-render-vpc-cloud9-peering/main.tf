@@ -5,6 +5,12 @@ provider "aws" {
 }
 locals {
   common_tags = var.common_tags
+  # vaultvpc_tags = {
+  #   "conflictkey" : local.common_tags["conflictkey"],
+  #   "pipelineid" : local.common_tags["pipelineid"],
+  #   "projectname" : "firehawk-main",
+  #   "vpcname": var.vpcname_vault,
+  # }
 }
 data "aws_vpc" "primary" { # The primary is the VPC defined by the common tags var.
   default = false
@@ -24,20 +30,10 @@ resource "aws_vpc_peering_connection" "primary2secondary" {
   # peer_owner_id = "${data.aws_caller_identity.current.account_id}"
 }
 data "aws_route_table" "main_private" {
-  tags = {
-    "conflictkey" : local.common_tags["conflictkey"],
-    "pipelineid" : local.common_tags["pipelineid"],
-    "projectname" : "firehawk-render-cluster",
-    "area" : "private",
-  }
+  tags = merge( local.common_tags, { "area" : "private" } )
 }
 data "aws_route_table" "main_public" {
-  tags = {
-    "conflictkey" : local.common_tags["conflictkey"],
-    "pipelineid" : local.common_tags["pipelineid"],
-    "projectname" : "firehawk-render-cluster",
-    "area" : "public",
-  }
+  tags = merge( local.common_tags, { "area" : "public" } )
 }
 resource "aws_route" "primaryprivate2secondary" {
   route_table_id            = data.aws_route_table.main_private.id
