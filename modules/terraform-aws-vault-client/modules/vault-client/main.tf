@@ -69,7 +69,7 @@ data "terraform_remote_state" "vault_client_profile" { # read the arn with data.
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension_vault}"
-    key    = "${var.resourcetier_vault}/${var.vpcname_vault}-terraform-aws-iam-profile-vault-client/terraform.tfstate"
+    key    = "firehawk-main/modules/terraform-aws-iam-profile-vault-client/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }

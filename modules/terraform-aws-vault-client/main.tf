@@ -54,7 +54,6 @@ data "terraform_remote_state" "bastion_security_group" { # read the arn with dat
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension_vault}"
-    # key    = "${var.resourcetier_vault}/${var.vpcname_vault}-terraform-aws-sg-bastion/terraform.tfstate"
     key    = "firehawk-main/modules/terraform-aws-sg-bastion/terraform.tfstate"
     region = data.aws_region.current.name
   }
