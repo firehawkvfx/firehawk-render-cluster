@@ -13,7 +13,8 @@ dependencies {
     "../terraform-aws-render-vpc-vault-vpc-peering",
     "../terraform-aws-render-vpc-cloud9-peering",
     "../../../firehawk-main/modules/terraform-aws-sg-bastion",
-    "../../../firehawk-main/modules/vault"
+    "../../../firehawk-main/modules/vault",
+    "../../../firehawk-main/modules/vault-configuration",
     ]
 }
 
