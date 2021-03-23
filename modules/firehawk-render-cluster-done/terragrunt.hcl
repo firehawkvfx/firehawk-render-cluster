@@ -1,3 +1,5 @@
+# A dummy event to simplify refs to completion of this project build
+
 include {
   path = find_in_parent_folders()
 }
@@ -13,11 +15,4 @@ dependencies {
     "../terraform-aws-node-houdini",
     "../terraform-aws-deadline-db"
     ]
-}
-
-terraform {
-  after_hook "after_hook_1" {
-    commands = ["apply"]
-    execute  = ["bash", "instructions"]
-  }
 }
