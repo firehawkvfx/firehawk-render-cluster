@@ -10,7 +10,7 @@ inputs = local.common_vars.inputs
 
 dependencies {
   paths = [
-    "../terraform-aws-node-houdini"
+    "../terraform-aws-node-houdini",
     "../terraform-aws-deadline-db"
     ]
 }
