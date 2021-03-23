@@ -24,10 +24,14 @@ variable "conflictkey" {
   type        = string
 }
 variable "common_tags" {
-  description = "Common tags for all resources in a deployment run."
+  description = "Common tags for all resources in this project."
   type        = map(string)
 }
-variable "vpcname_vault" {
+variable "common_tags_vaultvpc" {
+  description = "Common tags for resources in the vault vpc / firehawk-main project."
+  type        = map(string)
+}
+variable "vpcname_vaultvpc" {
   description = "The VPC name containing Vault"
   type = string
 }

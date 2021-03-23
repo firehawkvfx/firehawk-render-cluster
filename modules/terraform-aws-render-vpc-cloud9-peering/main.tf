@@ -9,7 +9,7 @@ locals {
   #   "conflictkey" : local.common_tags["conflictkey"],
   #   "pipelineid" : local.common_tags["pipelineid"],
   #   "projectname" : "firehawk-main",
-  #   "vpcname": var.vpcname_vault,
+  #   "vpcname": var.vpcname_vaultvpc,
   # }
 }
 data "aws_vpc" "primary" { # The primary is the VPC defined by the common tags var.
