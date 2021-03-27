@@ -1,10 +1,10 @@
 [submodule "terraform-aws-deadline-db"]
 	path = modules/terraform-aws-deadline-db
-	url = git@github.com:firehawkvfx/terraform-aws-deadline-db.git
+	url = ../terraform-aws-deadline-db.git
 	branch = dev
 [submodule "terraform-aws-render-vpc"]
 	path = modules/terraform-aws-render-vpc
-	url = git@github.com:firehawkvfx/terraform-aws-render-vpc.git
+	url = ../terraform-aws-render-vpc.git
 [submodule "modules/terraform-aws-node-houdini"]
 	path = modules/terraform-aws-node-houdini
-	url = git@github.com:firehawkvfx/terraform-aws-node-houdini.git
+	url = ../terraform-aws-node-houdini.git
