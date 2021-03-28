@@ -36,29 +36,6 @@ cd $SCRIPTDIR/modules/terraform-aws-render-vpc-vault-vpc-peering
 ./generate-plan
 terraform apply -input=false tfplan # Ensure Render VPC is peered with Vault VPC
 
-# if [[ ! -f "/opt/consul/bin/run-consul" ]]; then
-#     echo "You have not yet installed consul."
-#     exit 0 # if the user hasn't installed consul yet, this step must be performed manually.
-# fi
-
-# echo "Running Consul..."
-# sudo /opt/consul/bin/run-consul --client --cluster-tag-key "${consul_cluster_tag_key}" --cluster-tag-value "${consul_cluster_tag_value}"
-
-# assuming we are already logged in, but we will need to revisit this.
-# if [[ -z "$VAULT_TOKEN" ]]; then
-#     echo "Instances from this point require you to login to vault.  To avoid this message you can define the var VAULT_TOKEN"
-# fi
-# echo "Waiting for consul vault service..."
-# until consul catalog services | grep -m 1 "vault"; do sleep 1 ; done
-# until vault status | grep -m 1 "Initialized.*"; do sleep 1 ; done
-# initialised=true
-# vault status | grep -m 1 "Initialized.*true" || initialised=false
-# if [[ "$initialised" == false ]]; then
-#     echo "Vault is not Initialized.  Aborting. You will need to login and initialise the vault"
-#     exit 1
-# fi
-# vault login --no-print $VAULT_TOKEN
-
 cd $SCRIPTDIR/modules/terraform-aws-vault-client
 ./generate-plan
 terraform apply -input=false tfplan # Ensure Vault / Consul instances are running, and configure VPC peering with the current cloud 9 VPC.

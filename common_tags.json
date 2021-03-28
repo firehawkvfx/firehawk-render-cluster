@@ -7,5 +7,6 @@
     "owner": "\($owner)",
     "region": "\($region)",
     "vpcname": "\($vpcname)",
+    "projectname": "\($projectname)",
     "terraform": "true"
 }

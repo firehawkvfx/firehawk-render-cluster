@@ -3,7 +3,7 @@ variable "aws_key_name" {
 }
 
 variable "vault_client_ami_id" {
-  description = "The prebuilt AMI for the vault client host. This should be a private ami you have build with packer."
+  description = "The prebuilt AMI for the vault client host. This should be a private ami you have built with packer."
   type        = string
 }
 
@@ -83,7 +83,15 @@ variable "common_tags" {
   type        = map(string)
 }
 
-variable "vpcname_vault" {
-  description = "The VPC name containing Vault"
-  type = string
+variable "bucket_extension_vault" {
+    description = "The bucket extension where the terraform remote state resides"
+    type = string
+}
+variable "resourcetier_vault" {
+    description = "The resourcetier the desired vault vpc resides in"
+    type = string
+}
+variable "vpcname_vaultvpc" {
+    description = "A namespace component defining the location of the terraform remote state"
+    type = string
 }
