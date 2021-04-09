@@ -55,9 +55,9 @@ locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 # https://www.packer.io/docs/from-1.5/blocks/source
 #could not parse template for following block: "template: generated:4: function \"clean_resource_name\" not defined"
 
-# source "amazon-ebs" "amazon-linux-2-ami" {
+# source "amazon-ebs" "amazolinux2-ami" {
 #   ami_description = "An Amazon Linux 2 AMI that will accept connections from hosts with TLS Certs."
-#   ami_name        = "firehawk-base-amazon-linux-2-{{isotime | clean_resource_name}}-{{uuid}}"
+#   ami_name        = "firehawk-base-amazolinux2-{{isotime | clean_resource_name}}-{{uuid}}"
 #   instance_type   = "t2.micro"
 #   region          = "{{user `aws_region`}}"
 #   source_ami_filter {
