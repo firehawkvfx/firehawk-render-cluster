@@ -1,13 +1,13 @@
 #!/bin/bash
 
 set -e
-set +o history
+# set +o history
 
 exec > >(tee -a /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 resourcetier="${resourcetier}"
- deadlineuser_name="${deadlineuser_name}"
- deadlineuser_pw="$(openssl rand -base64 12)"
+deadlineuser_name="${deadlineuser_name}"
+deadlineuser_pw="$(openssl rand -base64 12)"
 
 usermod --password $(echo $deadlineuser_pw | openssl passwd -1 -stdin) $deadlineuser_name
 
