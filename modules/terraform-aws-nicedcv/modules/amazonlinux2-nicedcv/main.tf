@@ -33,7 +33,13 @@ resource "aws_security_group" "workstation_amazonlinux2_nicedcv" {
     security_groups = var.security_group_ids
     description     = "Vault Web UI Forwarding"
   }
-
+  ingress {
+    protocol    = "tcp"
+    from_port   = 8443
+    to_port     = 8443
+    cidr_blocks = var.permitted_cidr_list_private
+    description = "NICE DCV graphical server"
+  }
   ingress {
     protocol    = "tcp"
     from_port   = 8080
