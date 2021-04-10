@@ -74,9 +74,10 @@ resource "aws_s3_bucket_object" "update_scripts" {
   etag     = filemd5("${path.module}/scripts/${each.value}")
 }
 data "template_file" "user_data_auth_client" {
-  template = format("%s%s",
+  template = format("%s%s%s",
     file("${path.module}/user-data-iam-auth-ssh-host-consul.sh"),
-    file("${path.module}/user-data-install-deadline-worker.sh")
+    file("${path.module}/user-data-install-deadline-worker.sh"),
+    file("${path.module}/user-data-nice-dcv.sh")
   )
   vars = {
     consul_cluster_tag_key   = var.consul_cluster_tag_key
