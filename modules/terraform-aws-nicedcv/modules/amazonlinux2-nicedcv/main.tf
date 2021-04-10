@@ -83,7 +83,7 @@ data "template_file" "user_data_auth_client" {
     consul_cluster_tag_value = var.consul_cluster_name
     aws_internal_domain      = var.aws_internal_domain
     aws_external_domain      = "" # External domain is not used for internal hosts.
-    example_role_name        = "rendernode-vault-role"
+    example_role_name        = "workstation-vault-role"
 
     deadlineuser_name                = "deadlineuser"
     deadline_version                 = "10.1.9.2"
