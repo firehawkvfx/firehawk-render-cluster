@@ -73,7 +73,7 @@ locals {
   private_subnet_cidr_blocks = [for s in data.aws_subnet.private : s.cidr_block]
   onsite_public_ip           = var.onsite_public_ip
   private_route_table_ids    = data.aws_route_tables.private.ids
-  instance_name              = "${lookup(local.common_tags, "vpcname", "default")}_nodecentos7houdini_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
+  instance_name              = "${lookup(local.common_tags, "vpcname", "default")}_workstationamazonlinux2nicedcv_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
 }
 module "workstation_amazonlinux2_nicedcv" {
   source                                  = "./modules/amazonlinux2-nicedcv"
