@@ -116,7 +116,7 @@ sudo mkdir -p $deadline_installer_dir
 
 # Install Client:
 # Deadline Worker
-echo "Installing $deadline_installer_dir/$deadline_client_installer_filename"
+echo "Installing Client $deadline_installer_dir/$deadline_client_installer_filename"
 sudo $deadline_installer_dir/$deadline_client_installer_filename \
 --mode unattended \
 --launcherdaemon true \
