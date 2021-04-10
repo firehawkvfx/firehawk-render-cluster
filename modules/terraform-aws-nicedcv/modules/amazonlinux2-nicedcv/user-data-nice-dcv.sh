@@ -17,7 +17,7 @@ retry \
   "vault login --no-print -method=aws header_value=vault.service.consul role=${example_role_name}" \
   "Waiting for Vault login"
 
-vault kv put -address="$VAULT_ADDR" -format=json $resourcetier/network/deadlineuser_pw value="$deadlineuser_pw"
+vault kv put -address="$VAULT_ADDR" -format=json $resourcetier/users/deadlineuser_pw value="$deadlineuser_pw"
 
 echo "Revoking vault token..."
 vault token revoke -self
