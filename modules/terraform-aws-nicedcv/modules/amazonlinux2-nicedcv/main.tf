@@ -93,11 +93,11 @@ data "template_file" "user_data_auth_client" {
     deadline_installer_script_branch = "deadline-immutable" # TODO This must become immutable - version it
   }
 }
-data "terraform_remote_state" "rendernode_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
+data "terraform_remote_state" "workstation_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension_vault}"
-    key    = "firehawk-main/modules/terraform-aws-iam-profile-rendernode/terraform.tfstate"
+    key    = "firehawk-main/modules/terraform-aws-iam-profile-workstation/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }
@@ -109,7 +109,7 @@ resource "aws_instance" "workstation_amazonlinux2_nicedcv" {
   subnet_id              = tolist(var.private_subnet_ids)[0]
   tags                   = merge(map("Name", var.name), var.common_tags, local.extra_tags)
   user_data              = data.template_file.user_data_auth_client.rendered
-  iam_instance_profile   = data.terraform_remote_state.rendernode_profile.outputs.instance_profile_name
+  iam_instance_profile   = data.terraform_remote_state.workstation_profile.outputs.instance_profile_name
   vpc_security_group_ids = local.vpc_security_group_ids
   root_block_device {
     delete_on_termination = true
