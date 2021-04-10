@@ -94,4 +94,5 @@ module "workstation_amazonlinux2_nicedcv" {
   ]
   aws_key_name = var.aws_key_name
   common_tags  = local.common_tags
+  deadline_version = var.deadline_version
 }
