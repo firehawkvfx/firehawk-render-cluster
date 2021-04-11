@@ -23,7 +23,7 @@ data "aws_instance" "vpn" {
 data "aws_vpc_peering_connection" "primary2secondary" {
   vpc_id = data.aws_vpc.primary.id
   peer_vpc_id = data.aws_vpc.secondary.id
-  tags = merge( var.common_tags, { "peer_to" : "vault" } )
+  tags = merge( var.common_tags_rendervpc, { "peer_to" : "vault" } )
 }
 
 locals {
