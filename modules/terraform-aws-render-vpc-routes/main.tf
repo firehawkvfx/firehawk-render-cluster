@@ -2,6 +2,10 @@ data "aws_vpc" "primary" {
   default = false
   tags    = var.common_tags_rendervpc
 }
+data "aws_vpc" "secondary" {
+  default = false
+  tags    = var.common_tags_vaultvpc
+}
 data "aws_route_tables" "public" {
   vpc_id = data.aws_vpc.primary.id
   tags   = merge(var.common_tags_rendervpc, { "area" : "public" })
@@ -14,6 +18,12 @@ data "aws_route_tables" "private" {
 
 data "aws_instance" "vpn" {
   instance_tags = merge(var.common_tags_vaultvpc, { "role" : "vpn" })
+}
+
+data "aws_vpc_peering_connection" "primary2secondary" {
+  vpc_id = data.aws_vpc.primary.id
+  peer_vpc_id = data.aws_vpc.secondary.id
+  tags = merge( local.common_tags, { "peer_to" : "vault" } )
 }
 
 locals {
@@ -29,7 +39,8 @@ resource "aws_route" "private_openvpn_remote_subnet_gateway" {
 
   route_table_id         = element(concat(local.private_route_table_ids, list("")), count.index)
   destination_cidr_block = var.onsite_private_subnet_cidr
-  instance_id            = local.id
+  # instance_id            = local.id
+  vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
 
   timeouts {
     create = "5m"
@@ -41,7 +52,8 @@ resource "aws_route" "public_openvpn_remote_subnet_gateway" {
 
   route_table_id         = element(concat(local.public_route_table_ids, list("")), count.index)
   destination_cidr_block = var.onsite_private_subnet_cidr
-  instance_id            = local.id
+  # instance_id            = local.id
+  vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
 
   timeouts {
     create = "5m"
@@ -54,7 +66,8 @@ resource "aws_route" "private_openvpn_remote_subnet_vpndhcp_gateway" {
 
   route_table_id         = element(concat(local.private_route_table_ids, list("")), count.index)
   destination_cidr_block = var.vpn_cidr
-  instance_id            = local.id
+  # instance_id            = local.id
+  vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
 
   timeouts {
     create = "5m"
@@ -66,7 +79,8 @@ resource "aws_route" "public_openvpn_remote_subnet_vpndhcp_gateway" {
 
   route_table_id         = element(concat(local.public_route_table_ids, list("")), count.index)
   destination_cidr_block = var.vpn_cidr
-  instance_id            = local.id
+  # instance_id            = local.id
+  vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
 
   timeouts {
     create = "5m"

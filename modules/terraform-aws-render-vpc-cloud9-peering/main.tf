@@ -23,7 +23,7 @@ resource "aws_vpc_peering_connection" "primary2secondary" {
   vpc_id      = data.aws_vpc.primary.id   # Primary VPC ID.
   peer_vpc_id = data.aws_vpc.secondary.id # Secondary VPC ID.
   auto_accept = true                      # Flags that the peering connection should be automatically confirmed. This only works if both VPCs are owned by the same account.
-
+  tags = merge( local.common_tags, { "peer_to" : "cloud9" } )
   # # AWS Account ID. This can be dynamically queried using the
   # # aws_caller_identity data resource.
   # # https://www.terraform.io/docs/providers/aws/d/caller_identity.html
