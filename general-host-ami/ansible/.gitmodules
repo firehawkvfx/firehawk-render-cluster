@@ -1,3 +1,0 @@
-[submodule "ansible_collections/firehawkvfx/houdini/roles/houdini_openfirehawk_houdini_tools_sync/files/openfirehawk_houdini_tools"]
-	path = ansible_collections/firehawkvfx/houdini/roles/houdini_openfirehawk_houdini_tools_sync/files/openfirehawk_houdini_tools
-	url = ../openfirehawk-houdini-tools.git
