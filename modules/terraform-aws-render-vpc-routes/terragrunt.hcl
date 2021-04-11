@@ -14,3 +14,5 @@ dependencies {
     "../terraform-aws-render-vpc-cloud9-peering"
     ]
 }
+
+skip = true # this module should be deprecated if using the vpn module
