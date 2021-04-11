@@ -12,7 +12,7 @@ dependencies {
   paths = [
     "../terraform-aws-render-vpc",
     "../terraform-aws-render-vpc-vault-vpc-peering",
-    "../../../firehawk-main/modules/terraform-aws-sg-vpn",
+    "../terraform-aws-sg-vpn",
     "../../../firehawk-main/modules/vault",
     "../../../firehawk-main/modules/terraform-aws-iam-profile-openvpn"
     ]
