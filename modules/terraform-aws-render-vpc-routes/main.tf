@@ -1,11 +1,15 @@
+data "aws_vpc" "primary" {
+  default = false
+  tags    = var.common_tags_rendervpc
+}
 data "aws_route_tables" "public" {
   vpc_id = data.aws_vpc.primary.id
-  tags   = merge(var.common_tags_vaultvpc, { "area" : "public" })
+  tags   = merge(var.common_tags_rendervpc, { "area" : "public" })
 }
 
 data "aws_route_tables" "private" {
   vpc_id = data.aws_vpc.primary.id
-  tags   = merge(var.common_tags_vaultvpc, { "area" : "private" })
+  tags   = merge(var.common_tags_rendervpc, { "area" : "private" })
 }
 
 data "aws_instance" "vpn" {
