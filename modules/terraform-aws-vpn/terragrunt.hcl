@@ -19,5 +19,5 @@ dependencies {
 }
 
 terraform {
-  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-vpn?ref=rendervpc-vpn"
+  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-vpn?ref=update-default-path-vpn-certs"
 }
