@@ -13,7 +13,7 @@ data "aws_route_tables" "private" {
 }
 
 data "aws_instance" "vpn" {
-  tags = merge(var.common_tags_vaultvpc, { "role" : "vpn" })
+  instance_tags = merge(var.common_tags_vaultvpc, { "role" : "vpn" })
 }
 
 locals {
