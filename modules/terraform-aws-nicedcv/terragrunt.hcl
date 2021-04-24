@@ -20,4 +20,4 @@ dependencies {
     ]
 }
 
-# skip = true
+skip = true # disabled until deadline client can be installed - missing packages
