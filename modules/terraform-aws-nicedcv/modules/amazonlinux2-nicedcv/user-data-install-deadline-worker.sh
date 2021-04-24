@@ -17,8 +17,8 @@ deadline_version="${deadline_version}"
 
 # Script vars (implicit)
 export VAULT_ADDR=https://vault.service.consul:8200
-client_cert_file_path="/opt/Thinkbox/certs/Deadline10RemoteClient.pfx"
-client_cert_vault_path="$resourcetier/deadline/client_cert_files$client_cert_file_path"
+client_cert_file_path="${client_cert_file_path}"
+client_cert_vault_path="${client_cert_vault_path}"
 installer_file="install-deadline-worker.sh"
 installer_path="/home/$deadlineuser_name/Downloads/$installer_file"
 
@@ -61,17 +61,14 @@ function retry {
   log "$description failed after $attempts attempts."
   exit $exit_status
 }
-
 function retrieve_file {
-  echo "source var"
   local -r source_path="$1"
   if [[ -z "$2" ]]; then
     local -r target_path="$source_path"
   else
     local -r target_path="$2"
   fi
-  echo "response:"
-  # local -r response=$(retry \
+  echo "Aquiring vault data... $source_path to $target_path"
   response=$(retry \
   "vault kv get -field=value $source_path/file" \
   "Trying to read secret from vault")
@@ -87,24 +84,19 @@ function retrieve_file {
     echo "Ensuring path is writeable"
     touch "$target_path"
     chmod u+w "$target_path"
-    # echo "Error: Path not writable: $target_path "
   fi
   if [[ -f "$target_path" ]]; then
     chmod u+w "$target_path"
   else
     echo "Error: path does not exist, var may not be a file: $target_path "
   fi
-  # sudo chmod u+w $target_path
-  # echo "test decode"
-  # echo "$response" | base64 --decode
-  echo "Write file content: single operation to: $target_path"
+  echo "Write file content: single operation"
   echo "$response" | base64 --decode > $target_path
   if [[ ! -f "$target_path" ]] || [[ -z "$(cat $target_path)" ]]; then
     echo "Error: no file or empty result at $target_path"
     exit 1
   fi
   echo "retrival done."
-  # skipping permissions
 }
 
 ### Centos 7 fix: Failed dns lookup can cause sudo commands to slowdown
@@ -156,20 +148,23 @@ chown $deadlineuser_name:$deadlineuser_name /opt/Thinkbox/certs/
 retry \
   "vault login --no-print -method=aws header_value=vault.service.consul role=${example_role_name}" \
   "Waiting for Vault login"
-echo "Aquiring vault data... $client_cert_vault_path to $client_cert_file_path"
+
 # Retrieve previously generated secrets from Vault.  Would be better if we can use vault as an intermediary to generate certs.
 retrieve_file "$client_cert_vault_path" "$client_cert_file_path"
 echo "Finalise permissions"
+chown $deadlineuser_name:$deadlineuser_name $client_cert_file_path
 chmod u=rw,g=rw,o-rwx $client_cert_file_path
 
 echo "Revoking vault token..."
 vault token revoke -self
 
-### Install Deadline
-# Client
-mkdir -p "$(dirname $installer_path)"
-aws s3api get-object --bucket "$installers_bucket" --key "$installer_file" "$installer_path"
-chown $deadlineuser_name:$deadlineuser_name $installer_path
-chmod u+x $installer_path
-sudo -i -u $deadlineuser_name installers_bucket="$installers_bucket" deadlineuser_name="$deadlineuser_name" deadline_version="$deadline_version" $installer_path
+# ### Install Deadline
+# # Client
+# mkdir -p "$(dirname $installer_path)"
+# aws s3api get-object --bucket "$installers_bucket" --key "$installer_file" "$installer_path"
+# chown $deadlineuser_name:$deadlineuser_name $installer_path
+# chmod u+x $installer_path
+# sudo -i -u $deadlineuser_name installers_bucket="$installers_bucket" deadlineuser_name="$deadlineuser_name" deadline_version="$deadline_version" $installer_path
+
+sudo service deadline10launcher restart
 

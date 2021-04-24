@@ -73,6 +73,11 @@ resource "aws_s3_bucket_object" "update_scripts" {
   source   = "${path.module}/scripts/${each.value}"
   etag     = filemd5("${path.module}/scripts/${each.value}")
 }
+locals {
+  resourcetier           = var.common_tags["resourcetier"]
+  client_cert_file_path  = "/opt/Thinkbox/certs/Deadline10RemoteClient.pfx"
+  client_cert_vault_path = "${local.resourcetier}/deadline/client_cert_files${local.client_cert_file_path}"
+}
 data "template_file" "user_data_auth_client" {
   template = format("%s%s%s",
     file("${path.module}/user-data-iam-auth-ssh-host-consul.sh"),
@@ -92,6 +97,9 @@ data "template_file" "user_data_auth_client" {
     resourcetier                     = var.common_tags["resourcetier"]
     deadline_installer_script_repo   = "https://github.com/firehawkvfx/packer-firehawk-amis.git"
     deadline_installer_script_branch = "deadline-immutable" # TODO This must become immutable - version it
+
+    client_cert_file_path  = local.client_cert_file_path
+    client_cert_vault_path = local.client_cert_vault_path
   }
 }
 data "terraform_remote_state" "workstation_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
