@@ -38,10 +38,14 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
     region = data.aws_region.current.name
   }
 }
+output "block_device_mappings" {
+  value = data.aws_ami.rendernode.id.block_device_mappings
+}
 
 locals {
-  ami_id                             = data.aws_ami.rendernode.id
-  snapshot_id                        = data.aws_ami.rendernode.id.block_device_mappings["/dev/sda1"].snapshot_id
+  ami_id = data.aws_ami.rendernode.id
+  # snapshot_id                        = data.aws_ami.rendernode.id.block_device_mappings["/dev/sda1"].snapshot_id
+  snapshot_id                        = "unknown"
   private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
   instance_profile                   = data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn
   security_group_id                  = data.terraform_remote_state.rendernode_security_group.outputs.security_group_id

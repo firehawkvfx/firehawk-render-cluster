@@ -25,3 +25,11 @@ variable "aws_key_name" {
   type        = string
   default     = null
 }
+variable "bucket_extension_vault" {
+    description = "The bucket extension where the terraform remote state resides"
+    type = string
+}
+variable "bucket_extension" {
+    description = "The bucket extension where the software installers reside"
+    type = string
+}
