@@ -11,7 +11,7 @@ inputs = local.common_vars.inputs
 dependencies {
   paths = [ # not strictly dependencies, but if they fail, there is no point in continuing to deploy a vpc or anything else.
     "../terraform-aws-deadline-db",
-    "../../../firehawk-main/modules/terraform-aws-sg-rendernode",
+    "../../../firehawk-main/modules/terraform-aws-sg-rendernode/module",
     "../../../firehawk-main/modules/terraform-aws-iam-profile-rendernode"
     ]
 }
