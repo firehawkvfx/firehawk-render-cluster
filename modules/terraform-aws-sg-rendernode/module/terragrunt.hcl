@@ -17,8 +17,7 @@ dependency "data" {
 
 dependencies {
   paths = [
-    "../data",
-    "../vpc"
+    "../data"
   ]
 }
 

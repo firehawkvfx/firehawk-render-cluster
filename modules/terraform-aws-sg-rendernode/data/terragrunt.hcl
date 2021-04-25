@@ -9,7 +9,9 @@ locals {
 inputs = local.common_vars.inputs
 
 dependencies {
-  paths = ["../vpc"]
+  paths = [
+    "../../vpc"
+    ]
 }
 
 # skip = true
