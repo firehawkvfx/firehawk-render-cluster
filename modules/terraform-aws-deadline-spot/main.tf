@@ -69,9 +69,9 @@ output "ebs_block_device" {
   value = local.ebs_block_device
 }
 
-output "snapshot_id" {
-  value = local.ebs_block_device["/dev/sda1"].snapshot_id
-}
+# output "snapshot_id" {
+#   value = local.ebs_block_device["/dev/sda1"].snapshot_id
+# }
 
 
 
