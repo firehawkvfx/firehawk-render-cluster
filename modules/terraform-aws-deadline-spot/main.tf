@@ -49,7 +49,7 @@ locals {
   private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
   instance_profile                   = data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn
   security_group_id                  = data.terraform_remote_state.rendernode_security_group.outputs.security_group_id
-  config_template_file_path          = "${path.module}/ansible/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
+  config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
   override_config_template_file_path = "/home/ec2-user/config_template.json"
 }
 resource "null_resource" "provision_deadline_spot" {
@@ -57,8 +57,8 @@ resource "null_resource" "provision_deadline_spot" {
   triggers = {
     ami_id                  = local.ami_id
     config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
-    deadline_spot_sha1      = sha1(file("${path.module}/ansible/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
-    deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
+    deadline_spot_sha1      = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
+    deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
     deadline_roles_tf_sha1  = sha1(file("${path.module}/modules/deadline/main.tf"))
     # spot_access_key_id      = module.deadline.spot_access_key_id
     # spot_secret             = module.deadline.spot_secret
@@ -75,7 +75,7 @@ resource "null_resource" "provision_deadline_spot" {
       printf "\n...Waiting for consul deadlinedb service before attempting to configure.\n\n"
       until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
       set -x
-      ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "\
+      ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "\
         config_generated_json=\"$HOME/config_generated.json\" \
         max_spot_capacity_engine=1 \
         max_spot_capacity_mantra=1 \

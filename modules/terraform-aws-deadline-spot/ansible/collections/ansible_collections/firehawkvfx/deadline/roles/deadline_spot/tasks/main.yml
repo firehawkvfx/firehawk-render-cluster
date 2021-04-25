@@ -54,7 +54,7 @@
     config_template: "{{ lookup('first_found', findme) }}"
   vars:
     findme:
-      # - "/secrets/overrides/ansible/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
+      # - "/secrets/overrides/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
       - "config_template.json"
 
 - debug:
