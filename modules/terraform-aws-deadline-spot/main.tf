@@ -39,7 +39,7 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
   }
 }
 output "block_device_mappings" {
-  value = data.aws_ami.rendernode.id.block_device_mappings
+  value = data.aws_ami.rendernode.block_device_mappings
 }
 
 locals {
@@ -53,9 +53,7 @@ locals {
   override_config_template_file_path = "/home/ec2-user/config_template.json"
 }
 resource "null_resource" "provision_deadline_spot" {
-  count      = (var.aws_nodes_enabled && var.provision_deadline_spot_plugin) ? 1 : 0
-  depends_on = [null_resource.dependency_deadline_spot, module.node.ami_id, module.firehawk_init.local-provisioning-complete]
-
+  count      = 1
   triggers = {
     ami_id                  = module.node.ami_id
     config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
