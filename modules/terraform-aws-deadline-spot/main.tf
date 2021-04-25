@@ -39,7 +39,7 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
   }
 }
 
-locals "snapshot_id" {
+locals {
   ami_id                             = data.aws_ami.rendernode.id
   snapshot_id                        = data.aws_ami.rendernode.id.block_device_mappings["/dev/sda1"].snapshot_id
   private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
