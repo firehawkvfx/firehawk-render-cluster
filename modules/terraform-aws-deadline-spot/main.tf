@@ -38,10 +38,6 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
     region = data.aws_region.current.name
   }
 }
-output "block_device_mappings" {
-  value = data.aws_ami.rendernode.block_device_mappings
-}
-
 variable "ebs_empty_map" {
   type = map(string)
   default = {
@@ -56,7 +52,6 @@ locals {
   # ebs_block_device_selected = element(data.aws_ami.rendernode.block_device_mappings, 0)
   ebs_block_device_selected = data.aws_ami.rendernode.block_device_mappings
 }
-
 # This loop creates key's based on the device name, so the snapshot_id can be retrieved by the device name.
 locals {
   ebs_block_device = {
@@ -64,21 +59,10 @@ locals {
     bd.device_name => bd
   }
 }
-
-output "ebs_block_device" {
-  value = local.ebs_block_device
-}
-
-output "snapshot_id" {
-  value = local.ebs_block_device["/dev/sda1"].ebs.snapshot_id
-}
-
-
-
 locals {
   ami_id = data.aws_ami.rendernode.id
   # snapshot_id                        = data.aws_ami.rendernode.id.block_device_mappings["/dev/sda1"].snapshot_id
-  snapshot_id                        = "unknown"
+  snapshot_id                        = local.ebs_block_device["/dev/sda1"].ebs.snapshot_id
   private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
   instance_profile                   = data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn
   security_group_id                  = data.terraform_remote_state.rendernode_security_group.outputs.security_group_id
@@ -89,6 +73,7 @@ resource "null_resource" "provision_deadline_spot" {
   count      = 1
   triggers = {
     ami_id                  = local.ami_id
+    snapshot_id = local.snapshot_id
     config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
     deadline_spot_sha1      = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
     deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
