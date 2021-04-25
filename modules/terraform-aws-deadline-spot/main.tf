@@ -9,10 +9,10 @@ data "aws_ami" "rendernode" {
     name   = "tag:ami_role"
     values = ["firehawk_centos7_rendernode_ami"]
   }
-  filter {
-    name   = "tag:commit_hash"
-    values = [var.ami_commit_hash]
-  }
+  # filter { # This should be used in production
+  #   name   = "tag:commit_hash"
+  #   values = [var.ami_commit_hash]
+  # }
 }
 data "aws_vpc" "rendervpc" {
   default = false
