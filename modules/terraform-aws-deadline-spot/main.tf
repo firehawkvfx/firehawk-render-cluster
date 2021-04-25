@@ -53,7 +53,8 @@ variable "ebs_empty_map" {
 locals {
   # ebs_block_device_extended = concat(data.aws_ami.rendernode.block_device_mappings, list(list(var.ebs_empty_map)))
   # We select the first element in the list.  if the actual node exists, we will eventually get a valid value after the for loop below, otherwise it will return blank from the empty map, which is fine, since the ami id should never be referenced in this state.
-  ebs_block_device_selected = element(data.aws_ami.rendernode.block_device_mappings, 0)
+  # ebs_block_device_selected = element(data.aws_ami.rendernode.block_device_mappings, 0)
+  ebs_block_device_selected = data.aws_ami.rendernode.block_device_mappings
 }
 
 # This loop creates key's based on the device name, so the snapshot_id can be retrieved by the device name.
