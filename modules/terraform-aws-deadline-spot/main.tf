@@ -55,7 +55,7 @@ locals {
 resource "null_resource" "provision_deadline_spot" {
   count      = 1
   triggers = {
-    ami_id                  = module.node.ami_id
+    ami_id                  = local.ami_id
     config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
     deadline_spot_sha1      = sha1(file("${path.module}/ansible/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
     deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
