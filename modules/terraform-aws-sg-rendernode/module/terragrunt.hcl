@@ -13,6 +13,12 @@ locals {
 
 dependency "data" {
   config_path = "../data"
+  mock_outputs = {
+    bastion_security_group = "fake-vpc-id"
+    vpn_security_group = "fake-sg-id"
+    rendervpc_cidr = "fake-cidr1"
+    vaultvpc_cidr = "fake-cidr2"
+  }
 }
 
 dependencies {
