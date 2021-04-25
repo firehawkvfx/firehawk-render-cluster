@@ -75,7 +75,7 @@ cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure.\n\n"
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
 set -x
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$HOME/config_generated.json \
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=/home/ubuntu/config_generated.json \
   max_spot_capacity_engine=1 \
   max_spot_capacity_mantra=1 \
   volume_type=${var.node_centos_volume_type} \
