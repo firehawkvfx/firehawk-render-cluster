@@ -4,3 +4,5 @@
 modules/terraform-aws-render-vpc-cloud9-peering/s3-backend.tf
 modules/terraform-aws-render-vpc-vault-vpc-peering/s3-backend.tf
 modules/terraform-aws-vault-client/s3-backend.tf
+modules/terraform-aws-sg-rendernode/module/.terraform.lock.hcl
+modules/terraform-aws-sg-rendernode/data/.terraform.lock.hcl
