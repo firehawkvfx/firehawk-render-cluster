@@ -69,27 +69,27 @@ resource "null_resource" "provision_deadline_spot" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
-      export SHOWCOMMANDS=true; set -x
-      echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
-      cd ${path.module}
-      printf "\n...Waiting for consul deadlinedb service before attempting to configure.\n\n"
-      until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
-      set -x
-      ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "\
-        config_generated_json=\"$HOME/config_generated.json\" \
-        max_spot_capacity_engine=1 \
-        max_spot_capacity_mantra=1 \
-        volume_type=${var.node_centos_volume_type} \
-        volume_size=${var.node_centos_volume_size} \
-        ami_id=${local.ami_id} \
-        snapshot_id=${local.snapshot_id} \
-        subnet_id=${local.private_subnet_ids[0]} \
-        spot_instance_profile_arn=\"${local.instance_profile}\" \
-        security_group_id=${local.security_group_id} \
-        aws_region=${data.aws_region.current.name} \
-        aws_key_name=${var.aws_key_name} \
-        account_id=${lookup(var.common_tags, "accountid", "0")} \
-        "
+export SHOWCOMMANDS=true; set -x
+echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
+cd ${path.module}
+printf "\n...Waiting for consul deadlinedb service before attempting to configure.\n\n"
+until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
+set -x
+ANSIBLE_STDOUT_CALLBACK=debug ANSIBLE_CONFIG=${path.module}/ansible/ansible.cfg ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "\
+  config_generated_json=$HOME/config_generated.json \
+  max_spot_capacity_engine=1 \
+  max_spot_capacity_mantra=1 \
+  volume_type=${var.node_centos_volume_type} \
+  volume_size=${var.node_centos_volume_size} \
+  ami_id=${local.ami_id} \
+  snapshot_id=${local.snapshot_id} \
+  subnet_id=${local.private_subnet_ids[0]} \
+  spot_instance_profile_arn=${local.instance_profile} \
+  security_group_id=${local.security_group_id} \
+  aws_region=${data.aws_region.current.name} \
+  aws_key_name=${var.aws_key_name} \
+  account_id=${lookup(var.common_tags, "accountid", "0")} \
+  "
 EOT
   }
 }
