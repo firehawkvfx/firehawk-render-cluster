@@ -12,7 +12,7 @@ locals {
   }
 }
 resource "aws_security_group" "node_centos7_houdini" {
-  count       = var.create_vpc ? 1 : 0
+  # count       = var.create_vpc ? 1 : 0
   name        = var.name
   vpc_id      = data.aws_vpc.thisvpc.id
   description = "Vault client security group"
