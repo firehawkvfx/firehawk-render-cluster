@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 data "aws_ami" "rendernode" {
   most_recent = true
   # If we change the AWS Account in which test are run, update this value.
-  owners = ["562637147889"]
+  owners = ["self"]
   filter {
     name   = "tag:ami_role"
     values = ["firehawk_centos7_rendernode_ami"]
@@ -12,10 +12,6 @@ data "aws_ami" "rendernode" {
   filter {
     name   = "tag:commit_hash"
     values = [var.ami_commit_hash]
-  }
-  filter {
-    name   = "owners"
-    values = ["self"]
   }
 }
 data "aws_vpc" "rendervpc" {
