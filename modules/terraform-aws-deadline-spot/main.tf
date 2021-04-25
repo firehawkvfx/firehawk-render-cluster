@@ -88,7 +88,7 @@ resource "null_resource" "provision_deadline_spot" {
         security_group_id=${local.security_group_id} \
         aws_region=${data.aws_region.current.name} \
         aws_key_name=${var.aws_key_name} \
-        account_id=${lookup(local.common_tags, "accountid", "0")} \
+        account_id=${lookup(var.common_tags, "accountid", "0")} \
         "
 EOT
   }
