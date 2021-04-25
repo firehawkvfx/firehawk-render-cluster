@@ -71,7 +71,7 @@ resource "null_resource" "provision_deadline_spot" {
     command     = <<EOT
       export SHOWCOMMANDS=true; set -x
       echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
-      cd ${path.module}/ansible
+      cd ${path.module}
       printf "\n...Waiting for consul deadlinedb service before attempting to configure.\n\n"
       until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
       set -x
