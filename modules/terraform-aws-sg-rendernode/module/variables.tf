@@ -1,9 +1,3 @@
-
-variable "name" {
-  description = "The name used to define resources in this module"
-  type        = string
-  default     = "rendernode"
-}
 variable "common_tags" {
   description = "A map of common tags to assign to the resources created by this module"
   type        = map(string)

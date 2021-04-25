@@ -13,10 +13,10 @@ locals {
 }
 resource "aws_security_group" "node_centos7_houdini" {
   # count       = var.create_vpc ? 1 : 0
-  name        = var.name
+  name        = local.name
   vpc_id      = data.aws_vpc.thisvpc.id
   description = "Vault client security group"
-  tags        = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags        = merge(map("Name", local.name), var.common_tags, local.extra_tags)
 
   # this should be further restricted in a production environment
   ingress {
