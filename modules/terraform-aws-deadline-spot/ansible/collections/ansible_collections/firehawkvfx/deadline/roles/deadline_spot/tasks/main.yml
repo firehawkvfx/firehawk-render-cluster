@@ -170,7 +170,7 @@
         ]
       ]}});'
   become: true
-  no_log: true
+  # no_log: true
   with_items:
   - insert
   - update
