@@ -86,18 +86,20 @@ locals {
   security_group_id                  = data.terraform_remote_state.rendernode_security_group.outputs.security_group_id
   config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
   override_config_template_file_path = "/home/ec2-user/config_template.json"
-  ubl_url=data.aws_ssm_parameter.ubl_url.value
+  ubl_url                            = data.aws_ssm_parameter.ubl_url.value
   # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
 }
 resource "null_resource" "provision_deadline_spot" {
-  count      = 1
+  count = 1
   triggers = {
     ami_id                  = local.ami_id
-    snapshot_id = local.snapshot_id
+    snapshot_id             = local.snapshot_id
     config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
-    deadline_spot_sha1      = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
-    deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
+    # deadline_spot_sha1      = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
+    # deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
     deadline_roles_tf_sha1  = sha1(local.instance_profile)
+    tf_files            = sha1(join("", [for f in fileset(path.module, "**.tf") : filesha1(f)])) # checksum all contents of this directory
+    yaml_files            = sha1(join("", [for f in fileset(path.module, "**.y*l") : filesha1(f)])) # checksum all contents of this directory
     # spot_access_key_id      = module.deadline.spot_access_key_id
     # spot_secret             = module.deadline.spot_secret
     volume_size = var.node_centos_volume_size
@@ -118,28 +120,28 @@ ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/in
 EOT
   }
 
-#   provisioner "local-exec" { # configure spot event plugin
-#     interpreter = ["/bin/bash", "-c"]
-#     command     = <<EOT
-# export SHOWCOMMANDS=true; set -x
-# echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
-# cd ${path.module}
-# printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
-# until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
-# set -x
-# ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=/home/ubuntu/config_generated.json \
-#   max_spot_capacity_engine=1 \
-#   max_spot_capacity_mantra=1 \
-#   volume_type=${var.node_centos_volume_type} \
-#   volume_size=${var.node_centos_volume_size} \
-#   ami_id=${local.ami_id} \
-#   snapshot_id=${local.snapshot_id} \
-#   subnet_id=${local.private_subnet_ids[0]} \
-#   spot_instance_profile_arn=${local.instance_profile} \
-#   security_group_id=${local.security_group_id} \
-#   aws_region=${data.aws_region.current.name} \
-#   aws_key_name=${var.aws_key_name} \
-#   account_id=${lookup(var.common_tags, "accountid", "0")}"
-# EOT
-#   }
+  provisioner "local-exec" { # configure spot event plugin
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<EOT
+export SHOWCOMMANDS=true; set -x
+echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
+cd ${path.module}
+printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
+until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
+set -x
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=/home/ubuntu/config_generated.json \
+  max_spot_capacity_engine=1 \
+  max_spot_capacity_mantra=1 \
+  volume_type=${var.node_centos_volume_type} \
+  volume_size=${var.node_centos_volume_size} \
+  ami_id=${local.ami_id} \
+  snapshot_id=${local.snapshot_id} \
+  subnet_id=${local.private_subnet_ids[0]} \
+  spot_instance_profile_arn=${local.instance_profile} \
+  security_group_id=${local.security_group_id} \
+  aws_region=${data.aws_region.current.name} \
+  aws_key_name=${var.aws_key_name} \
+  account_id=${lookup(var.common_tags, "accountid", "0")}"
+EOT
+  }
 }
