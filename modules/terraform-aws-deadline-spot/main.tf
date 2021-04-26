@@ -41,9 +41,21 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
 data "aws_ssm_parameter" "ubl_url" {
   name = "/firehawk/resourcetier/dev/ubl_url"
 }
-data "aws_ssm_parameter" "ubl_activation_code" {
+# data "aws_ssm_parameter" "ubl_activation_code" {
+#   name = "/firehawk/resourcetier/dev/ubl_activation_code"
+# }
+
+
+data "aws_secretsmanager_secret" "ubl_activation_code" {
   name = "/firehawk/resourcetier/dev/ubl_activation_code"
 }
+data "aws_secretsmanager_secret_version" "ubl_activation_code" {
+  secret_id = data.aws_secretsmanager_secret.ubl_activation_code.id
+}
+output "ubl_activation_code" {
+  value = data.aws_secretsmanager_secret_version.ubl_activation_code.secret_string
+}
+
 variable "ebs_empty_map" {
   type = map(string)
   default = {
@@ -75,7 +87,7 @@ locals {
   config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
   override_config_template_file_path = "/home/ec2-user/config_template.json"
   ubl_url=data.aws_ssm_parameter.ubl_url.value
-  ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
+  # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
 }
 resource "null_resource" "provision_deadline_spot" {
   count      = 1
@@ -92,19 +104,19 @@ resource "null_resource" "provision_deadline_spot" {
     volume_type = var.node_centos_volume_type
   }
 
-  provisioner "local-exec" { # configure deadline groups and UBL
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<EOT
-export SHOWCOMMANDS=true; set -x
-echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline groups / UBL"
-cd ${path.module}
-printf "\n...Waiting for consul deadlinedb service before attempting to configure groups / UBL.\n\n"
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
-set -x
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_config.yaml -v --extra-vars "ubl_url=${data.aws_ssm_parameter.ubl_url.value} \
-  ubl_activation_code=${data.aws_ssm_parameter.ubl_activation_code.value}"
-EOT
-  }
+#   provisioner "local-exec" { # configure deadline groups and UBL
+#     interpreter = ["/bin/bash", "-c"]
+#     command     = <<EOT
+# export SHOWCOMMANDS=true; set -x
+# echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline groups / UBL"
+# cd ${path.module}
+# printf "\n...Waiting for consul deadlinedb service before attempting to configure groups / UBL.\n\n"
+# until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
+# set -x
+# ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_config.yaml -v --extra-vars "ubl_url=${data.aws_ssm_parameter.ubl_url.value} \
+#   ubl_activation_code=${data.aws_ssm_parameter.ubl_activation_code.value}"
+# EOT
+#   }
 
   provisioner "local-exec" { # configure spot event plugin
     interpreter = ["/bin/bash", "-c"]
