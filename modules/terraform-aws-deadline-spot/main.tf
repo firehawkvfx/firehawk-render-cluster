@@ -124,7 +124,8 @@ EOT
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
 export SHOWCOMMANDS=true; set -x
-export config_output_dir=$HOME
+export config_output_dir=$HOME/firehawk
+mkdir -p "$config_output_dir"
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
 cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
