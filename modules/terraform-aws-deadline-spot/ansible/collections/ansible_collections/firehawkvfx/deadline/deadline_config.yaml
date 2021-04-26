@@ -10,6 +10,6 @@
 
   roles:
   - role: 'firehawkvfx.deadline.deadline_db_check'
-  - role: 'firehawkvfx.deadline.deadline_groups'
-  - role: 'firehawkvfx.deadline.deadline_ubl'
+  - role: 'firehawkvfx.deadline.deadline_groups' # add groups
+  - role: 'firehawkvfx.deadline.deadline_ubl' # enable ubl
   - role: 'firehawkvfx.deadline.deadline_db_check'
