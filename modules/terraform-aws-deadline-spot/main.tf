@@ -124,12 +124,14 @@ EOT
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
 export SHOWCOMMANDS=true; set -x
+export config_output_dir=$HOME
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
 cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
 set -x
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=/home/ubuntu/config_generated.json \
+  config_output_dir=$config_output_dir
   max_spot_capacity_engine=1 \
   max_spot_capacity_mantra=1 \
   volume_type=${var.node_centos_volume_type} \

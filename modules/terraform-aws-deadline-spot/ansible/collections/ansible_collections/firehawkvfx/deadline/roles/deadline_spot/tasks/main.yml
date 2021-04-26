@@ -68,7 +68,7 @@
 - name: 'Copy to /home/{{ ansible_user }}/'
   fetch:
     src: "{{ config_generated_json }}"
-    dest: "/home/{{ ansible_user }}/"
+    dest: "{{ config_output_dir }}"
 
 # to list collections-
 # show collections;
