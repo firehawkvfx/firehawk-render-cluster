@@ -1,6 +1,12 @@
+- name: get groups
+  shell: |
+    /opt/Thinkbox/Deadline10/bin/deadlinecommand GetGroupNames
+  register: result
+
 - name: add groups
   shell: |
     /opt/Thinkbox/Deadline10/bin/deadlinecommand -AddGroup {{ item }}
+  when: 'item | string not in result.stdout'
   with_items:
   - local
   - cloud
