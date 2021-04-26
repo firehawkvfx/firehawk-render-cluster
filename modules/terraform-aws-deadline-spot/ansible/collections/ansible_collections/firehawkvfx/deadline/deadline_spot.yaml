@@ -7,6 +7,7 @@
     package_python_interpreter: /usr/bin/python3
     config_generated_json:
     aws_region:
+    config_output_dir:
 
   roles:
   - {role: 'firehawkvfx.deadline.deadline_spot', tags: 'update'}
