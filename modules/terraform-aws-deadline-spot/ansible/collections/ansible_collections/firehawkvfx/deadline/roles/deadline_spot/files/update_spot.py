@@ -5,7 +5,7 @@ import json
 from Deadline.Scripting import ClientUtils, RepositoryUtils
 
 try:
-    with open('data.txt') as json_file:
+    with open('/home/ubuntu/config_generated.json') as json_file:
         config = json.load(json_file)
     config = str({"test":"test"})
     configs = json.loads(config)
