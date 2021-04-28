@@ -85,7 +85,7 @@
 - name: exec spot template - json
   shell: | 
     # set -x
-    cd /opt/Thinkbox/Deadline10
+    cd /opt/Thinkbox/Deadline10/bin
     deadlinecommand -ExecuteScriptNoGui "/home/{{ ansible_user }}/update_spot.py"
   become: true
 
