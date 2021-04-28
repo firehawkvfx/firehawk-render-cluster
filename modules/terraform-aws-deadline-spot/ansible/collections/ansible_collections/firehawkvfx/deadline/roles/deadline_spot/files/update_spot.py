@@ -1,8 +1,9 @@
+import json
+from Deadline.Scripting import ClientUtils, RepositoryUtils
+
 # execute with:
 # deadlinecommand -ExecuteScriptNoGui "update_spot.py"
 
-import json
-from Deadline.Scripting import ClientUtils, RepositoryUtils
 
 try:
     with open('/home/ubuntu/config_generated.json') as json_file:
@@ -14,4 +15,5 @@ try:
 
     RepositoryUtils.AddOrUpdateServerData("event.plugin.spot", "Config", json.dumps(configs))
 except Exception as e:
+    print(e)
     raise e
