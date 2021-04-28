@@ -86,7 +86,7 @@
   shell: | 
     # set -x
     cd /opt/Thinkbox/Deadline10/bin
-    ./deadlinecommand -ExecuteScriptNoGui "/home/{{ ansible_user }}/update_spot.py"
+    ./deadlinecommand -ExecuteScriptNoGui "/home/{{ ansible_user }}/update_spot.py --template-path /home/ubuntu/config_generated.json"
   become: true
 
 
