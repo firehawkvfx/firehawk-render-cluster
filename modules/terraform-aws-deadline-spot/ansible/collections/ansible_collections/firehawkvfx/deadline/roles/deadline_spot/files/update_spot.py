@@ -8,8 +8,6 @@ def __main__():
     try:
         with open('/home/ubuntu/config_generated.json') as json_file:
             configs = json.load(json_file)
-            # config = str({"test":"test"})
-            # configs = json.loads(config)
             if not configs:
                 raise Exception("No Spot Fleet Request Configuration found.")
 
