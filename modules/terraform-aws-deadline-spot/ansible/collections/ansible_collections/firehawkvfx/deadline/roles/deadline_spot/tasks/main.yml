@@ -65,7 +65,7 @@
     src: "{{ config_template }}"
     dest: "{{ config_generated_json }}"
 
-- name: 'Copy to /home/{{ ansible_user }}/'
+- name: 'Copy to config output dir'
   fetch:
     src: "{{ config_generated_json }}"
     dest: "{{ config_output_dir }}"
@@ -80,13 +80,13 @@
 - name: copy update_spot.py
   copy:
     src: "{{ update_spot }}"
-    dest: "{{ config_output_dir }}"
+    dest: "/home/{{ ansible_user }}/"
 
 - name: exec spot template - json
   shell: | 
     # set -x
     cd /opt/Thinkbox/Deadline10
-    deadlinecommand -ExecuteScriptNoGui "{{ config_output_dir }}/update_spot.py"
+    deadlinecommand -ExecuteScriptNoGui "/home/{{ ansible_user }}/update_spot.py"
   become: true
 
 
