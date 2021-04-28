@@ -16,7 +16,7 @@
 
 - name: show output
   debug:
-    msg: "{{ deadline_ubl.stdout }}"
+    var: deadline_ubl
   when: ubl_url
 
 
