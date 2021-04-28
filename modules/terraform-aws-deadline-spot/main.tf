@@ -92,14 +92,14 @@ locals {
 resource "null_resource" "provision_deadline_spot" {
   count = 1
   triggers = {
-    ami_id                  = local.ami_id
-    snapshot_id             = local.snapshot_id
-    config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
+    ami_id               = local.ami_id
+    snapshot_id          = local.snapshot_id
+    config_template_sha1 = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
     # deadline_spot_sha1      = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml"))
     # deadline_spot_role_sha1 = sha1(file("${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/tasks/main.yml"))
-    deadline_roles_tf_sha1  = sha1(local.instance_profile)
-    tf_files            = sha1(join("", [for f in fileset(path.module, "**.tf") : filesha1(f)])) # checksum all contents of this directory
-    yaml_files            = sha1(join("", [for f in fileset(path.module, "**.y*l") : filesha1(f)])) # checksum all contents of this directory
+    deadline_roles_tf_sha1 = sha1(local.instance_profile)
+    tf_files               = sha1(join("", [for f in fileset(path.module, "**.tf") : filesha1(f)]))  # checksum all contents of this directory
+    yaml_files             = sha1(join("", [for f in fileset(path.module, "**.y*l") : filesha1(f)])) # checksum all contents of this directory
     # spot_access_key_id      = module.deadline.spot_access_key_id
     # spot_secret             = module.deadline.spot_secret
     volume_size = var.node_centos_volume_size

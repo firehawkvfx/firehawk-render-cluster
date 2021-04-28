@@ -70,6 +70,26 @@
     src: "{{ config_generated_json }}"
     dest: "{{ config_output_dir }}"
 
+- name: show first existing file or ignore if none do
+  set_fact:
+    update_spot: "{{ lookup('first_found', findme) }}"
+  vars:
+    findme:
+      - "update_spot.py"
+
+- name: copy update_spot.py
+  copy:
+    src: "{{ update_spot }}"
+    dest: "{{ config_output_dir }}"
+
+- name: exec spot template - json
+  shell: | 
+    # set -x
+    cd /opt/Thinkbox/Deadline10
+    deadlinecommand -ExecuteScriptNoGui "{{ config_output_dir }}/update_spot.py"
+  become: true
+
+
 # to list collections-
 # show collections;
 
