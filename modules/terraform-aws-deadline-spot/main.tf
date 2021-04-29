@@ -132,7 +132,7 @@ cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
 set -x
-ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$remote_config_output_dir/config_generated.json \
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$remote_config_output_dir/config_generated.json \
   deadlineuser_name=${var.deadlineuser_name} \
   local_config_output_dir=$local_config_output_dir \
   remote_config_output_dir=$remote_config_output_dir \
