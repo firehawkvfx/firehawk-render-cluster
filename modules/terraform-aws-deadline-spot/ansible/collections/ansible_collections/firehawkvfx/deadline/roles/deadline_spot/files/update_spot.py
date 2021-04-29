@@ -1,20 +1,15 @@
-import json
+import os, json
 from Deadline.Scripting import ClientUtils, RepositoryUtils
 
 # execute with:
 # deadlinecommand -ExecuteScriptNoGui "update_spot.py"
 
-import argparse
-
 def __main__():
     try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--template-path', help='The path to your spot fleet template to configure deadline with')
-        args = parser.parse_args()
-        print('template path: {}'.format(args))
-
-        with open('/home/ubuntu/config_generated.json') as json_file:
-            configs = json.load(json_file)
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        config_generated = os.path.join(script_dir, 'config_generated.json' )
+        with open( config_generated ) as json_file:
+            configs = json.load( json_file )
             if not configs:
                 raise Exception("No Spot Fleet Request Configuration found.")
 

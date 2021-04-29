@@ -80,13 +80,13 @@
 - name: copy update_spot.py
   copy:
     src: "{{ update_spot }}"
-    dest: "/home/{{ ansible_user }}/"
+    dest: "{{ config_output_dir }}/"
 
 - name: exec spot template - json
   shell: | 
     # set -x
     cd /opt/Thinkbox/Deadline10/bin
-    ./deadlinecommand -ExecuteScriptNoGui "/home/{{ ansible_user }}/update_spot.py --template-path /home/ubuntu/config_generated.json"
+    ./deadlinecommand -ExecuteScriptNoGui "{{ config_output_dir }}/update_spot.py"
   become: true
 
 
