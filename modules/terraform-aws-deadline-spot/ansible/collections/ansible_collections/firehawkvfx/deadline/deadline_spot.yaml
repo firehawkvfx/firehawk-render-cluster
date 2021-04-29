@@ -5,6 +5,7 @@
 
   vars:
     package_python_interpreter: /usr/bin/python3
+    deadlineuser_name:
     config_generated_json:
     aws_region:
     local_config_output_dir:

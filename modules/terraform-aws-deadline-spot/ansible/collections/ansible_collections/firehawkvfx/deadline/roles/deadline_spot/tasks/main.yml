@@ -60,6 +60,15 @@
 - debug:
     var: config_template
 
+- name: Create dir
+  file: 
+    path: "{{ remote_config_output_dir }}"
+    state: directory
+    # mode: u=rwX,g=rX,o-rwx
+    owner: "{{ deadlineuser_name }}"
+    # group: syscontrol
+  become: true
+
 - name: generate spot fleet config from template
   template:
     src: "{{ config_template }}"
