@@ -39,3 +39,8 @@ variable "deadlineuser_name" {
   type = string
   default = "deadlineuser"
 }
+
+variable "deadline_db_instance_id" {
+  description = "The instance ID running deadline DB.  When this changes it must be provisioned again."
+  type = string
+}

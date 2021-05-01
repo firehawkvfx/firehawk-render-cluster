@@ -92,6 +92,7 @@ locals {
 resource "null_resource" "provision_deadline_spot" {
   count = 1
   triggers = {
+    deadline_db_instance_id = var.deadline_db_instance_id
     ami_id               = local.ami_id
     snapshot_id          = local.snapshot_id
     config_template_sha1 = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
