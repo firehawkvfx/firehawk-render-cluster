@@ -1,51 +1,3 @@
-# - name: install expect module
-#   package:
-#     name: expect
-#   become: true
-#   vars:
-#     ansible_python_interpreter: "{{ package_python_interpreter }}"
-
-# - name: "Keybase: Run expect to wait for a keybase pass and decrypt - first time is dirty output."
-#   shell: |
-#     /deployuser/scripts/pgp-expect-keybase.sh {{ keybase_secret | regex_escape() }} {{ spot_secret | regex_escape() }}
-#   become_user: deployuser
-#   connection: local
-#   no_log: true
-#   when: "'keybase:' in pgp_public_key"
-
-# - name: "Keybase: Run expect to wait for a keybase pass and decrypt - collect output."
-#   shell: |
-#     /deployuser/scripts/pgp-expect-keybase.sh {{ keybase_secret | regex_escape() }} {{ spot_secret | regex_escape() }}
-#   become_user: deployuser
-#   connection: local
-#   register: spot_secret_output
-#   no_log: true
-#   when: "'keybase:' in pgp_public_key"
-
-# - set_fact:
-#     spot_secret_key: "{{ spot_secret_output.stdout }}"
-#   when: spot_secret_output.changed
-#   no_log: true
-
-# - name: "GPG: Run expect to wait for a pgp pass and decrypt - collect output."
-#   shell: |
-#     echo {{ spot_secret | regex_escape() }} | base64 --decode | gpg -dq --no-tty --passphrase {{ pgp_secret | regex_escape() }} --no-use-agent
-#   become_user: deployuser
-#   connection: local
-#   register: spot_secret_output
-#   no_log: true
-#   when: "'keybase:' not in pgp_public_key"
-
-# - set_fact:
-#     spot_secret_key: "{{ spot_secret_output.stdout }}"
-#   when: spot_secret_output.changed
-#   no_log: true
-
-# - fail:
-#     msg: "invalid output from keybase expect"
-#   when: '" " in spot_secret_key or spot_secret_key ==""'
-#   no_log: true
-
 - debug:
     msg: "warning, multiple subnets in the json spot fleet template may cause errors"
 
@@ -98,6 +50,50 @@
     ./deadlinecommand -ExecuteScriptNoGui "{{ remote_config_output_dir }}/update_spot.py"
   become: true
 
+- name: Enable spot plugin
+  shell: | 
+    # set -x
+    cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
+    ./{{ mongo_executable }} --eval '
+      db.EventPluginSettingsCollection.update({"_id": "spot"},{$set:{"PluginEnabled": "1"}});'
+  become: true
+
+- name: Spot plugin config
+  shell: | 
+    # set -x
+    cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
+    ./{{ mongo_executable }} --eval '
+      db.EventPluginSettingsCollection.update({"_id": "spot"},{$set:{"PluginEnabled": "1"}});
+
+      db.EventPluginSettingsCollection.update(
+        { "_id" : "spot" },
+        {
+          "$set" : {
+            "DlInit.$[element]" : [ "{{ item.key }}", "{{ item.value }}"]
+          }
+        },
+        {
+          "arrayFilters": [
+            { "element.0" : "{{ item.key }}" } 
+          ]
+        }
+      )'
+  become: true
+  # no_log: true
+  with_items:
+  - { key: "State", value: "Global Enabled" }
+  - { key: "ResourceTracker", value: "True" }
+  - { key: "UseLocalCredentials", value: "False" }
+  - { key: "AccessID", value: "" }
+  - { key: "SecretKey", value: "" } # This must be blank for the instance profile to function.
+  - { key: "Logging", value: "Verbose" }
+  - { key: "Region", value: "{{ aws_region }}" }
+  - { key: "IdleShutdown", value: "2" }
+  - { key: "DeleteTerminatedSlaves", value: "True" }
+  - { key: "StrictHardCap", value: "True" }
+  - { key: "StaggerInstances", value: "{{ stagger_instances }}" }
+  - { key: "PreJobTaskMode", value: "Conservative" }
+  - { key: "AWSInstanceStatus", value: "Disabled" }
 
 # to list collections-
 # show collections;
@@ -135,76 +131,3 @@
 # to query db entries ue something like - > db.EventPluginSettingsCollection.find({"_id": "spot"})
 # > db.EventPluginSettingsCollection.find({"_id": "spot"})
 # { "_id" : "spot", "LastWriteTime" : ISODate("2019-12-16T11:04:30.499Z"), "Name" : "Spot", "PluginEnabled" : 1, "DebugLogging" : false, "Icon" : null, "Limits" : [ ], "DlInit" : [ [ "State", "Disabled" ], [ "ResourceTracker", "True" ], [ "AccessID", "" ], [ "SecretKey", "" ], [ "Logging", "Standard" ], [ "Region", "us-west-2" ], [ "Config", "{}" ], [ "IdleShutdown", "10" ], [ "DeleteTerminatedSlaves", "False" ], [ "DeleteInterruptedSlaves", "False" ], [ "StrictHardCap", "True" ], [ "StaggerInstances", "50" ], [ "PreJobTaskMode", "Conservative" ], [ "AWSInstanceStatus", "Disabled" ] ], "Meta" : {  } }
-
-# - name: init spot template - json
-#   shell: | 
-#     # set -x
-#     cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
-#     ./{{ mongo_executable }} --eval '
-#       var StaggerInstances = "50";
-#       var IdleShutdown = "2";
-#       var spot_json = cat("{{ config_generated_json }}");
-#       db.EventPluginSettingsCollection.{{ item }}({"_id": "spot"},{$set:{"PluginEnabled": "1"}});
-#       db.EventPluginSettingsCollection.{{ item }}({"_id": "spot"},{$set:{"DlInit": [
-#         [
-#           "State",
-#           "Global Enabled"
-#         ],
-#         [
-#           "ResourceTracker",
-#           "True"
-#         ],
-#         [
-#           "AccessID",
-#           ""
-#         ],
-#         [
-#           "SecretKey",
-#           ""
-#         ],
-#         [
-#           "Logging",
-#           "Verbose"
-#         ],
-#         [
-#           "Region",
-#           "{{ aws_region }}"
-#         ],
-#         [
-#           "Config",
-#           spot_json
-#         ],
-#         [
-#           "IdleShutdown",
-#           IdleShutdown
-#         ],
-#         [
-#           "DeleteTerminatedSlaves",
-#           "True"
-#         ],
-#         [
-#           "DeleteInterruptedSlaves",
-#           "False"
-#         ],
-#         [
-#           "StrictHardCap",
-#           "True"
-#         ],
-#         [
-#           "StaggerInstances",
-#           StaggerInstances
-#         ],
-#         [
-#           "PreJobTaskMode",
-#           "Conservative"
-#         ],
-#         [
-#           "AWSInstanceStatus",
-#           "Disabled"
-#         ]
-#       ]}});'
-#   become: true
-#   # no_log: true
-#   with_items:
-#   - insert
-#   - update
