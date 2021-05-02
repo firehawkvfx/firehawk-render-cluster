@@ -19,5 +19,5 @@ dependencies {
 }
 
 terraform {
-  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-vpn?ref=v0.0.1"
+  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-vpn?ref=config-deadline-spot"
 }
