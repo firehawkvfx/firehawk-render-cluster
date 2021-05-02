@@ -1,4 +1,4 @@
-# The user data for initialising render nodes.  This may be used in spot fleets or on demand instance types. 
+# The user data for initialising render nodes.  This may be used in spot fleets or on demand instance types. base 64 encoding is preffered for output.
 
 locals {
   resourcetier           = var.common_tags["resourcetier"]
