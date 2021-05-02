@@ -11,6 +11,7 @@
     local_config_output_dir:
     remote_config_output_dir:
     user_data:
+    # user_data: "{{ lookup('file', ./user_data_base64) }}"
 
   roles:
   - {role: 'firehawkvfx.deadline.deadline_spot', tags: 'update'}

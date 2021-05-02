@@ -93,15 +93,15 @@ resource "null_resource" "provision_deadline_spot" {
   count = 1
   triggers = {
     deadline_db_instance_id = var.deadline_db_instance_id
-    ami_id               = local.ami_id
-    snapshot_id          = local.snapshot_id
-    config_template_sha1 = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
-    deadline_roles_tf_sha1 = sha1(local.instance_profile)
-    tf_files               = sha1(join("", [for f in fileset(path.module, "**.tf") : filesha1(f)]))  # checksum all contents of this directory
-    yaml_files             = sha1(join("", [for f in fileset(path.module, "**.y*l") : filesha1(f)])) # checksum all contents of this directory
-    volume_size = var.node_centos_volume_size
-    volume_type = var.node_centos_volume_type
-    user_data = var.user_data
+    ami_id                  = local.ami_id
+    snapshot_id             = local.snapshot_id
+    config_template_sha1    = sha1(file(fileexists(local.override_config_template_file_path) ? local.override_config_template_file_path : local.config_template_file_path))
+    deadline_roles_tf_sha1  = sha1(local.instance_profile)
+    tf_files                = sha1(join("", [for f in fileset(path.module, "**.tf") : filesha1(f)]))  # checksum all contents of this directory
+    yaml_files              = sha1(join("", [for f in fileset(path.module, "**.y*l") : filesha1(f)])) # checksum all contents of this directory
+    volume_size             = var.node_centos_volume_size
+    volume_type             = var.node_centos_volume_type
+    user_data               = var.user_data
   }
 
   provisioner "local-exec" { # configure deadline groups and UBL
@@ -147,8 +147,9 @@ ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/invent
   security_group_id=${local.security_group_id} \
   aws_region=${data.aws_region.current.name} \
   aws_key_name=${var.aws_key_name} \
-  account_id=${lookup(var.common_tags, "accountid", "0")}" \
-  user_data=${var.user_data} \
+  account_id=${lookup(var.common_tags, "accountid", "0")} \
+  user_data=${var.user_data}"
+
 EOT
   }
 }
