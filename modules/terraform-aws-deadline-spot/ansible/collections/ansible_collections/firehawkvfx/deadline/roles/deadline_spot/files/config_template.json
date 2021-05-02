@@ -149,6 +149,8 @@
     "ValidFrom": "2021-05-02T00:24:46Z",
     "ValidUntil": "2022-05-02T00:24:46Z",
     "TerminateInstancesWithExpiration": true,
+    "InstanceInterruptionBehavior": "terminate",
+    "SpotInstanceType": "persistent",
     "LaunchSpecifications": [
       {
         "ImageId": "{{ ami_id }}",
