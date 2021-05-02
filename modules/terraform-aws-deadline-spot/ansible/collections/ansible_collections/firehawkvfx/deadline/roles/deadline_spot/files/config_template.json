@@ -12,6 +12,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5a.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "3.456",
         "IamInstanceProfile": {
@@ -38,6 +39,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5d.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "4.544",
         "IamInstanceProfile": {
@@ -64,6 +66,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5d.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "5.568",
         "IamInstanceProfile": {
@@ -90,6 +93,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5a.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "4.352",
         "IamInstanceProfile": {
@@ -116,6 +120,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "c5.18xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "3.996",
         "IamInstanceProfile": {
@@ -156,6 +161,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.48",
         "IamInstanceProfile": {
@@ -182,6 +188,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5d.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.696",
         "IamInstanceProfile": {
@@ -208,6 +215,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.604",
         "IamInstanceProfile": {
@@ -234,6 +242,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.4xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 2,
         "SpotPrice": "0.48",
@@ -261,6 +270,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.8xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 4,
         "SpotPrice": "0.48",
@@ -300,6 +310,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5a.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "3.456",
         "IamInstanceProfile": {
@@ -326,6 +337,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5d.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "4.544",
         "IamInstanceProfile": {
@@ -352,6 +364,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5d.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "5.568",
         "IamInstanceProfile": {
@@ -378,6 +391,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5a.16xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "4.352",
         "IamInstanceProfile": {
@@ -404,6 +418,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "c5.18xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "3.996",
         "IamInstanceProfile": {
@@ -442,6 +457,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "t3a.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.3802",
         "IamInstanceProfile": {
@@ -468,6 +484,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "t3.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.4204",
         "IamInstanceProfile": {
@@ -494,6 +511,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r4.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.638",
         "IamInstanceProfile": {
@@ -520,6 +538,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.48",
         "IamInstanceProfile": {
@@ -546,6 +565,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5d.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.696",
         "IamInstanceProfile": {
@@ -572,6 +592,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.604",
         "IamInstanceProfile": {
@@ -598,6 +619,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.4xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 2,
         "SpotPrice": "0.48",
@@ -625,6 +647,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5a.8xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 4,
         "SpotPrice": "0.432",
@@ -652,6 +675,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.8xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 4,
         "SpotPrice": "0.48",
@@ -691,6 +715,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "t3a.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.3802",
         "IamInstanceProfile": {
@@ -717,6 +742,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "t3.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.4204",
         "IamInstanceProfile": {
@@ -743,6 +769,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r4.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.638",
         "IamInstanceProfile": {
@@ -769,6 +796,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.48",
         "IamInstanceProfile": {
@@ -795,6 +823,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5d.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.696",
         "IamInstanceProfile": {
@@ -821,6 +850,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "r5.2xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "SpotPrice": "0.604",
         "IamInstanceProfile": {
@@ -847,6 +877,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.4xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 2,
         "SpotPrice": "0.48",
@@ -874,6 +905,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5a.8xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 4,
         "SpotPrice": "0.432",
@@ -901,6 +933,7 @@
         "ImageId": "{{ ami_id }}",
         "InstanceType": "m5.8xlarge",
         "SubnetId": "{{ subnet_id }}",
+        "UserData": "{{ user_data }}",
         "KeyName": "{{ aws_key_name }}",
         "WeightedCapacity": 4,
         "SpotPrice": "0.48",

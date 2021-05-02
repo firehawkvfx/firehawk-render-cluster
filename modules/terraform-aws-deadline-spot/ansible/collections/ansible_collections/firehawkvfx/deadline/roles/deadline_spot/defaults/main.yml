@@ -4,3 +4,4 @@ mongo_executable: deadline_mongo
 max_spot_capacity_engine: 1
 max_spot_capacity_mantra: 1
 stagger_instances: 5
+user_data:
