@@ -19,3 +19,7 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+variable "bucket_extension" {
+  description = "The bucket extension where the software installers reside"
+  type        = string
+}
