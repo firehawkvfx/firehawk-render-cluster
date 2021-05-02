@@ -166,5 +166,10 @@ vault token revoke -self
 # chmod u+x $installer_path
 # sudo -i -u $deadlineuser_name installers_bucket="$installers_bucket" deadlineuser_name="$deadlineuser_name" deadline_version="$deadline_version" $installer_path
 
-sudo service deadline10launcher restart
+houdini_license_server_address="${houdini_license_server_address}"
+if [[ ! -z "$houdini_license_server_address" ]]; then
+  hserver -S $houdini_license_server_address
+  hserver -l
+fi
 
+sudo service deadline10launcher restart

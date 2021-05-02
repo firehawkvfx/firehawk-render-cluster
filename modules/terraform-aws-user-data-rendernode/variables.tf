@@ -23,3 +23,7 @@ variable "bucket_extension" {
   description = "The bucket extension where the software installers reside"
   type        = string
 }
+variable "houdini_license_server_address" {
+  description = "The IP or host name of your Houdini license server (IP Address is recommended to simplify usage across sites instead of DNS)."
+  type        = string
+}
