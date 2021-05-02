@@ -168,6 +168,8 @@ vault token revoke -self
 
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ ! -z "$houdini_license_server_address" ]]; then
+  cd /opt/hfs${houdini_major_version}
+  source ./houdini_setup
   hserver -S $houdini_license_server_address
   hserver -l
 fi

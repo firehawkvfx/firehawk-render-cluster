@@ -29,5 +29,6 @@ data "template_file" "user_data_auth_client" {
     client_cert_vault_path = local.client_cert_vault_path
     
     houdini_license_server_address = var.houdini_license_server_address
+    houdini_major_version = "18.5" # TODO: this should be aquired from an AMI tag
   }
 }
