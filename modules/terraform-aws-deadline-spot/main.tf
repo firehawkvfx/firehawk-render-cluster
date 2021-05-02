@@ -150,7 +150,8 @@ ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/invent
   security_group_id=${local.security_group_id} \
   aws_region=${data.aws_region.current.name} \
   aws_key_name=${var.aws_key_name} \
-  account_id=${lookup(var.common_tags, "accountid", "0")}"
+  account_id=${lookup(var.common_tags, "accountid", "0")}" \
+  user_data=${var.user_data} \
 EOT
   }
 }

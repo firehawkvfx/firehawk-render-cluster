@@ -10,6 +10,7 @@
     aws_region:
     local_config_output_dir:
     remote_config_output_dir:
+    user_data:
 
   roles:
   - {role: 'firehawkvfx.deadline.deadline_spot', tags: 'update'}

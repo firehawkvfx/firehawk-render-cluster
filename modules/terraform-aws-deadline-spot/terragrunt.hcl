@@ -6,6 +6,12 @@ locals {
   common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 }
 
+dependency "terraform-aws-user-data-rendernode" {
+  config_path = "../terraform-aws-user-data-rendernode"
+  mock_outputs = {
+    user_data = "fake-user-data"
+  }
+}
 
 dependency "terraform-aws-deadline-db" {
   config_path = "../terraform-aws-deadline-db"
@@ -18,6 +24,7 @@ inputs = merge(
   local.common_vars.inputs,
   {
     deadline_db_instance_id          = dependency.terraform-aws-deadline-db.outputs.id
+    user_data          = dependency.terraform-aws-user-data-rendernode.outputs.user_data_base64
   }
 )
 

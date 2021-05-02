@@ -33,14 +33,16 @@ variable "bucket_extension" {
     description = "The bucket extension where the software installers reside"
     type = string
 }
-
 variable "deadlineuser_name" {
   description = "The deadline user name for render nodes and deadline DB"
   type = string
   default = "deadlineuser"
 }
-
 variable "deadline_db_instance_id" {
   description = "The instance ID running deadline DB.  When this changes it must be provisioned again."
+  type = string
+}
+variable "user_data" {
+  description = "The user data for the render node"
   type = string
 }
