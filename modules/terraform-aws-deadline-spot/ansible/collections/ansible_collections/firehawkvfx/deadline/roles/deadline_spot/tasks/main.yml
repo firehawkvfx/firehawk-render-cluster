@@ -95,6 +95,12 @@
   - { key: "PreJobTaskMode", value: "Conservative" }
   - { key: "AWSInstanceStatus", value: "Disabled" }
 
+- name: Restart service deadline10launcher
+  service:
+    name: deadline10launcher
+    state: restarted
+  become: true
+
 # to list collections-
 # show collections;
 
