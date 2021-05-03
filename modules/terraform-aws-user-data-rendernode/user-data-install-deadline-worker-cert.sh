@@ -173,11 +173,7 @@ if [[ ! -z "$houdini_license_server_address" ]]; then
   cd /opt/hfs${houdini_major_version}
   set +x
   echo "source ./houdini_setup"
-  source ./houdini_setup
-  set -x
-  hserver
-  hserver -S $houdini_license_server_address
-  hserver -l
+  sudo -i -u $deadlineuser_name bash -c "source ./houdini_setup; hserver -S $houdini_license_server_address; hserver -l"
 else
   echo "Skippping setting of Houdiini license server."
 fi
