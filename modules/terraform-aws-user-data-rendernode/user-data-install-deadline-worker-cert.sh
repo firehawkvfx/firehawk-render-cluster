@@ -169,11 +169,8 @@ vault token revoke -self
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ ! -z "$houdini_license_server_address" ]]; then
   echo "Set Houdini license server to: $houdini_license_server_address"
-  set -x
-  cd /opt/hfs${houdini_major_version}
-  set +x
   echo "source ./houdini_setup"
-  sudo -i -u $deadlineuser_name bash -c "source ./houdini_setup; hserver -S $houdini_license_server_address; hserver -l"
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver -S $houdini_license_server_address; hserver -l"
 else
   echo "Skippping setting of Houdiini license server."
 fi
