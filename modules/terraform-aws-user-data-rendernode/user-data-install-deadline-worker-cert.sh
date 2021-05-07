@@ -189,7 +189,7 @@ if [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; the
   chmod u=rwX,g=rwX,o=rwX "$prod_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  echo "$onsite_nfs_mount_target /prod none defaults,bind 0 0"
+  echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" # This mount should be the fastest mount available.
   echo "...Mounting."
   mount -a
   echo "...Finished NFS mount."
