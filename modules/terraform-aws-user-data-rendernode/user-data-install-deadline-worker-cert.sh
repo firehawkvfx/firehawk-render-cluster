@@ -158,15 +158,6 @@ chmod u=rw,g=rw,o-rwx $client_cert_file_path
 echo "Revoking vault token..."
 vault token revoke -self
 
-# ### Install Deadline
-# # Client
-# mkdir -p "$(dirname $installer_path)"
-# aws s3api get-object --bucket "$installers_bucket" --key "$installer_file" "$installer_path"
-# chown $deadlineuser_name:$deadlineuser_name $installer_path
-# chmod u+x $installer_path
-# sudo -i -u $deadlineuser_name installers_bucket="$installers_bucket" deadlineuser_name="$deadlineuser_name" deadline_version="$deadline_version" $installer_path
-
-yum install nc -y
 
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ ! -z "$houdini_license_server_address" ]]; then
@@ -201,7 +192,7 @@ if [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; the
   df -h
 fi
 
-sudo service deadline10launcher restart
+service deadline10launcher restart
 set +x
 
 # Leave the following newline at the end of this template
