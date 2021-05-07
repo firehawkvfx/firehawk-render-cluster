@@ -168,7 +168,6 @@ vault token revoke -self
 
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ ! -z "$houdini_license_server_address" ]]; then
-
   sudo yum install nc -y
   echo "...Wait until license server is reachable"
   until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
@@ -176,7 +175,7 @@ if [[ ! -z "$houdini_license_server_address" ]]; then
   echo "source ./houdini_setup and set hserver to: $houdini_license_server_address"
   set -x
   sudo -i -u $deadlineuser_name bash -c "echo \"serverhost=$houdini_license_server_address\" | sudo tee /home/$deadlineuser_name/.sesi_licenses.pref"
-  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver -l"
   set +x
 else
   echo "Skippping setting of Houdiini license server."
