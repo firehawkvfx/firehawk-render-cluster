@@ -166,9 +166,10 @@ vault token revoke -self
 # chmod u+x $installer_path
 # sudo -i -u $deadlineuser_name installers_bucket="$installers_bucket" deadlineuser_name="$deadlineuser_name" deadline_version="$deadline_version" $installer_path
 
+yum install nc -y
+
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ ! -z "$houdini_license_server_address" ]]; then
-  sudo yum install nc -y
   echo "...Wait until license server is reachable"
   until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
   echo "Set Houdini license server to: $houdini_license_server_address"
@@ -179,6 +180,25 @@ if [[ ! -z "$houdini_license_server_address" ]]; then
   set +x
 else
   echo "Skippping setting of Houdiini license server."
+fi
+
+echo "Determine if mounts should be altered..."
+onsite_nfs_export=${onsite_nfs_export}
+onsite_nfs_mount_target=${onsite_nfs_mount_target}
+
+if [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
+  onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
+  echo "...Wait until NFS server is reachable."
+  until nc -vzw 2 $onsite_nfs_host 2049; do sleep 2; done
+  echo "...Ensuring mount path exists."
+  mkdir -p "$onsite_nfs_mount_target"
+  chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
+  echo "...Configure /etc/fstab"
+  echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
+  echo "...Mounting."
+  mount -a
+  echo "...Finished NFS mount."
+  df -h
 fi
 
 sudo service deadline10launcher restart

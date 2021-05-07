@@ -12,6 +12,10 @@ data "template_file" "user_data_auth_client" {
     file("${path.module}/user-data-install-deadline-worker-cert.sh")
   )
   vars = {
+
+    onsite_nfs_export       = "192.168.92.11:/prod3"
+    onsite_nfs_mount_target = "/adl_prod"
+
     consul_cluster_tag_key   = var.consul_cluster_tag_key
     consul_cluster_tag_value = var.consul_cluster_name
     aws_internal_domain      = var.aws_internal_domain
@@ -27,8 +31,8 @@ data "template_file" "user_data_auth_client" {
 
     client_cert_file_path  = local.client_cert_file_path
     client_cert_vault_path = local.client_cert_vault_path
-    
+
     houdini_license_server_address = var.houdini_license_server_address
-    houdini_major_version = "18.5" # TODO: this should be aquired from an AMI tag
+    houdini_major_version          = "18.5" # TODO: this should be aquired from an AMI tag
   }
 }
