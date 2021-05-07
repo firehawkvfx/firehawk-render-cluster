@@ -175,7 +175,8 @@ if [[ ! -z "$houdini_license_server_address" ]]; then
   echo "Set Houdini license server to: $houdini_license_server_address"
   echo "source ./houdini_setup and set hserver to: $houdini_license_server_address"
   set -x
-  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -S $houdini_license_server_address && hserver -l"
+  sudo -i -u $deadlineuser_name bash -c "echo \"serverhost=$houdini_license_server_address\" | sudo tee /home/$deadlineuser_name/.sesi_licenses.pref"
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
   set +x
 else
   echo "Skippping setting of Houdiini license server."
