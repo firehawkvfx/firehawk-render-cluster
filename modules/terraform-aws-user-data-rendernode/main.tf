@@ -15,6 +15,7 @@ data "template_file" "user_data_auth_client" {
 
     onsite_nfs_export       = "192.168.92.11:/prod3"
     onsite_nfs_mount_target = "/adl_prod"
+    prod_mount_target       = "/prod"
 
     consul_cluster_tag_key   = var.consul_cluster_tag_key
     consul_cluster_tag_value = var.consul_cluster_name
