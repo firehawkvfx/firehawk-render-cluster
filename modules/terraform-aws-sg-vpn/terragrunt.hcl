@@ -13,7 +13,7 @@ dependencies {
 }
 
 terraform {
-  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-sg-vpn?ref=rendervpc-vpn"
+  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-sg-vpn?ref=v0.0.10"
 }
 
 # skip = false
