@@ -196,6 +196,15 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   mount -a
   echo "...Finished NFS mount."
   df -h
+  echo "...Setting temp dir for PDG testing.  This may not be required, and if not should be considered to be changed."
+  houdini_tmp_dir="$onsite_nfs_mount_target/tmp"
+  if sudo test -d "$houdini_tmp_dir"; then
+    echo "The temp dir exists: $houdini_tmp_dir"
+    echo "HOUDINI_TEMP_DIR = \"$houdini_tmp_dir\"" | sudo tee --append /home/deadlineuser/houdini18.0/houdini.env
+  then
+    echo "ERROR: The temp dir does not exist: $houdini_tmp_dir.  Ensure you create it on your volume before deploying this host again."
+    exit 1
+  fi
 fi
 
 service deadline10launcher restart
