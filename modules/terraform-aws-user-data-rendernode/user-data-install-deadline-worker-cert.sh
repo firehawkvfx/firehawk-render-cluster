@@ -190,7 +190,8 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   chmod u=rwX,g=rwX,o=rwX "$prod_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" # This mount should be the fastest mount available. If no remote mount is defined, the mount over VPN will be used, but performance will be limited by the VPN connection.
+  # This next bind mount should be the fastest mount available. If no remote mount is defined, the mount over VPN will be used, but performance will be limited by the VPN connection.
+  echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" | tee --append /etc/fstab 
   echo "...Mounting."
   mount -a
   echo "...Finished NFS mount."
