@@ -174,11 +174,12 @@ else
 fi
 
 echo "Determine if mounts should be altered..."
+onsite_storage=${onsite_storage}
 onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
 prod_mount_target=${prod_mount_target}
 
-if [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
+if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
   onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
   echo "...Wait until NFS server is reachable."
   until nc -vzw 2 $onsite_nfs_host 2049; do sleep 2; done
@@ -189,7 +190,7 @@ if [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; the
   chmod u=rwX,g=rwX,o=rwX "$prod_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" # This mount should be the fastest mount available.
+  echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" # This mount should be the fastest mount available. If no remote mount is defined, the mount over VPN will be used, but performance will be limited by the VPN connection.
   echo "...Mounting."
   mount -a
   echo "...Finished NFS mount."
