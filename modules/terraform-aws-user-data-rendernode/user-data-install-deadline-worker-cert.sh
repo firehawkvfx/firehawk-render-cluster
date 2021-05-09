@@ -201,7 +201,7 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   if sudo test -d "$houdini_tmp_dir"; then
     echo "The temp dir exists: $houdini_tmp_dir"
     echo "HOUDINI_TEMP_DIR = \"$houdini_tmp_dir\"" | sudo tee --append /home/deadlineuser/houdini18.0/houdini.env
-  then
+  else
     echo "ERROR: The temp dir does not exist: $houdini_tmp_dir.  Ensure you create it on your volume before deploying this host again."
     exit 1
   fi
