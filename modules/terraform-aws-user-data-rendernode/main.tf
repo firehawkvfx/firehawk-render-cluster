@@ -6,16 +6,26 @@ locals {
   client_cert_vault_path = "${local.resourcetier}/deadline/client_cert_files${local.client_cert_file_path}"
 }
 
+data "aws_ssm_parameter" "onsite_nfs_export" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/onsite_nfs_export"
+}
+data "aws_ssm_parameter" "onsite_nfs_mount_target" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/onsite_nfs_mount_target"
+}
+data "aws_ssm_parameter" "prod_mount_target" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/prod_mount_target"
+}
+
 data "template_file" "user_data_auth_client" {
   template = format("%s%s",
     file("${path.module}/user-data-iam-auth-ssh-host-consul.sh"),
     file("${path.module}/user-data-install-deadline-worker-cert.sh")
   )
   vars = {
-
-    onsite_nfs_export       = "192.168.92.11:/prod3"
-    onsite_nfs_mount_target = "/adl_prod"
-    prod_mount_target       = "/prod"
+    onsite_storage = data.aws_ssm_parameter.onsite_storage.value
+    onsite_nfs_export       = data.aws_ssm_parameter.onsite_nfs_export.value # eg "192.168.92.11:/prod3"
+    onsite_nfs_mount_target = data.aws_ssm_parameter.onsite_nfs_mount_target.value # eg "/onsite_prod"
+    prod_mount_target       = data.aws_ssm_parameter.prod_mount_target.value # eg "/prod"
 
     consul_cluster_tag_key   = var.consul_cluster_tag_key
     consul_cluster_tag_value = var.consul_cluster_name
