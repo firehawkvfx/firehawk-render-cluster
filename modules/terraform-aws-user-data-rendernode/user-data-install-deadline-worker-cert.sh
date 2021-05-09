@@ -178,6 +178,7 @@ onsite_storage=${onsite_storage}
 onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
 prod_mount_target=${prod_mount_target}
+houdini_major_version=${houdini_major_version}
 
 if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
   onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
@@ -200,7 +201,7 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   houdini_tmp_dir="$onsite_nfs_mount_target/tmp"
   if sudo test -d "$houdini_tmp_dir"; then
     echo "The temp dir exists: $houdini_tmp_dir"
-    echo "HOUDINI_TEMP_DIR = \"$houdini_tmp_dir\"" | sudo tee --append /home/deadlineuser/houdini18.0/houdini.env
+    echo "HOUDINI_TEMP_DIR = \"$houdini_tmp_dir\"" | sudo tee --append /home/deadlineuser/houdini$houdini_major_version/houdini.env
   else
     echo "ERROR: The temp dir does not exist: $houdini_tmp_dir.  Ensure you create it on your volume before deploying this host again."
     exit 1
