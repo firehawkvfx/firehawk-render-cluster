@@ -20,7 +20,7 @@ data "aws_vpc" "rendervpc" {
 }
 data "aws_subnet_ids" "private" {
   vpc_id = data.aws_vpc.rendervpc.id
-  tags   = map("area", "private")
+  tags   = { "area": "private" }
 }
 data "terraform_remote_state" "rendernode_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
@@ -88,6 +88,11 @@ locals {
   override_config_template_file_path = "/home/ec2-user/config_template.json"
   ubl_url                            = data.aws_ssm_parameter.ubl_url.value
   # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
+  fileset = [for f in fileset(path.module, "**.y*l") : f]
+}
+
+output "fileset" {
+  value = local.fileset
 }
 resource "null_resource" "provision_deadline_spot" {
   count = 1
