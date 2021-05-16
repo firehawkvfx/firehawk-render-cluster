@@ -1,12 +1,15 @@
 - name: init ubl licence info if first time install, and enable other config default to ease usage.
   shell: | 
     cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{UsageBasedURL: "{{ ubl_url }}"}})'
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{UsageBasedActivationCode: "{{ ubl_activation_code }}"}})'
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{SlaveUseIPAddress: true}})' # Required over VPN without DNS
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{PulseUseIPAddress: true}})' # Required over VPN without DNS
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{EnableRemoteAdministration: true}})' # Required over VPN to configure deadline
-    ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{EnableRemoteCommandWhitelist: false}})'
+
+
+    cd /opt/Thinkbox/Deadline10/bin
+    ./deadlinecommand -SetRepositoryOption "EnableRemoteAdministration" True
+    ./deadlinecommand -SetRepositoryOption "EnableRemoteCommandWhitelist" False
+    ./deadlinecommand -SetRepositoryOption "SlaveUseIPAddress" True
+    ./deadlinecommand -SetRepositoryOption "PulseUseIPAddress" True
+    ./deadlinecommand -SetRepositoryOption "UsageBasedURL" "{{ ubl_url }}"
+    ./deadlinecommand -SetRepositoryOption "UsageBasedActivationCode" "{{ ubl_activation_code }}"
   when: ubl_url
   # no_log: true
   become: true
@@ -19,6 +22,13 @@
     var: deadline_ubl
   when: ubl_url
 
+# deprecated
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{UsageBasedURL: "{{ ubl_url }}"}})'
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{UsageBasedActivationCode: "{{ ubl_activation_code }}"}})'
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{SlaveUseIPAddress: true}})' # Required over VPN without DNS
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{PulseUseIPAddress: true}})' # Required over VPN without DNS
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{EnableRemoteAdministration: true}})' # Required over VPN to configure deadline
+# ./{{ mongo_executable }} --eval 'db.DeadlineSettings.update({"_id": "deadline_network_settings"},{$set:{EnableRemoteCommandWhitelist: false}})'
 
 # - debug:
 #     msg: "{{ deadline_ubl.stdout }}"
