@@ -93,7 +93,7 @@ locals {
   fileset = fileset(path.module, "**")
 }
 output "path_module" {
-  value = path_module
+  value = local.path_module
 }
 output "fileset" {
   value = local.fileset
