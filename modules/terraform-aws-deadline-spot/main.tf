@@ -90,13 +90,15 @@ locals {
   # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
   path_module = path.module
   # fileset = [for f in fileset(path.module, "**.y*l") : f]
-  fileset = fileset("./", "[^.]*/**")
+  fileset = fileset(path.module, "[^.]*/**")
+  shaset = sha1(join("", [for f in local.fileset : filesha1(f)]))
 }
-output "path_module" {
-  value = local.path_module
-}
+
 output "fileset" {
   value = local.fileset
+}
+output "shaset" {
+  value = local.shaset
 }
 resource "null_resource" "provision_deadline_spot" {
   count = 1
