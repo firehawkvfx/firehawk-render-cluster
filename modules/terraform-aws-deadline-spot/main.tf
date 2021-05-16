@@ -118,7 +118,7 @@ export SHOWCOMMANDS=true; set -x
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline groups / UBL"
 cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure groups / UBL.\n\n"
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
+until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
 set -x
 set -e
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_config.yaml -v --extra-vars "ubl_url=${data.aws_ssm_parameter.ubl_url.value} \
@@ -136,7 +136,7 @@ mkdir -p "$local_config_output_dir"
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
 cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 1 ; done
+until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
 set -x
 set -e
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$remote_config_output_dir/config_generated.json \
