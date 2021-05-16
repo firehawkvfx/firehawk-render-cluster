@@ -88,9 +88,13 @@ locals {
   override_config_template_file_path = "/home/ec2-user/config_template.json"
   ubl_url                            = data.aws_ssm_parameter.ubl_url.value
   # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
-  fileset = [for f in fileset(path.module, "**.y*l") : f]
+  path_module = path.module
+  # fileset = [for f in fileset(path.module, "**.y*l") : f]
+  fileset = fileset(path.module, "**")
 }
-
+output "path_module" {
+  value = path_module
+}
 output "fileset" {
   value = local.fileset
 }
