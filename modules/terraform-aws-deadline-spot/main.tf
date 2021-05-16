@@ -90,7 +90,7 @@ locals {
   # ubl_activation_code=data.aws_ssm_parameter.ubl_activation_code.value
   path_module = path.module
   # fileset = [for f in fileset(path.module, "**.y*l") : f]
-  fileset = fileset(path.module, "**")
+  fileset = fileset("./", "[^.]*/**")
 }
 output "path_module" {
   value = local.path_module
