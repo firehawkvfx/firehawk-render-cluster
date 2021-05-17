@@ -19,5 +19,5 @@ dependencies {
 }
 
 terraform {
-  source = "github.com/firehawkvfx/terraform-aws-vpn.git//?ref=v0.0.4"
+  source = "github.com/firehawkvfx/terraform-aws-vpn.git//?ref=v0.0.6"
 }
