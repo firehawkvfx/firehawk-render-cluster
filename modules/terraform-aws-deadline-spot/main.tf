@@ -41,20 +41,18 @@ data "terraform_remote_state" "rendernode_security_group" { # read the arn with 
 data "aws_ssm_parameter" "ubl_url" {
   name = "/firehawk/resourcetier/dev/ubl_url"
 }
-# data "aws_ssm_parameter" "ubl_activation_code" {
-#   name = "/firehawk/resourcetier/dev/ubl_activation_code"
-# }
-
-
 data "aws_secretsmanager_secret" "ubl_activation_code" {
   name = "/firehawk/resourcetier/dev/ubl_activation_code"
 }
 data "aws_secretsmanager_secret_version" "ubl_activation_code" {
   secret_id = data.aws_secretsmanager_secret.ubl_activation_code.id
 }
-# output "ubl_activation_code" {
-#   value = data.aws_secretsmanager_secret_version.ubl_activation_code.secret_string
-# }
+data "aws_ssm_parameter" "max_spot_capacity_engine" {
+  name = "/firehawk/resourcetier/dev/max_spot_capacity_engine"
+}
+data "aws_ssm_parameter" "max_spot_capacity_mantra" {
+  name = "/firehawk/resourcetier/dev/max_spot_capacity_mantra"
+}
 
 variable "ebs_empty_map" {
   type = map(string)
@@ -78,7 +76,7 @@ locals {
   }
 }
 locals {
-  ami_id = data.aws_ami.rendernode.id
+  ami_id                             = data.aws_ami.rendernode.id
   snapshot_id                        = local.ebs_block_device["/dev/sda1"].ebs.snapshot_id
   private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
   instance_profile                   = data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn
@@ -86,9 +84,11 @@ locals {
   config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
   override_config_template_file_path = "/home/ec2-user/config_template.json"
   ubl_url                            = data.aws_ssm_parameter.ubl_url.value
-  path_module = path.module
-  fileset = fileset(path.module, "[^.]*/**")
-  shaset  = sha1(join("", [for f in local.fileset : filesha1(f)]))
+  max_spot_capacity_engine           = data.max_spot_capacity_engine.value
+  max_spot_capacity_mantra           = data.max_spot_capacity_mantra.value
+  path_module                        = path.module
+  fileset                            = fileset(path.module, "[^.]*/**")
+  shaset                             = sha1(join("", [for f in local.fileset : filesha1(f)]))
 }
 
 output "fileset" {
@@ -143,8 +143,8 @@ ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/invent
   deadlineuser_name=${var.deadlineuser_name} \
   local_config_output_dir=$local_config_output_dir \
   remote_config_output_dir=$remote_config_output_dir \
-  max_spot_capacity_engine=1 \
-  max_spot_capacity_mantra=1 \
+  max_spot_capacity_engine=${var.max_spot_capacity_engine} \
+  max_spot_capacity_mantra=${var.max_spot_capacity_mantra} \
   volume_type=${var.node_centos_volume_type} \
   volume_size=${var.node_centos_volume_size} \
   ami_id=${local.ami_id} \
