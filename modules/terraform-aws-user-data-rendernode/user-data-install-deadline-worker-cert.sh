@@ -172,7 +172,7 @@ if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_licens
 else
   printf "\n...Skippping setting of Houdini license server: houdini_license_server_enabled: ${houdini_license_server_enabled} houdini_license_server_address:${houdini_license_server_address}\n\n"
   echo "Starting hserver process to enable UBL"
-  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -S 127.0.0.1"
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver ; sleep 10 ; hserver ; hserver -S 127.0.0.1"
 fi
 
 echo "Determine if mounts should be altered..."
