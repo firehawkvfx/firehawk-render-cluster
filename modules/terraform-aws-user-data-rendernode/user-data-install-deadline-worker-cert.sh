@@ -171,6 +171,8 @@ if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_licens
   set +x
 else
   printf "\n...Skippping setting of Houdini license server: houdini_license_server_enabled: ${houdini_license_server_enabled} houdini_license_server_address:${houdini_license_server_address}\n\n"
+  echo "Starting hserver process"
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver"
 fi
 
 echo "Determine if mounts should be altered..."
