@@ -17,6 +17,12 @@ data "aws_ssm_parameter" "onsite_nfs_mount_target" {
 data "aws_ssm_parameter" "prod_mount_target" {
   name = "/firehawk/resourcetier/${local.resourcetier}/prod_mount_target"
 }
+data "aws_ssm_parameter" "houdini_license_server_enabled" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/houdini_license_server_enabled"
+}
+data "aws_ssm_parameter" "houdini_license_server_address" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/houdini_license_server_address"
+}
 
 data "template_file" "user_data_auth_client" {
   template = format("%s%s",
@@ -45,7 +51,8 @@ data "template_file" "user_data_auth_client" {
     client_cert_file_path  = local.client_cert_file_path
     client_cert_vault_path = local.client_cert_vault_path
 
-    houdini_license_server_address = var.houdini_license_server_address
+    houdini_license_server_enabled = data.aws_ssm_parameter.houdini_license_server_enabled.value
+    houdini_license_server_address = data.aws_ssm_parameter.houdini_license_server_address.value
     houdini_major_version          = "18.5" # TODO: this should be aquired from an AMI tag.  This should also be passed to the ansible template in the image build.
   }
 }

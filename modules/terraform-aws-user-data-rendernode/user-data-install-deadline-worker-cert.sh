@@ -158,9 +158,9 @@ chmod u=rw,g=rw,o-rwx $client_cert_file_path
 echo "Revoking vault token..."
 vault token revoke -self
 
-
+houdini_license_server_enabled="${houdini_license_server_enabled}"
 houdini_license_server_address="${houdini_license_server_address}"
-if [[ ! -z "$houdini_license_server_address" ]]; then
+if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_license_server_address" ]]; then
   echo "...Wait until license server is reachable"
   until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
   echo "Set Houdini license server to: $houdini_license_server_address"
