@@ -11,7 +11,7 @@
     ./deadlinecommand -SetRepositoryOption "UsageBasedURL" "{{ ubl_url }}"
     ./deadlinecommand -SetRepositoryOption "UsageBasedActivationCode" "{{ ubl_activation_code }}"
   when: ubl_url
-  # no_log: true
+  no_log: true
   become: true
   register: deadline_ubl
   with_items:

@@ -79,7 +79,7 @@
         }
       )'
   become: true
-  # no_log: true
+  no_log: true
   with_items:
   - { key: "State", value: "Global Enabled" }
   - { key: "ResourceTracker", value: "True" }
