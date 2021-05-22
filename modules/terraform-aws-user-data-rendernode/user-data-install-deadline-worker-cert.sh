@@ -72,7 +72,7 @@ function retrieve_file {
   response=$(retry \
   "vault kv get -field=value $source_path/file" \
   "Trying to read secret from vault")
-  echo "$response"
+
   echo "mkdir: $(dirname $target_path)"
   mkdir -p "$(dirname $target_path)" # ensure the directory exists
   echo "Check file path is writable: $target_path"
