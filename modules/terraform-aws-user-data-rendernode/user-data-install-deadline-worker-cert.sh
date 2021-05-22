@@ -170,7 +170,7 @@ if [[ ! -z "$houdini_license_server_address" ]]; then
   sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
   set +x
 else
-  echo "Skippping setting of Houdiini license server."
+  printf "\nSkippping setting of Houdiini license server.\n"
 fi
 
 echo "Determine if mounts should be altered..."
