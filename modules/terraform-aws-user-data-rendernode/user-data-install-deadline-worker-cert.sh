@@ -160,7 +160,7 @@ vault token revoke -self
 
 houdini_license_server_enabled="${houdini_license_server_enabled}"
 houdini_license_server_address="${houdini_license_server_address}"
-if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_license_server_address" ]]; then
+if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_license_server_address" ]] && [[ "$houdini_license_server_address" == "0.0.0.0" ]]; then
   echo "...Wait until license server is reachable"
   until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
   echo "Set Houdini license server to: $houdini_license_server_address"
@@ -170,7 +170,7 @@ if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_licens
   sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
   set +x
 else
-  printf "\nSkippping setting of Houdiini license server.\n"
+  printf "\n...Skippping setting of Houdini license server: houdini_license_server_enabled: ${houdini_license_server_enabled} houdini_license_server_address:${houdini_license_server_address}\n\n"
 fi
 
 echo "Determine if mounts should be altered..."
