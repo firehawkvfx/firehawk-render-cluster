@@ -9,7 +9,7 @@ locals {
 dependency "terraform-aws-user-data-rendernode" {
   config_path = "../terraform-aws-user-data-rendernode"
   mock_outputs = {
-    user_data = "fake-user-data"
+    user_data_base64 = "fake-user-data"
   }
 }
 
@@ -23,8 +23,8 @@ dependency "terraform-aws-deadline-db" {
 inputs = merge(
   local.common_vars.inputs,
   {
-    deadline_db_instance_id          = dependency.terraform-aws-deadline-db.outputs.id
-    user_data          = dependency.terraform-aws-user-data-rendernode.outputs.user_data_base64
+    deadline_db_instance_id = dependency.terraform-aws-deadline-db.outputs.id
+    user_data               = dependency.terraform-aws-user-data-rendernode.outputs.user_data_base64
   }
 )
 
@@ -33,7 +33,7 @@ dependencies {
     "../terraform-aws-deadline-db",
     "../terraform-aws-sg-rendernode/module",
     "../../../firehawk-main/modules/terraform-aws-iam-profile-rendernode"
-    ]
+  ]
 }
 
 # skip = true
