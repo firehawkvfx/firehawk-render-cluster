@@ -3,9 +3,9 @@ data "aws_vpc" "thisvpc" {
   tags    = var.common_tags
 }
 locals {
-  name                = "${lookup(local.common_tags, "vpcname", "default")}_rendernode_ec2_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
+  name = "${lookup(local.common_tags, "vpcname", "default")}_rendernode_ec2_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
   # permitted_cidr_list = [var.combined_vpcs_cidr, var.vpn_cidr, var.onsite_private_subnet_cidr]
-  common_tags         = var.common_tags
+  common_tags = var.common_tags
   extra_tags = {
     role  = "rendernode"
     route = "private"
@@ -28,6 +28,13 @@ resource "aws_security_group" "node_centos7_houdini" {
     description     = "all incoming traffic from vpc, vpn dhcp, and remote subnet"
   }
   ingress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "WARNING: TESTING ONLY"
+  }
+  ingress {
     protocol        = "tcp"
     from_port       = 22
     to_port         = 22
@@ -44,30 +51,30 @@ resource "aws_security_group" "node_centos7_houdini" {
   #   description     = "Vault"
   # }
   ingress {
-    protocol  = "tcp"
-    from_port = 27100
-    to_port   = 27100
+    protocol    = "tcp"
+    from_port   = 27100
+    to_port     = 27100
     cidr_blocks = var.permitted_cidr_list_private
     description = "DeadlineDB MongoDB"
   }
   ingress {
-    protocol  = "tcp"
-    from_port = 8080
-    to_port   = 8080
+    protocol    = "tcp"
+    from_port   = 8080
+    to_port     = 8080
     cidr_blocks = var.permitted_cidr_list_private
     description = "Deadline And Deadline RCS"
   }
   ingress {
-    protocol  = "tcp"
-    from_port = 4433
-    to_port   = 4433
+    protocol    = "tcp"
+    from_port   = 4433
+    to_port     = 4433
     cidr_blocks = var.permitted_cidr_list_private
     description = "Deadline RCS TLS HTTPS"
   }
   ingress {
-    protocol  = "tcp"
-    from_port = 1714
-    to_port   = 1714
+    protocol    = "tcp"
+    from_port   = 1714
+    to_port     = 1714
     cidr_blocks = var.permitted_cidr_list_private
     description = "Houdini"
   }
