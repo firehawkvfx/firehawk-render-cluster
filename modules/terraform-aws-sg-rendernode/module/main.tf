@@ -65,6 +65,13 @@ resource "aws_security_group" "node_centos7_houdini" {
     description = "Deadline RCS TLS HTTPS"
   }
   ingress {
+    protocol  = "tcp"
+    from_port = 1714
+    to_port   = 1714
+    cidr_blocks = var.permitted_cidr_list_private
+    description = "Houdini"
+  }
+  ingress {
     protocol    = "icmp"
     from_port   = 8
     to_port     = 0
