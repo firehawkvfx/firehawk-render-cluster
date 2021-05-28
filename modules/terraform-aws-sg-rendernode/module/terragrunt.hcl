@@ -18,6 +18,7 @@ dependency "data" {
     vpn_security_group = "fake-sg-id"
     rendervpc_cidr = "fake-cidr1"
     vaultvpc_cidr = "fake-cidr2"
+    private_subnet_cidr_blocks = "fake-cidr33"
   }
 }
 
@@ -31,7 +32,7 @@ inputs = merge(
   local.common_vars.inputs,
   {
     security_group_ids          = [dependency.data.outputs.bastion_security_group, dependency.data.outputs.vpn_security_group]
-    permitted_cidr_list_private = [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr]
+    permitted_cidr_list_private = [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr, dependency.data.outputs.private_subnet_cidr_blocks]
     permitted_cidr_list         = ["${local.onsite_public_ip}/32", local.remote_cloud_public_ip_cidr, local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr, dependency.data.outputs.rendervpc_cidr, dependency.data.outputs.vaultvpc_cidr]
   }
 )

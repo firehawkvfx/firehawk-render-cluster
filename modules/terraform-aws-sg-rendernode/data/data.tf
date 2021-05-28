@@ -29,6 +29,16 @@ data "aws_vpc" "vaultvpc" {
   default = false
   tags    = var.common_tags_vaultvpc
 }
+
+data "aws_subnet_ids" "private" {
+  vpc_id = data.aws_vpc.rendervpc.id
+  tags   = tomap({"area": "private"})
+}
+data "aws_subnet" "private" {
+  for_each = data.aws_subnet_ids.private.ids
+  id       = each.value
+}
+
 output "bastion_security_group" {
   value = data.terraform_remote_state.bastion_security_group.outputs.security_group_id
 }
@@ -40,4 +50,7 @@ output "rendervpc_cidr" {
 }
 output "vaultvpc_cidr" {
   value = data.aws_vpc.vaultvpc.cidr_block
+}
+output "private_subnet_cidr_blocks" {
+  value = [for s in data.aws_subnet.private : s.cidr_block]
 }
