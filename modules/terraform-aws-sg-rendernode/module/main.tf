@@ -27,13 +27,13 @@ resource "aws_security_group" "node_centos7_houdini" {
     security_groups = var.security_group_ids
     description     = "all incoming traffic from vpc, vpn dhcp, and remote subnet"
   }
-  ingress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "WARNING: TESTING ONLY"
-  }
+  # ingress {
+  #   protocol    = "-1"
+  #   from_port   = 0
+  #   to_port     = 0
+  #   cidr_blocks = ["0.0.0.0/0"]
+  #   description = "WARNING: TESTING ONLY"
+  # }
   ingress {
     protocol        = "tcp"
     from_port       = 22
