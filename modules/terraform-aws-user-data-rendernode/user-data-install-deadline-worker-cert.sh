@@ -19,8 +19,6 @@ deadline_version="${deadline_version}"
 export VAULT_ADDR=https://vault.service.consul:8200
 client_cert_file_path="${client_cert_file_path}"
 client_cert_vault_path="${client_cert_vault_path}"
-installer_file="install-deadline-worker.sh"
-installer_path="/home/$deadlineuser_name/Downloads/$installer_file"
 
 # Functions
 function log {
@@ -210,7 +208,10 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   fi
 fi
 
-service deadline10launcher restart
+systemctl status deadline10launcher
+systemctl enable deadline10launcher
+systemctl start deadline10launcher
+
 set +x
 
 # Leave the following newline at the end of this template
