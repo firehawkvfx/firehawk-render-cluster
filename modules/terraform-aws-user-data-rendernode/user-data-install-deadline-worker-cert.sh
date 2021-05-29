@@ -209,8 +209,13 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
 fi
 
 systemctl status deadline10launcher
+echo "...Enable: deadline10launcher"
 systemctl enable deadline10launcher
+echo "...Start: deadline10launcher"
 systemctl start deadline10launcher
+echo "...Status: deadline10launcher"
+
+systemctl status deadline10launcher
 
 set +x
 
