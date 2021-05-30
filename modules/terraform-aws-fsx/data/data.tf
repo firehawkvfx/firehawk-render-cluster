@@ -57,3 +57,6 @@ output "vaultvpc_cidr" {
 output "private_subnet_cidr_blocks" {
   value = [for s in data.aws_subnet.private : s.cidr_block]
 }
+output "private_subnet_ids" {
+  value = [for s in data.aws_subnet_ids.private.ids : s.cidr_block]
+}
