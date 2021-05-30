@@ -129,7 +129,7 @@ output "id" {
 }
 
 output "network_interface_ids" {
-  value = length(aws_fsx_lustre_file_system.fsx_storage) ? aws_fsx_lustre_file_system.fsx_storage.*.network_interface_ids : null
+  value = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage.*.network_interface_ids : null
 }
 
 # Terraform provider API does not list the primary interface in the correct order to obtain it.  so we use a custom data source to aquire the primary interface
@@ -145,7 +145,7 @@ output "network_interface_ids" {
 # }
 
 locals {
-  primary_interface = length(aws_fsx_lustre_file_system.fsx_storage) ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids : null
+  primary_interface = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids : null
 }
 output "primary_interface" {
   value = local.primary_interface
