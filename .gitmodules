@@ -6,5 +6,5 @@
 	path = modules/terraform-aws-render-vpc
 	url = ../terraform-aws-render-vpc.git
 [submodule "modules/terraform-aws-node-houdini"]
-	path = modules/terraform-aws-node-houdini
+	path = modules/terraform-aws-node-houdini/module
 	url = ../terraform-aws-node-houdini.git
