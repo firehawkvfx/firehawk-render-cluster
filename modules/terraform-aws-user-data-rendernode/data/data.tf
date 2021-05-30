@@ -13,7 +13,3 @@ data "terraform_remote_state" "fsx" { # read the arn with data.terraform_remote_
     region = data.aws_region.current.name
   }
 }
-
-output "fsx_private_ip" {
-  value = data.terraform_remote_state.fsx.outputs.fsx_private_ip
-}
