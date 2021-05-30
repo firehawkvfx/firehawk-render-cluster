@@ -14,6 +14,9 @@ data "aws_ssm_parameter" "onsite_nfs_export" {
 data "aws_ssm_parameter" "onsite_nfs_mount_target" {
   name = "/firehawk/resourcetier/${local.resourcetier}/onsite_nfs_mount_target"
 }
+data "aws_ssm_parameter" "cloud_mount_target" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/cloud_mount_target"
+}
 data "aws_ssm_parameter" "prod_mount_target" {
   name = "/firehawk/resourcetier/${local.resourcetier}/prod_mount_target"
 }
@@ -34,6 +37,8 @@ data "template_file" "user_data_auth_client" {
     onsite_nfs_export       = data.aws_ssm_parameter.onsite_nfs_export.value       # eg "192.168.92.11:/prod3"
     onsite_nfs_mount_target = data.aws_ssm_parameter.onsite_nfs_mount_target.value # eg "/onsite_prod"
     prod_mount_target       = data.aws_ssm_parameter.prod_mount_target.value       # eg "/prod"
+    cloud_mount_target       = data.aws_ssm_parameter.cloud_mount_target.value       # eg "/cloud_prod"
+    cloud_fsx_ip_address    = var.fsx_private_ip
 
     consul_cluster_tag_key   = var.consul_cluster_tag_key
     consul_cluster_tag_value = var.consul_cluster_name

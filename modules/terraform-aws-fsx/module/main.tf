@@ -121,35 +121,10 @@ locals {
   id = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].id : null
 }
 
-output "id" {
-  depends_on = [
-    aws_fsx_lustre_file_system.fsx_storage,
-  ]
-  value = local.id
-}
-
-output "network_interface_ids" {
-  value = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage.*.network_interface_ids : null
-}
-
-# Terraform provider API does not list the primary interface in the correct order to obtain it.  so we use a custom data source to aquire the primary interface
-
-# data "external" "primary_interface_id" { # Why cant we use triggers here?
-#   count   = local.fsx_enabled
-#   program = ["/bin/bash", "${path.module}/primary_interface.sh"]
-
-#   # Arbitrary map from strings to strings, passed to the external program as the data query.
-#   query = {
-#     id = "${local.id}"
-#   }
-# }
-
 locals {
   primary_interface = length( aws_fsx_lustre_file_system.fsx_storage ) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids[0] : null
 }
-output "primary_interface" {
-  value = local.primary_interface
-}
+
 
 data "aws_network_interface" "fsx_primary_interface" {
   count      = local.fsx_enabled
@@ -170,15 +145,7 @@ resource "aws_route53_record" "fsx_record" {
   records = [local.fsx_private_ip]
 }
 
-output "fsx_private_ip" {
-  depends_on = [
-    aws_fsx_lustre_file_system.fsx_storage,
-    local.primary_interface,
-    data.aws_network_interface.fsx_primary_interface,
-    aws_route53_record.fsx_record
-  ]
-  value = local.fsx_private_ip
-}
+
 
 ### attach mounts onsite if fsx is available
 
