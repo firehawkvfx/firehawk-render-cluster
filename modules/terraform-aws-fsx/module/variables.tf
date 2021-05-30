@@ -1,21 +1,21 @@
 variable "fsx_storage" {
   description = "Bool enabling FSX storage"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 variable "fsx_storage_capacity" {
   description = "Storage capacity (default in GB)"
-  type = string
-  default = "1200"
+  type        = string
+  default     = "1200"
 }
 variable "fsx_bucket" {
   description = "The path to the S3 Bucket for the FSX backend"
-  type = string
+  type        = string
 }
 variable "subnet_ids" {
   description = "The list of subnet ID's for FSX endpoints."
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 variable "common_tags" {
   description = "Common tags for all resources in a deployment run."
@@ -38,8 +38,8 @@ variable "permitted_cidr_list_private" {
 }
 variable "fsx_record_enabled" {
   description = "Whether to add a DNS record using Route 53"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 variable "private_route53_zone_id" {
   default = null

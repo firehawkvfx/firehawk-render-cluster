@@ -111,7 +111,7 @@ resource "aws_fsx_lustre_file_system" "fsx_storage" {
   export_path        = local.fsx_import_path
   storage_capacity   = var.fsx_storage_capacity
   subnet_ids         = var.subnet_ids
-  security_group_ids = length(aws_security_group.fsx_vpc) > 0 ? [ aws_security_group.fsx_vpc[0].id ] : null
+  security_group_ids = length(aws_security_group.fsx_vpc) > 0 ? [aws_security_group.fsx_vpc[0].id] : null
   deployment_type    = "SCRATCH_2"
 
   tags = var.common_tags
@@ -145,15 +145,16 @@ output "network_interface_ids" {
 # }
 
 locals {
-  primary_interface = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids : null
+  primary_interface = length( aws_fsx_lustre_file_system.fsx_storage ) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids[0] : null
 }
 output "primary_interface" {
   value = local.primary_interface
 }
 
 data "aws_network_interface" "fsx_primary_interface" {
-  count = local.fsx_enabled
-  id    = local.primary_interface
+  count      = local.fsx_enabled
+  depends_on = [ aws_fsx_lustre_file_system.fsx_storage ]
+  id         = local.primary_interface
 }
 
 locals {
