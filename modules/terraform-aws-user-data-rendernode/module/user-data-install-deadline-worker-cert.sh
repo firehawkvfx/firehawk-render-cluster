@@ -199,12 +199,8 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   echo "...Ensuring mount paths exist."
   mkdir -p "$onsite_nfs_mount_target"
   chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
-  # mkdir -p "$prod_mount_target"
-  # chmod u=rwX,g=rwX,o=rwX "$prod_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  # This next bind mount should be the fastest mount available. If no remote mount is defined, the mount over VPN will be used, but performance will be limited by the VPN connection.
-  # echo "$onsite_nfs_mount_target $prod_mount_target none defaults,bind 0 0" | tee --append /etc/fstab 
   if [[ -z "$cloud_fsx_ip_address" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
     echo "Since no fsx ip address was found, onsite storage will be mounted to cloud nodes. cloud_fsx_ip_address: $cloud_fsx_ip_address"
     bind_to "$onsite_nfs_mount_target" "$prod_mount_target"
@@ -219,9 +215,7 @@ if [[ ! -z "$cloud_fsx_ip_address" ]]; then
   chmod u=rwX,g=rwX,o=rwX "$cloud_mount_target"
   echo "...Configure /etc/fstab for FSX"
   echo "$cloud_fsx_ip_export $cloud_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
-
   bind_to "$cloud_mount_target" "$prod_mount_target"
-  # echo "...Mounting FSX for lustre"
 fi
 
 echo "...Mounting."
@@ -229,26 +223,9 @@ mount -a
 echo "...Finished mounting."
 df -h
 
-# echo "...Setting temp dir for PDG testing.  This may not be required, and if not should be considered to be changed."
-# houdini_tmp_dir="$onsite_nfs_mount_target/tmp"
-# if sudo test -d "$houdini_tmp_dir"; then
-#   echo "The temp dir exists: $houdini_tmp_dir"
-#   echo "HOUDINI_TEMP_DIR = \"$houdini_tmp_dir\"" | sudo tee --append /home/deadlineuser/houdini$houdini_major_version/houdini.env
-# else
-#   echo "ERROR: The temp dir does not exist: $houdini_tmp_dir.  Ensure you create it on your volume before deploying this host again."
-#   exit 1
-# fi
-
-# service deadline10launcher restart
-# echo "...Status: deadline10launcher"
-# systemctl status deadline10launcher
 echo "...Enable: deadline10launcher"
 systemctl enable deadline10launcher
 echo "...Start: deadline10launcher"
 systemctl start deadline10launcher
-# echo "...Status: deadline10launcher"
-# systemctl status deadline10launcher
-
 set +x
-
 # Leave the following newline at the end of this template
