@@ -13,7 +13,3 @@ data "terraform_remote_state" "user_data" { # read the arn with data.terraform_r
     region = data.aws_region.current.name
   }
 }
-
-output "user_data_base64" {
-  value = data.terraform_remote_state.user_data.outputs.user_data_base64
-}
