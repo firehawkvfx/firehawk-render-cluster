@@ -45,6 +45,9 @@ data "aws_subnet" "private" {
 # output "vpn_security_group" {
 #   value = data.terraform_remote_state.vpn_security_group.outputs.security_group_id
 # }
+output "vpc_id" {
+  value = data.aws_vpc.rendervpc.id
+}
 output "rendervpc_cidr" {
   value = data.aws_vpc.rendervpc.cidr_block
 }

@@ -23,7 +23,7 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
   name        = "fsx_vpc_pipeid${lookup(var.common_tags, "pipelineid", "0")}"
   vpc_id      = var.vpc_id
   description = "FSx security group"
-  tags        = merge(tomap( { "Name" : local.name } ), var.common_tags, local.extra_tags)
+  tags        = merge(tomap({ "Name" : local.name }), var.common_tags, local.extra_tags)
 
   ingress {
     protocol    = "-1"
@@ -32,7 +32,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "all incoming traffic"
   }
-
   ingress {
     protocol    = "tcp"
     from_port   = 988
@@ -40,7 +39,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "Allows Lustre traffic between Amazon FSx for Lustre file servers"
   }
-
   ingress {
     protocol    = "udp"
     from_port   = 1021
@@ -48,7 +46,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "Allows Lustre traffic between Amazon FSx for Lustre file servers"
   }
-
   ingress {
     protocol    = "icmp"
     from_port   = 8
@@ -56,7 +53,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "icmp"
   }
-
   egress {
     protocol    = "tcp"
     from_port   = 988
@@ -64,7 +60,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "Allows Lustre traffic between Amazon FSx for Lustre file servers"
   }
-
   egress {
     protocol    = "udp"
     from_port   = 1021
@@ -72,7 +67,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "Allows Lustre traffic between Amazon FSx for Lustre file servers"
   }
-
   egress {
     protocol    = "icmp"
     from_port   = 8
@@ -80,7 +74,6 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
     cidr_blocks = var.permitted_cidr_list_private
     description = "icmp"
   }
-
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -107,11 +100,11 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
 
 locals {
   fsx_enabled     = (!var.sleep && var.fsx_storage) ? 1 : 0
-  fsx_import_path = "s3://${var.fsx_bucket_prefix}.${var.bucket_extension}"
+  fsx_import_path = "s3://${var.fsx_bucket}"
 }
 
 resource "aws_fsx_lustre_file_system" "fsx_storage" {
-  count      = (!var.sleep && (local.fsx_enabled == 1)) ? 1 : 0
+  count = (!var.sleep && (local.fsx_enabled == 1)) ? 1 : 0
   # depends_on = [null_resource.init_fsx]
 
   import_path        = local.fsx_import_path
@@ -136,7 +129,7 @@ output "id" {
 }
 
 output "network_interface_ids" {
-  value = length( aws_fsx_lustre_file_system.fsx_storage ) ? aws_fsx_lustre_file_system.fsx_storage.*.network_interface_ids : null
+  value = length(aws_fsx_lustre_file_system.fsx_storage) ? aws_fsx_lustre_file_system.fsx_storage.*.network_interface_ids : null
 }
 
 # Terraform provider API does not list the primary interface in the correct order to obtain it.  so we use a custom data source to aquire the primary interface
@@ -152,7 +145,7 @@ output "network_interface_ids" {
 # }
 
 locals {
-  primary_interface = length( aws_fsx_lustre_file_system.fsx_storage ) ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids : null
+  primary_interface = length(aws_fsx_lustre_file_system.fsx_storage) ? aws_fsx_lustre_file_system.fsx_storage[0].network_interface_ids : null
 }
 output "primary_interface" {
   value = local.primary_interface
@@ -164,11 +157,11 @@ data "aws_network_interface" "fsx_primary_interface" {
 }
 
 locals {
-  fsx_private_ip = length( data.aws_network_interface.fsx_primary_interface ) > 0 ? data.aws_network_interface.fsx_primary_interface[0].private_ip : null
+  fsx_private_ip = length(data.aws_network_interface.fsx_primary_interface) > 0 ? data.aws_network_interface.fsx_primary_interface[0].private_ip : null
 }
 
 resource "aws_route53_record" "fsx_record" {
-  count   = ( local.fsx_enabled == 1 ) && var.fsx_record_enabled ? 1 : 0
+  count   = (local.fsx_enabled == 1) && var.fsx_record_enabled ? 1 : 0
   zone_id = var.private_route53_zone_id
   name    = var.fsx_hostname
   type    = "A"
@@ -188,10 +181,10 @@ output "fsx_private_ip" {
 
 ### attach mounts onsite if fsx is available
 
-locals {
-  fsx_volumes_user_path    = "/secrets/${var.envtier}/fsx_volumes/fsx_volumes.yaml"
-  fsx_volumes_default_path = "/deployuser/ansible/collections/ansible_collections/firehawkvfx/fsx/roles/fsx_volume_mounts/files/fsx_volumes.yaml"
-}
+# locals {
+#   fsx_volumes_user_path    = "/secrets/${var.envtier}/fsx_volumes/fsx_volumes.yaml"
+#   fsx_volumes_default_path = "/deployuser/ansible/collections/ansible_collections/firehawkvfx/fsx/roles/fsx_volume_mounts/files/fsx_volumes.yaml"
+# }
 
 # resource "null_resource" "fsx_update_file_system" { # Ensure the cluster synchronises changes in the S3 bucket.  Changes on the cluster must be pushed back to the bucket.
 #   count = (!var.sleep && (local.fsx_enabled == 1)) ? 1 : 0
@@ -245,14 +238,14 @@ locals {
 #         printf "\n$BLUE CONFIGURE REMOTE ROUTES ON LOCAL NODES $NC\n"
 #         ansible-playbook -i "$TF_VAR_inventory" ansible/node-centos-routes.yaml -v -v --extra-vars "variable_host=workstation1 variable_user=deployuser hostname=workstation1 ansible_ssh_private_key_file=$TF_VAR_onsite_workstation_private_ssh_key ethernet_interface=$TF_VAR_workstation_ethernet_interface"; exit_test
 #       fi
-      
+
 #       # mount volumes to local site when fsx is started
 #       if [[ $TF_VAR_remote_mounts_on_local == true ]] ; then
 #         printf "\n$BLUE CONFIGURE REMOTE MOUNTS ON LOCAL NODES $NC\n"
-        
+
 #         # unmount volumes from local site - same as when fsx is shutdown, we need to ensure no mounts are present since existing mounts pointed to an incorrect environment will be wrong
 #         ansible-playbook -i "$TF_VAR_inventory" ansible/collections/ansible_collections/firehawkvfx/fsx/fsx_volume_mounts.yaml --extra-vars "variable_host=workstation1 variable_user=deployuser ansible_ssh_private_key_file=$TF_VAR_onsite_workstation_private_ssh_key destroy=true variable_gather_facts=no" --skip-tags 'cloud_install local_install_onsite_mounts' --tags 'local_install'; exit_test
-        
+
 #         # now mount current volumes
 #         ansible-playbook -i "$TF_VAR_inventory" ansible/collections/ansible_collections/firehawkvfx/fsx/fsx_volume_mounts.yaml -v -v --extra-vars "fsx_ip=${var.fsx_hostname} fsx_id=${local.id} variable_host=workstation1 variable_user=deployuser ansible_ssh_private_key_file=$TF_VAR_onsite_workstation_private_ssh_key" --skip-tags 'cloud_install local_install_onsite_mounts' --tags 'local_install'; exit_test
 #       fi
