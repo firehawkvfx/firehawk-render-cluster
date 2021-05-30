@@ -5,10 +5,10 @@ output "primary_interface" {
   value = local.primary_interface
 }
 output "fsx_mount_name" {
-  value = aws_fsx_lustre_file_system.fsx_storage.mount_name
+  value = length(aws_fsx_lustre_file_system.fsx_storage) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].mount_name : null
 }
 output "fsx_dns_name" {
-  value = aws_fsx_lustre_file_system.fsx_storage.dns_name
+  value = length(aws_fsx_lustre_file_system.fsx_storage.dns_name) > 0 ? aws_fsx_lustre_file_system.fsx_storage[0].dns_name : null
 }
 output "id" {
   depends_on = [
