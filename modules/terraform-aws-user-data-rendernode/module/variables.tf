@@ -25,6 +25,16 @@ variable "bucket_extension" {
 }
 variable "fsx_private_ip" {
   description = "The IP address of the FSX primary interface to mount to render nodes"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
+}
+variable "fsx_dns_name" {
+  description = "The DNS name required to mount the FSX volume"
+  type        = string
+  default     = ""
+}
+variable "fsx_mount_name" {
+  description = "The mount name required to mount the FSX volume"
+  type        = string
+  default     = ""
 }

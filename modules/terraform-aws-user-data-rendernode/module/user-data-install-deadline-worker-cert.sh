@@ -179,8 +179,8 @@ onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
 cloud_mount_target=${prod_mount_target}
 prod_mount_target=${prod_mount_target}
-cloud_fsx_ip_address=${cloud_fsx_ip_address}
-cloud_fsx_ip_export="${cloud_fsx_ip_address}@tcp:/fsx"
+cloud_fsx_dns_name=${cloud_fsx_dns_name}
+cloud_fsx_export="${cloud_fsx_dns_name}@tcp:/${fsx_mount_name}"
 houdini_major_version=${houdini_major_version}
 
 function bind_to {
@@ -201,20 +201,20 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  if [[ -z "$cloud_fsx_ip_address" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
-    echo "Since no fsx ip address was found, onsite storage will be mounted to cloud nodes. cloud_fsx_ip_address: $cloud_fsx_ip_address"
+  if [[ -z "$cloud_fsx_dns_name" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
+    echo "Since no fsx ip address was found, onsite storage will be mounted to cloud nodes. cloud_fsx_dns_name: $cloud_fsx_dns_name"
     bind_to "$onsite_nfs_mount_target" "$prod_mount_target"
   fi
 fi
 
-if [[ ! -z "$cloud_fsx_ip_address" ]]; then
+if [[ ! -z "$cloud_fsx_dns_name" ]]; then
   echo "...Wait until FSX server is reachable."
-  until nc -vzw 2 $cloud_fsx_ip_address 988; do sleep 2; done
+  until nc -vzw 2 $cloud_fsx_dns_name 988; do sleep 2; done
   echo "...Ensuring mount paths exist."
   mkdir -p "$cloud_mount_target"
   chmod u=rwX,g=rwX,o=rwX "$cloud_mount_target"
   echo "...Configure /etc/fstab for FSX"
-  echo "$cloud_fsx_ip_export $cloud_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
+  echo "$cloud_fsx_export $cloud_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
   bind_to "$cloud_mount_target" "$prod_mount_target"
 fi
 

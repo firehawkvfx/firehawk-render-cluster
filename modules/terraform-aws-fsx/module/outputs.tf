@@ -4,6 +4,12 @@ output "network_interface_ids" {
 output "primary_interface" {
   value = local.primary_interface
 }
+output "fsx_mount_name" {
+  value = aws_fsx_lustre_file_system.fsx_storage.mount_name
+}
+output "fsx_dns_name" {
+  value = aws_fsx_lustre_file_system.fsx_storage.fsx_dns_name
+}
 output "id" {
   depends_on = [
     aws_fsx_lustre_file_system.fsx_storage,
