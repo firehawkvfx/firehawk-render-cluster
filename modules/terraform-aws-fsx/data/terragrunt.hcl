@@ -10,9 +10,7 @@ inputs = local.common_vars.inputs
 
 dependencies {
   paths = [
-    "../../terraform-aws-render-vpc",
-    # "../../terraform-aws-sg-vpn",
-    # "../../../../firehawk-main/modules/terraform-aws-sg-bastion",
+    "../../terraform-aws-render-vpc"
     ]
 }
 
