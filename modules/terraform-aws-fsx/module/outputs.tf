@@ -8,7 +8,7 @@ output "fsx_mount_name" {
   value = aws_fsx_lustre_file_system.fsx_storage.mount_name
 }
 output "fsx_dns_name" {
-  value = aws_fsx_lustre_file_system.fsx_storage.fsx_dns_name
+  value = aws_fsx_lustre_file_system.fsx_storage.dns_name
 }
 output "id" {
   depends_on = [
