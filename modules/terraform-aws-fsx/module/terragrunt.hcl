@@ -32,6 +32,7 @@ inputs = merge(
   local.common_vars.inputs,
   {
     vpc_id = dependency.data.outputs.vpc_id
+    subnet_ids = length( dependency.data.outputs.private_subnet_cidr_blocks ) > 0 ? dependency.data.outputs.private_subnet_cidr_blocks[0] : []
     # security_group_ids          = [dependency.data.outputs.bastion_security_group, dependency.data.outputs.vpn_security_group]
     permitted_cidr_list_private = concat( dependency.data.outputs.private_subnet_cidr_blocks,  [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr] )
     # permitted_cidr_list         = ["${local.onsite_public_ip}/32", local.remote_cloud_public_ip_cidr, local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr, dependency.data.outputs.rendervpc_cidr, dependency.data.outputs.vaultvpc_cidr]
