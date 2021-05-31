@@ -113,6 +113,7 @@ resource "aws_fsx_lustre_file_system" "fsx_storage" {
   subnet_ids         = var.subnet_ids
   security_group_ids = length(aws_security_group.fsx_vpc) > 0 ? [aws_security_group.fsx_vpc[0].id] : null
   deployment_type    = "SCRATCH_2"
+  auto_import_policy = "NEW_CHANGED"
 
   tags = var.common_tags
 }
