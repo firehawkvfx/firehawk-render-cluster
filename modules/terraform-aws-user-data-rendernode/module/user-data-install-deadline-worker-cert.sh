@@ -177,7 +177,7 @@ echo "Determine if mounts should be altered..."
 onsite_storage=${onsite_storage}
 onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
-cloud_mount_target=${prod_mount_target}
+cloud_mount_target=${cloud_mount_target}
 prod_mount_target=${prod_mount_target}
 cloud_fsx_dns_name=${cloud_fsx_dns_name}
 cloud_fsx_export="${cloud_fsx_dns_name}@tcp:/${fsx_mount_name}"
