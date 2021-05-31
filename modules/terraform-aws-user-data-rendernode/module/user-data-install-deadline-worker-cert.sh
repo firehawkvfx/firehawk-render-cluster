@@ -185,7 +185,7 @@ houdini_major_version=${houdini_major_version}
 
 function bind_to {
   local -r source="$1"
-  local -r target="$1"
+  local -r target="$2"
   mkdir -p "$target"
   chmod u=rwX,g=rwX,o=rwX "$target"
   echo "...Bind $source to $target"
