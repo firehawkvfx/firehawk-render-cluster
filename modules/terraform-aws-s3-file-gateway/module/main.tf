@@ -1,3 +1,5 @@
+# This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
+
 terraform {
   required_providers {
     aws = "~> 3.8" # specifically because this fix can simplify work arounds - https://github.com/hashicorp/terraform-provider-aws/pull/14314
