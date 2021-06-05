@@ -20,28 +20,28 @@ resource "aws_security_group_rule" "ingress_443" {
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
-resource "aws_security_group_rule" "ingress_all" {
-  description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
-  from_port         = 0
-  protocol          = "ALL"
-  security_group_id = aws_security_group.storage_gateway.id
-  to_port           = 0
-  type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
-}
+# resource "aws_security_group_rule" "ingress_all" {
+#   description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
+#   from_port         = 0
+#   protocol          = "ALL"
+#   security_group_id = aws_security_group.storage_gateway.id
+#   to_port           = 0
+#   type              = "ingress"
+#   cidr_blocks       = var.permitted_cidr_list_private
+# }
 
-resource "aws_security_group_rule" "ingress_all_anywhere" {
-  description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
-  from_port         = 0
-  protocol          = "ALL"
-  security_group_id = aws_security_group.storage_gateway.id
-  to_port           = 0
-  type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+# resource "aws_security_group_rule" "ingress_all_anywhere" {
+#   description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
+#   from_port         = 0
+#   protocol          = "ALL"
+#   security_group_id = aws_security_group.storage_gateway.id
+#   to_port           = 0
+#   type              = "ingress"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
 
 resource "aws_security_group_rule" "ingress_icmp" {
-  description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
+  description       = "ICMP Ping"
   from_port         = 8
   protocol          = "icmp"
   security_group_id = aws_security_group.storage_gateway.id
