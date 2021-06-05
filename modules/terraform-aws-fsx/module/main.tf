@@ -99,7 +99,7 @@ resource "aws_security_group" "fsx_vpc" { # fsx for lustre security group rules 
 # }
 
 locals {
-  fsx_enabled     = (!var.sleep && var.fsx_storage) ? 1 : 0
+  fsx_enabled     = (!var.sleep && var.fsx_storage_enabled) ? 1 : 0
   fsx_import_path = "s3://${var.fsx_bucket}"
 }
 

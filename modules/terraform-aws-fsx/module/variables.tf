@@ -1,4 +1,4 @@
-variable "fsx_storage" {
+variable "fsx_storage_enabled" {
   description = "Bool enabling FSX storage"
   type        = bool
   default     = true
