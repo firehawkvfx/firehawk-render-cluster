@@ -8,7 +8,7 @@ variable "fsx_storage_capacity" {
   type        = string
   default     = "1200"
 }
-variable "fsx_bucket" {
+variable "rendering_bucket" {
   description = "The path to the S3 Bucket for the FSX backend"
   type        = string
 }
