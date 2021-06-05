@@ -7,7 +7,7 @@ resource "aws_security_group_rule" "ingress_80" {
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 80
   type              = "ingress"
-  cidr_blocks       = ["${var.deployment_cidr}"]
+  cidr_blocks       = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "egress_all" {
