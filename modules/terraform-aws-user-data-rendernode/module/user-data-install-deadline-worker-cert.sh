@@ -177,7 +177,8 @@ echo "Determine if mounts should be altered..."
 onsite_storage=${onsite_storage}
 onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
-cloud_mount_target=${cloud_mount_target}
+cloud_fsx_storage=${cloud_fsx_storage}
+cloud_fsx_mount_target=${cloud_fsx_mount_target}
 prod_mount_target=${prod_mount_target}
 cloud_fsx_dns_name=${cloud_fsx_dns_name}
 cloud_fsx_export="${cloud_fsx_dns_name}@tcp:/${fsx_mount_name}"
@@ -192,7 +193,7 @@ function bind_to {
   echo "$source $target none defaults,bind 0 0" | tee --append /etc/fstab 
 }
 
-if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
+if [[ $onsite_storage == "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
   onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
   echo "...Wait until NFS server is reachable."
   until nc -vzw 2 $onsite_nfs_host 2049; do sleep 2; done
@@ -201,21 +202,21 @@ if [[ $onsite_storage = "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z 
   chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  if [[ -z "$cloud_fsx_dns_name" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
+  if [[ $cloud_fsx_storage == "false" ]] || [[ -z "$cloud_fsx_dns_name" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
     echo "Since no fsx ip address was found, onsite storage will be mounted to cloud nodes. cloud_fsx_dns_name: $cloud_fsx_dns_name"
     bind_to "$onsite_nfs_mount_target" "$prod_mount_target"
   fi
 fi
 
-if [[ ! -z "$cloud_fsx_dns_name" ]]; then
+if [[ $cloud_fsx_storage == "true" ]] && [[ ! -z "$cloud_fsx_dns_name" ]]; then
   echo "...Wait until FSX server is reachable."
   until nc -vzw 2 $cloud_fsx_dns_name 988; do sleep 2; done
   echo "...Ensuring mount paths exist."
-  mkdir -p "$cloud_mount_target"
-  chmod u=rwX,g=rwX,o=rwX "$cloud_mount_target"
+  mkdir -p "$cloud_fsx_mount_target"
+  chmod u=rwX,g=rwX,o=rwX "$cloud_fsx_mount_target"
   echo "...Configure /etc/fstab for FSX"
-  echo "$cloud_fsx_export $cloud_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
-  bind_to "$cloud_mount_target" "$prod_mount_target"
+  echo "$cloud_fsx_export $cloud_fsx_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
+  bind_to "$cloud_fsx_mount_target" "$prod_mount_target"
 fi
 
 echo "...Mounting."

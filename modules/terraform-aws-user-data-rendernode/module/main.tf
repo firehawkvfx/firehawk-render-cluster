@@ -14,8 +14,11 @@ data "aws_ssm_parameter" "onsite_nfs_export" {
 data "aws_ssm_parameter" "onsite_nfs_mount_target" {
   name = "/firehawk/resourcetier/${local.resourcetier}/onsite_nfs_mount_target"
 }
-data "aws_ssm_parameter" "cloud_mount_target" {
-  name = "/firehawk/resourcetier/${local.resourcetier}/cloud_mount_target"
+data "aws_ssm_parameter" "cloud_fsx_storage" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/cloud_fsx_storage"
+}
+data "aws_ssm_parameter" "cloud_fsx_mount_target" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/cloud_fsx_mount_target"
 }
 data "aws_ssm_parameter" "prod_mount_target" {
   name = "/firehawk/resourcetier/${local.resourcetier}/prod_mount_target"
@@ -37,7 +40,8 @@ data "template_file" "user_data_auth_client" {
     onsite_nfs_export       = data.aws_ssm_parameter.onsite_nfs_export.value       # eg "192.168.92.11:/prod3"
     onsite_nfs_mount_target = data.aws_ssm_parameter.onsite_nfs_mount_target.value # eg "/onsite_prod"
     prod_mount_target       = data.aws_ssm_parameter.prod_mount_target.value       # eg "/prod"
-    cloud_mount_target      = data.aws_ssm_parameter.cloud_mount_target.value      # eg "/cloud_prod"
+    cloud_fsx_storage       = data.aws_ssm_parameter.cloud_fsx_storage.value
+    cloud_fsx_mount_target  = data.aws_ssm_parameter.cloud_fsx_mount_target.value # eg "/cloud_prod"
     cloud_fsx_dns_name      = var.fsx_dns_name
     fsx_mount_name          = var.fsx_mount_name
 
