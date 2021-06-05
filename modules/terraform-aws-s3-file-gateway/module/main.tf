@@ -27,7 +27,7 @@ data "aws_ami" "gateway_ami" {
   owners      = ["amazon"]
   filter {
     name   = "name"
-    values = ["aws-thinstaller-1528922603"]
+    values = ["aws-storage-gateway-1621970089"]
   }
 }
 

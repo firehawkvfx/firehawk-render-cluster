@@ -17,6 +17,8 @@ dependency "data" {
     rendervpc_cidr = "fake-cidr1"
     private_subnet_cidr_blocks = "['fake-cidr33']"
     private_subnet_ids = "['fake-subnet-id']"
+    public_subnet_cidr_blocks = "['fake-cidr33']"
+    public_subnet_ids = "['fake-subnet-id']"
     cloud_s3_gateway = "false"
     aws_s3_bucket_arn = "fake-arn"
   }
@@ -34,8 +36,8 @@ inputs = merge(
     cloud_s3_gateway_enabled = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? true : false
     # 
     vpc_id = dependency.data.outputs.vpc_id
-    subnet_ids = length( dependency.data.outputs.private_subnet_ids ) > 0 ? [ dependency.data.outputs.private_subnet_ids[0] ] : []
-    permitted_cidr_list_private = concat( dependency.data.outputs.private_subnet_cidr_blocks,  [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr] )
+    subnet_ids = length( dependency.data.outputs.public_subnet_ids ) > 0 ? [ dependency.data.outputs.public_subnet_ids[0] ] : []
+    permitted_cidr_list_private = concat( dependency.data.outputs.public_subnet_cidr_blocks,  [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr] )
     deployment_cidr = dependency.data.outputs.rendervpc_cidr # TODO replace with a more specific list
     gateway_name = "cloud_s3_file_gateway"
     key_name = get_env("TF_VAR_aws_key_name", "")
