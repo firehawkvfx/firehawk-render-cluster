@@ -15,7 +15,7 @@ inputs = merge(
 
 dependencies {
   paths = [
-    "../../terraform-aws-render-vpc"
+    "../../terraform-aws-render-vpc-routes"
     ]
 }
 
