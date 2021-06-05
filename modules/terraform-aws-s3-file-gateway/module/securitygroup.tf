@@ -10,6 +10,16 @@ resource "aws_security_group_rule" "ingress_80" {
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
+resource "aws_security_group_rule" "ingress_all" {
+  description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
+  from_port         = 0
+  protocol          = "ALL"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 0
+  type              = "ingress"
+  cidr_blocks       = var.permitted_cidr_list_private
+}
+
 resource "aws_security_group_rule" "egress_all" {
   description       = "egress"
   from_port         = 0
