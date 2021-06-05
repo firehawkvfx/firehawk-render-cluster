@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "policy_document" {
     ]
 
     resources = [
-      "${var.aws_s3_bucket_arn}",
+      var.aws_s3_bucket_arn
     ]
 
     effect = "Allow"

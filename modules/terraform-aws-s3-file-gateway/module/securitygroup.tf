@@ -1,9 +1,5 @@
 # This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
 
-data "aws_security_group" "deployment-bastion" {
-  name = "devops-production-deployment-bastion"
-}
-
 resource "aws_security_group_rule" "ingress_80" {
   description       = "For activation"
   from_port         = 80
