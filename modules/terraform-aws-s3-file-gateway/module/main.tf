@@ -31,7 +31,7 @@ data "aws_ami" "gateway_ami" {
   }
 }
 
-resource "aws_instance" "gateway" {
+resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
   ami           = data.aws_ami.gateway_ami.image_id
   instance_type = var.instance_type
 
