@@ -23,6 +23,11 @@ variable "bucket_extension" {
   description = "The bucket extension where the software installers reside"
   type        = string
 }
+variable "fsx_enabled" {
+  description = "Whether FSX is enabled or not."
+  type = bool
+  default = false
+}
 variable "fsx_private_ip" {
   description = "The IP address of the FSX primary interface to mount to render nodes"
   type        = string

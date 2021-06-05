@@ -9,6 +9,7 @@ locals {
 dependency "data" {
   config_path = "../data"
   mock_outputs = {
+    fsx_storage = "[]"
     fsx_private_ip = "fake-fsx-private-ip"
     fsx_mount_name = "fake-mount-name"
     fsx_dns_name = "fake-dns-name"
@@ -18,9 +19,10 @@ dependency "data" {
 inputs = merge(
   local.common_vars.inputs,
   {
-    fsx_private_ip = dependency.data.outputs.fsx_private_ip
-    fsx_mount_name = dependency.data.outputs.fsx_mount_name
-    fsx_dns_name = dependency.data.outputs.fsx_dns_name
+    fsx_enabled = length( dependency.data.outputs.fsx_storage ) > 0 ? true : false
+    fsx_private_ip = length( dependency.data.outputs.fsx_storage ) > 0 ? dependency.data.outputs.fsx_private_ip : null
+    fsx_mount_name = length( dependency.data.outputs.fsx_storage ) > 0 ? dependency.data.outputs.fsx_mount_name : null
+    fsx_dns_name = length( dependency.data.outputs.fsx_storage ) > 0 ? dependency.data.outputs.fsx_dns_name : null
   }
 )
 
