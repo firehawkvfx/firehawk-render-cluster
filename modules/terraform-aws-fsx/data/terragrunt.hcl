@@ -10,7 +10,7 @@ inputs = local.common_vars.inputs
 
 dependencies {
   paths = [
-    "../../terraform-aws-render-vpc-routes"
+    "../../terraform-aws-render-vpc"
     ]
 }
 
