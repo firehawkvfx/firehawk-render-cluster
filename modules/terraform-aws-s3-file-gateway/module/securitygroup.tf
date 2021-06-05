@@ -80,6 +80,7 @@ resource "aws_security_group_rule" "ingress_2049_tcp_product" {
   to_port                  = 2049
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_2049_udp_product" {
@@ -90,6 +91,7 @@ resource "aws_security_group_rule" "ingress_2049_udp_product" {
   to_port                  = 2049
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_111_tcp_product" {
@@ -100,6 +102,7 @@ resource "aws_security_group_rule" "ingress_111_tcp_product" {
   to_port                  = 111
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_111_udp_product" {
@@ -110,6 +113,7 @@ resource "aws_security_group_rule" "ingress_111_udp_product" {
   to_port                  = 111
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_20048_tcp_product" {
@@ -120,6 +124,7 @@ resource "aws_security_group_rule" "ingress_20048_tcp_product" {
   to_port                  = 20048
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_20048_udp_product" {
@@ -130,4 +135,5 @@ resource "aws_security_group_rule" "ingress_20048_udp_product" {
   to_port                  = 20048
   type                     = "ingress"
   source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
+  cidr_blocks              = var.permitted_cidr_list_private
 }
