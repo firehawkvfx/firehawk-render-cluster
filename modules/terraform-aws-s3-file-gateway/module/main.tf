@@ -47,7 +47,7 @@ resource "aws_instance" "gateway" {
   key_name = var.key_name
 
   vpc_security_group_ids = [
-    "${aws_security_group.storage_gateway.id}",
+    aws_security_group.storage_gateway.id
   ]
 }
 
