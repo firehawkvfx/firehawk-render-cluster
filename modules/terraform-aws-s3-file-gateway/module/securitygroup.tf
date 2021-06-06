@@ -73,67 +73,67 @@ resource "aws_security_group" "deployment_storage_gateway_access" {
 }
 
 resource "aws_security_group_rule" "ingress_2049_tcp_product" {
-  description              = "For NFS"
-  from_port                = 2049
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 2049
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 2049
+  protocol          = "tcp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 2049
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_2049_udp_product" {
-  description              = "For NFS"
-  from_port                = 2049
-  protocol                 = "udp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 2049
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 2049
+  protocol          = "udp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 2049
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_111_tcp_product" {
-  description              = "For NFS"
-  from_port                = 111
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 111
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 111
+  protocol          = "tcp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 111
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_111_udp_product" {
-  description              = "For NFS"
-  from_port                = 111
-  protocol                 = "udp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 111
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 111
+  protocol          = "udp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 111
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_20048_tcp_product" {
-  description              = "For NFS"
-  from_port                = 20048
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 20048
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 20048
+  protocol          = "tcp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 20048
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }
 
 resource "aws_security_group_rule" "ingress_20048_udp_product" {
-  description              = "For NFS"
-  from_port                = 20048
-  protocol                 = "udp"
-  security_group_id        = aws_security_group.storage_gateway.id
-  to_port                  = 20048
-  type                     = "ingress"
+  description       = "For NFS"
+  from_port         = 20048
+  protocol          = "udp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 20048
+  type              = "ingress"
   # source_security_group_id = aws_security_group.deployment_storage_gateway_access.id
-  cidr_blocks              = var.permitted_cidr_list_private
+  cidr_blocks = var.permitted_cidr_list_private
 }

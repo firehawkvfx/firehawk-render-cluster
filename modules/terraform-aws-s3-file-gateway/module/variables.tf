@@ -13,8 +13,8 @@ variable "instance_type" {
 }
 variable "instance_name" {
   description = "The name for the instance"
-  type = string
-  default = "filegateway"
+  type        = string
+  default     = "filegateway"
 }
 variable "client_access_list" {
   type        = list(string)
@@ -79,15 +79,3 @@ variable "resourcetier" {
   description = "The resource tier speicifies a unique name for a resource based on the environment.  eg:  dev, green, blue, main."
   type        = string
 }
-
-# variable "fsx_record_enabled" {
-#   description = "Whether to add a DNS record using Route 53"
-#   type        = bool
-#   default     = false
-# }
-# variable "private_route53_zone_id" {
-#   default = null
-# }
-# variable "fsx_hostname" {
-#   default = "fsx"
-# }

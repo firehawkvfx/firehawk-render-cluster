@@ -30,12 +30,17 @@ data "aws_ami" "gateway_ami" {
     values = ["aws-storage-gateway-1621970089"]
   }
 }
-
+locals {
+  instance_tags = merge(var.common_tags, {
+    Name  = var.instance_name
+    role  = "filegateway"
+  })
+}
 resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
-  count = var.cloud_s3_gateway_enabled ? 1 : 0
+  count         = var.cloud_s3_gateway_enabled ? 1 : 0
   ami           = data.aws_ami.gateway_ami.image_id
   instance_type = var.instance_type
-  instance_name = var.instance_name
+  tags          = local.instance_tags
 
   # Refer to AWS File Gateway documentation for minimum system requirements.
   ebs_optimized = true
@@ -56,13 +61,13 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 }
 
 locals {
-  private_ip = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null 
-  nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null 
+  private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
+  nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null
   nfs_file_share_path = length(aws_storagegateway_nfs_file_share.same_account) > 0 ? aws_storagegateway_nfs_file_share.same_account[0].path : null
 }
 
 resource "aws_storagegateway_gateway" "nfs_file_gateway" {
-  count = var.cloud_s3_gateway_enabled ? 1 : 0
+  count              = var.cloud_s3_gateway_enabled ? 1 : 0
   gateway_ip_address = local.private_ip
   gateway_name       = var.gateway_name
   gateway_timezone   = var.gateway_time_zone
@@ -76,7 +81,7 @@ data "aws_storagegateway_local_disk" "cache" {
 }
 
 resource "aws_storagegateway_cache" "nfs_cache_volume" {
-  count = var.cloud_s3_gateway_enabled ? 1 : 0
+  count       = var.cloud_s3_gateway_enabled ? 1 : 0
   disk_id     = data.aws_storagegateway_local_disk.cache.id
   gateway_arn = local.nfs_file_gateway_id
 }
@@ -90,7 +95,7 @@ resource "aws_storagegateway_cache" "nfs_cache_volume" {
 # }
 
 resource "aws_storagegateway_nfs_file_share" "same_account" {
-  count = var.cloud_s3_gateway_enabled ? 1 : 0
+  count        = var.cloud_s3_gateway_enabled ? 1 : 0
   client_list  = var.permitted_cidr_list_private
   gateway_arn  = local.nfs_file_gateway_id
   role_arn     = aws_iam_role.role.arn
