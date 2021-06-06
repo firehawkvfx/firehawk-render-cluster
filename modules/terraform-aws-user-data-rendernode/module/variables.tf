@@ -53,3 +53,8 @@ variable "nfs_cloud_file_gateway_private_ip" {
   type = string
   default = null
 }
+variable "nfs_cloud_file_gateway_share_path" {
+  description = "The NFS export path from the file gateway"
+  type = string
+  default = null
+}

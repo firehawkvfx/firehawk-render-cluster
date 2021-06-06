@@ -15,6 +15,7 @@ dependency "data" {
     fsx_mount_name = "fake-mount-name"
     fsx_dns_name = "fake-dns-name"
     nfs_file_gateway = false
+    nfs_file_share_path = "/fake-path"
   }
 }
 
@@ -37,6 +38,7 @@ inputs = merge(
     fsx_dns_name = length( dependency.data.outputs.fsx_storage ) > 0 ? dependency.data.outputs.fsx_dns_name : null
     nfs_cloud_file_gateway_enabled = length( dependency.data.outputs.nfs_file_gateway ) > 0 ? true : false
     nfs_cloud_file_gateway_private_ip = length( dependency.data.outputs.nfs_file_gateway ) > 0 ? dependency.data.outputs.nfs_private_ip : null
+    nfs_cloud_file_gateway_share_path = length( dependency.data.outputs.nfs_file_gateway ) > 0 ? dependency.data.outputs.nfs_file_share_path : null
   }
 )
 

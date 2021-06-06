@@ -174,14 +174,38 @@ else
 fi
 
 echo "Determine if mounts should be altered..."
-onsite_storage=${onsite_storage}
+prod_mount_target=${prod_mount_target}
+
 onsite_nfs_export=${onsite_nfs_export}
 onsite_nfs_mount_target=${onsite_nfs_mount_target}
-cloud_fsx_storage=${cloud_fsx_storage}
-cloud_fsx_mount_target=${cloud_fsx_mount_target}
-prod_mount_target=${prod_mount_target}
+onsite_storage="false"
+if [[ "${onsite_storage}" == "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
+  onsite_storage="true"
+fi
+
+cloud_s3_gateway_dns_name=${cloud_s3_gateway_dns_name}
+cloud_s3_gateway_mount_target=${cloud_s3_gateway_mount_target}
+cloud_s3_gateway_mount_name=${cloud_s3_gateway_mount_name}
+cloud_s3_gateway_export="${cloud_s3_gateway_dns_name}:/${cloud_s3_gateway_mount_name}"
+cloud_s3_gateway="false"
+if [[ "${cloud_s3_gateway}" == "true" ]] && [[ ! -z "$cloud_s3_gateway_dns_name" ]] && [[ ! -z "$cloud_s3_gateway_mount_target" ]] && [[ ! -z "$cloud_s3_gateway_mount_name" ]]; then
+  cloud_s3_gateway="true"
+fi
+
 cloud_fsx_dns_name=${cloud_fsx_dns_name}
+cloud_fsx_mount_target=${cloud_fsx_mount_target}
+fsx_mount_name=${fsx_mount_name}
 cloud_fsx_export="${cloud_fsx_dns_name}@tcp:/${fsx_mount_name}"
+cloud_fsx_storage="false"
+if [[ "${cloud_fsx_storage}" == "true" ]] && [[ ! -z "$cloud_fsx_dns_name" ]] && [[ ! -z "$cloud_fsx_mount_target" ]] && [[ ! -z "$fsx_mount_name" ]]; then
+  cloud_fsx_storage="true"
+fi
+
+cloud_mount="false"
+if [[ "$cloud_s3_gateway" == "true" ]] || [[ "$cloud_fsx_storage" == "true" ]]; then
+  cloud_mount="true"
+fi
+
 houdini_major_version=${houdini_major_version}
 
 function bind_to {
@@ -193,8 +217,9 @@ function bind_to {
   echo "$source $target none defaults,bind 0 0" | tee --append /etc/fstab 
 }
 
-if [[ $onsite_storage == "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z "$onsite_nfs_mount_target" ]]; then
+if [[ $onsite_storage == "true" ]]; then
   onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
+  echo ""
   echo "...Wait until NFS server is reachable."
   until nc -vzw 2 $onsite_nfs_host 2049; do sleep 2; done
   echo "...Ensuring mount paths exist."
@@ -202,13 +227,28 @@ if [[ $onsite_storage == "true" ]] && [[ ! -z "$onsite_nfs_export" ]] && [[ ! -z
   chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
   echo "...Configure /etc/fstab"
   echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
-  if [[ $cloud_fsx_storage == "false" ]] || [[ -z "$cloud_fsx_dns_name" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
-    echo "Since no fsx ip address was found, onsite storage will be mounted to cloud nodes. cloud_fsx_dns_name: $cloud_fsx_dns_name"
+  if [[ $cloud_mount == "false" ]] || [[ "$onsite_storage" == "true" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
+    echo "Since no cloud mounts are configured, onsite storage will be mounted to cloud nodes."
     bind_to "$onsite_nfs_mount_target" "$prod_mount_target"
   fi
 fi
 
-if [[ $cloud_fsx_storage == "true" ]] && [[ ! -z "$cloud_fsx_dns_name" ]]; then
+if [[ $cloud_s3_gateway == "true" ]]; then
+  echo ""
+  echo "...Wait until NFS gateway server is reachable."
+  until nc -vzw 2 $cloud_fsx_dns_name 2049; do sleep 2; done
+  echo "...Ensuring mount paths exist."
+  mkdir -p "$cloud_s3_gateway_mount_target"
+  chmod u=rwX,g=rwX,o=rwX "$cloud_s3_gateway_mount_target"
+  echo "...Configure /etc/fstab for NFS file gateway"
+  echo "$cloud_s3_gateway_export $cloud_s3_gateway_mount_target nfs defaults,nolock,hard,_netdev 0 0" | tee --append /etc/fstab
+  if [[ $cloud_fsx_storage == "false" ]]; then # If for some reason fsx is being used as well, fsx will get the production mount instead
+    bind_to "$cloud_s3_gateway_mount_target" "$prod_mount_target"
+  fi
+fi
+
+if [[ $cloud_fsx_storage == "true" ]]; then
+  echo ""
   echo "...Wait until FSX server is reachable."
   until nc -vzw 2 $cloud_fsx_dns_name 988; do sleep 2; done
   echo "...Ensuring mount paths exist."
@@ -218,7 +258,7 @@ if [[ $cloud_fsx_storage == "true" ]] && [[ ! -z "$cloud_fsx_dns_name" ]]; then
   echo "$cloud_fsx_export $cloud_fsx_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
   bind_to "$cloud_fsx_mount_target" "$prod_mount_target"
 fi
-
+echo ""
 echo "...Mounting."
 mount -a
 echo "...Finished mounting."
