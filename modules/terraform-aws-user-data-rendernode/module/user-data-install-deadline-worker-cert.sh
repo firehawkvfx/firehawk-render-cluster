@@ -217,16 +217,24 @@ function bind_to {
   echo "$source $target none defaults,bind 0 0" | tee --append /etc/fstab 
 }
 
+function fstab_mount {
+  ping_host="$1"
+  ping_port="$2"
+  mount_target="$3"
+  fstab_entry="$4"
+  echo ""
+  echo "...Wait until server is reachable: $ping_host:$ping_port"
+  until nc -vzw 2 $ping_host $ping_port; do sleep 2; done
+  echo "...Ensuring mount paths exist for mount_target: $mount_target"
+  mkdir -p "$mount_target"
+  chmod u=rwX,g=rwX,o=rwX "$mount_target"
+  echo "...Configure /etc/fstab"
+  echo "$fstab_entry" | tee --append /etc/fstab
+}
+
 if [[ $onsite_storage == "true" ]]; then
   onsite_nfs_host=$(echo "$onsite_nfs_export" | awk -F ':' '{print $1}')
-  echo ""
-  echo "...Wait until NFS server is reachable."
-  until nc -vzw 2 $onsite_nfs_host 2049; do sleep 2; done
-  echo "...Ensuring mount paths exist."
-  mkdir -p "$onsite_nfs_mount_target"
-  chmod u=rwX,g=rwX,o=rwX "$onsite_nfs_mount_target"
-  echo "...Configure /etc/fstab"
-  echo "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0" | tee --append /etc/fstab
+  fstab_mount "$onsite_nfs_host" "2049" "$onsite_nfs_mount_target" "$onsite_nfs_export $onsite_nfs_mount_target nfs defaults,_netdev,rsize=8192,wsize=8192,timeo=14,intr 0 0"
   if [[ $cloud_mount == "false" ]] || [[ "$onsite_storage" == "true" ]]; then # if no fsx ip adress exists, then we will mount the onsite storage over the vpn.
     echo "Since no cloud mounts are configured, onsite storage will be mounted to cloud nodes."
     bind_to "$onsite_nfs_mount_target" "$prod_mount_target"
@@ -234,28 +242,14 @@ if [[ $onsite_storage == "true" ]]; then
 fi
 
 if [[ $cloud_s3_gateway == "true" ]]; then
-  echo ""
-  echo "...Wait until NFS gateway server is reachable."
-  until nc -vzw 2 $cloud_fsx_dns_name 2049; do sleep 2; done
-  echo "...Ensuring mount paths exist."
-  mkdir -p "$cloud_s3_gateway_mount_target"
-  chmod u=rwX,g=rwX,o=rwX "$cloud_s3_gateway_mount_target"
-  echo "...Configure /etc/fstab for NFS file gateway"
-  echo "$cloud_s3_gateway_export $cloud_s3_gateway_mount_target nfs defaults,nolock,hard,_netdev 0 0" | tee --append /etc/fstab
+  fstab_mount "$cloud_s3_gateway_dns_name" "2049" "$cloud_s3_gateway_mount_target" "$cloud_s3_gateway_export $cloud_s3_gateway_mount_target nfs defaults,nolock,hard,_netdev 0 0"
   if [[ $cloud_fsx_storage == "false" ]]; then # If for some reason fsx is being used as well, fsx will get the production mount instead
     bind_to "$cloud_s3_gateway_mount_target" "$prod_mount_target"
   fi
 fi
 
 if [[ $cloud_fsx_storage == "true" ]]; then
-  echo ""
-  echo "...Wait until FSX server is reachable."
-  until nc -vzw 2 $cloud_fsx_dns_name 988; do sleep 2; done
-  echo "...Ensuring mount paths exist."
-  mkdir -p "$cloud_fsx_mount_target"
-  chmod u=rwX,g=rwX,o=rwX "$cloud_fsx_mount_target"
-  echo "...Configure /etc/fstab for FSX"
-  echo "$cloud_fsx_export $cloud_fsx_mount_target lustre defaults,noatime,flock,_netdev 0 0" | tee --append /etc/fstab
+  fstab_mount "$cloud_fsx_dns_name" "988" "$cloud_fsx_mount_target" "$cloud_fsx_export $cloud_fsx_mount_target lustre defaults,noatime,flock,_netdev 0 0"
   bind_to "$cloud_fsx_mount_target" "$prod_mount_target"
 fi
 echo ""
