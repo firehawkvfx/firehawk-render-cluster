@@ -11,6 +11,7 @@ inputs = local.common_vars.inputs
 dependencies {
   paths = [
     "../../terraform-aws-fsx/module",
+    "../../terraform-aws-s3-file-gateway/module",
     "../../terraform-aws-render-vpc-vault-vpc-peering",
     "../../terraform-aws-deadline-db",
     "../../terraform-aws-sg-rendernode/module",
