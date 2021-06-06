@@ -35,8 +35,6 @@ export VAULT_ADDR=https://vault.service.consul:8200
   "vault login --no-print -method=aws header_value=vault.service.consul role=${example_role_name}" \
   "Waiting for Vault login"
 
-log "Aquiring vault data..."
-
 log "Request Vault sign's the SSH host key and becomes a known host for other machines."
 
 # Allow access from clients signed by the CA.
