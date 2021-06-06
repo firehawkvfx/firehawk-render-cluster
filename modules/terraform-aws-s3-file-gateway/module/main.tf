@@ -101,6 +101,8 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
   role_arn     = aws_iam_role.role.arn
   location_arn = var.aws_s3_bucket_arn
 
+  squash = "NoSquash" # see https://forums.aws.amazon.com/thread.jspa?messageID=886347&tstart=0 and https://docs.aws.amazon.com/storagegateway/latest/userguide/managing-gateway-file.html#edit-nfs-client
+
   nfs_file_share_defaults {
       directory_mode = "0777"
       file_mode      = "0666"
