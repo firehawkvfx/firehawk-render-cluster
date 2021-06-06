@@ -3,9 +3,15 @@
 
 provider "aws" {}
 
-# data "aws_ssm_parameter" "cloud_s3_gateway" {
-#   name = "/firehawk/resourcetier/${var.resourcetier}/cloud_s3_gateway"
-# }
+data "aws_ssm_parameter" "cloud_s3_gateway" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/cloud_s3_gateway"
+}
+data "aws_ssm_parameter" "cloud_s3_gateway_mount_target" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/cloud_s3_gateway_mount_target"
+}
+data "aws_ssm_parameter" "cloud_s3_gateway_size" {
+  name = "/firehawk/resourcetier/${var.resourcetier}/cloud_s3_gateway_size"
+}
 
 data "aws_s3_bucket" "rendering_bucket" {
   bucket        = var.s3_bucket_name
@@ -57,7 +63,13 @@ output "rendervpc_cidr" {
   value = data.aws_vpc.rendervpc.cidr_block
 }
 output "cloud_s3_gateway" {
-  value = true # data.aws_ssm_parameter.cloud_s3_gateway.value
+  value = data.aws_ssm_parameter.cloud_s3_gateway.value
+}
+output "cloud_s3_gateway_mount_target" {
+  value = data.aws_ssm_parameter.cloud_s3_gateway_mount_target.value
+}
+output "cloud_s3_gateway_size" {
+  value = data.aws_ssm_parameter.cloud_s3_gateway_size.value
 }
 output "aws_s3_bucket_arn" {
   value = data.aws_s3_bucket.rendering_bucket.arn

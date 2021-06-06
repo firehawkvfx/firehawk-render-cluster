@@ -20,6 +20,8 @@ dependency "data" {
     public_subnet_cidr_blocks = "['fake-cidr33']"
     public_subnet_ids = "['fake-subnet-id']"
     cloud_s3_gateway = "false"
+    cloud_s3_gateway_mount_target = "/Volumes/fake_path"
+    cloud_s3_gateway_size = "0"
     aws_s3_bucket_arn = "fake-arn"
   }
 }
@@ -34,6 +36,7 @@ inputs = merge(
   local.common_vars.inputs,
   {
     cloud_s3_gateway_enabled = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? true : false
+    ebs_cache_volume_size = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? dependency.data.outputs.cloud_s3_gateway_size : null
     # 
     vpc_id = dependency.data.outputs.vpc_id
     subnet_ids = length( dependency.data.outputs.private_subnet_ids ) > 0 ? [ dependency.data.outputs.private_subnet_ids[0] ] : []

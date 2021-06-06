@@ -32,6 +32,7 @@ data "aws_ami" "gateway_ami" {
 }
 
 resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
+  count = var.cloud_s3_gateway_enabled ? 1 : 0
   ami           = data.aws_ami.gateway_ami.image_id
   instance_type = var.instance_type
 
@@ -53,8 +54,15 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
   ]
 }
 
+locals {
+  private_ip = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null 
+  nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null 
+  nfs_file_share_path = length(aws_storagegateway_nfs_file_share.same_account) > 0 ? aws_storagegateway_nfs_file_share.same_account[0].path : null
+}
+
 resource "aws_storagegateway_gateway" "nfs_file_gateway" {
-  gateway_ip_address = aws_instance.gateway.private_ip
+  count = var.cloud_s3_gateway_enabled ? 1 : 0
+  gateway_ip_address = local.private_ip
   gateway_name       = var.gateway_name
   gateway_timezone   = var.gateway_time_zone
   gateway_type       = "FILE_S3"
@@ -63,12 +71,13 @@ resource "aws_storagegateway_gateway" "nfs_file_gateway" {
 data "aws_storagegateway_local_disk" "cache" {
   disk_path   = "/dev/xvdf"
   disk_node   = "/dev/xvdf"
-  gateway_arn = aws_storagegateway_gateway.nfs_file_gateway.id
+  gateway_arn = local.nfs_file_gateway_id
 }
 
 resource "aws_storagegateway_cache" "nfs_cache_volume" {
+  count = var.cloud_s3_gateway_enabled ? 1 : 0
   disk_id     = data.aws_storagegateway_local_disk.cache.id
-  gateway_arn = aws_storagegateway_gateway.nfs_file_gateway.id
+  gateway_arn = local.nfs_file_gateway_id
 }
 
 # resource "aws_route53_record" "gateway_A_record" {
@@ -80,8 +89,9 @@ resource "aws_storagegateway_cache" "nfs_cache_volume" {
 # }
 
 resource "aws_storagegateway_nfs_file_share" "same_account" {
+  count = var.cloud_s3_gateway_enabled ? 1 : 0
   client_list  = var.permitted_cidr_list_private
-  gateway_arn  = aws_storagegateway_gateway.nfs_file_gateway.id
+  gateway_arn  = local.nfs_file_gateway_id
   role_arn     = aws_iam_role.role.arn
   location_arn = var.aws_s3_bucket_arn
 }
