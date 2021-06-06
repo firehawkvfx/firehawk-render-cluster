@@ -100,6 +100,12 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
   gateway_arn  = local.nfs_file_gateway_id
   role_arn     = aws_iam_role.role.arn
   location_arn = var.aws_s3_bucket_arn
-  group_id     = var.group_id
-  owner_id     = var.owner_id
+
+  nfs_file_share_defaults {
+      directory_mode = "0777"
+      file_mode      = "0666"
+      group_id       = var.group_id
+      owner_id       = var.owner_id
+  }
+  
 }

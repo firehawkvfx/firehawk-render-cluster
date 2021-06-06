@@ -81,11 +81,11 @@ variable "resourcetier" {
 }
 variable "owner_id" {
   description = "The default owner ID for the NFS share"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 variable "group_id" {
   description = "The default group ID for the NFS share"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
