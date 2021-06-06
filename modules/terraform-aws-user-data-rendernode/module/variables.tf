@@ -43,3 +43,13 @@ variable "fsx_mount_name" {
   type        = string
   default     = ""
 }
+variable "nfs_cloud_file_gateway_enabled" {
+  description = "Whether the NFS share from the S3 File gateway is enabled or not"
+  type = bool
+  default = false
+}
+variable "nfs_cloud_file_gateway_private_ip" {
+  description = "The private IP address of the NFS share."
+  type = string
+  default = null
+}

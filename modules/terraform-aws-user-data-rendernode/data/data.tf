@@ -5,11 +5,20 @@ provider "aws" {}
 
 data "aws_region" "current" {}
 
-data "terraform_remote_state" "fsx" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
+data "terraform_remote_state" "fsx" { # read the fsx export info
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension}"
     key    = "firehawk-render-cluster/modules/terraform-aws-fsx/module/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
+}
+
+data "terraform_remote_state" "file_gateway" { # read the nfs export info
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension}"
+    key    = "firehawk-render-cluster/modules/terraform-aws-s3-file-gateway/module/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }
