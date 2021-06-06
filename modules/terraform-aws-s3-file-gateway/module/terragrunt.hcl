@@ -45,6 +45,7 @@ inputs = merge(
     gateway_name = "cloud_s3_file_gateway"
     key_name = get_env("TF_VAR_aws_key_name", "")
     aws_s3_bucket_arn = dependency.data.outputs.aws_s3_bucket_arn
+    instance_name = "filegateway_pipeid${lookup(local.common_vars.common_tags, "pipelineid", "0")}"
   }
 )
 

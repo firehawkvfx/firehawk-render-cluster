@@ -11,6 +11,11 @@ variable "instance_type" {
   description = "The type of EC2 instance to launch.  Consult the AWS Storage Gateway documentation for supported instance types"
   default     = "m4.xlarge"
 }
+variable "instance_name" {
+  description = "The name for the instance"
+  type = string
+  default = "filegateway"
+}
 variable "client_access_list" {
   type        = list(string)
   description = "The list of client IPs or CIDR blocks that can access the gateway"

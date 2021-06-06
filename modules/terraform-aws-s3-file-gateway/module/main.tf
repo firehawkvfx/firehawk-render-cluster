@@ -35,6 +35,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
   count = var.cloud_s3_gateway_enabled ? 1 : 0
   ami           = data.aws_ami.gateway_ami.image_id
   instance_type = var.instance_type
+  instance_name = var.instance_name
 
   # Refer to AWS File Gateway documentation for minimum system requirements.
   ebs_optimized = true
