@@ -9,7 +9,6 @@ locals {
   vpn_cidr                     = get_env("TF_VAR_vpn_cidr", "")
   onsite_public_ip             = get_env("TF_VAR_onsite_public_ip", "")
   remote_cloud_public_ip_cidr  = get_env("TF_VAR_remote_cloud_public_ip_cidr", "")
-  commont_tags = lookup(local.common_vars, "common_tags", "{}")
 }
 
 dependency "data" {
@@ -46,7 +45,7 @@ inputs = merge(
     gateway_name = "cloud_s3_file_gateway"
     key_name = get_env("TF_VAR_aws_key_name", "")
     aws_s3_bucket_arn = dependency.data.outputs.aws_s3_bucket_arn
-    instance_name = "filegateway_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
+    instance_name = "filegateway_pipeid${lookup(local.common_vars.inputs.common_tags, "pipelineid", "0")}"
   }
 )
 
