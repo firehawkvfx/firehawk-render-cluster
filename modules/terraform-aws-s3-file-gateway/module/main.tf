@@ -32,8 +32,8 @@ data "aws_ami" "gateway_ami" {
 }
 locals {
   instance_tags = merge(var.common_tags, {
-    Name  = var.instance_name
-    role  = "filegateway"
+    Name = var.instance_name
+    role = "filegateway"
   })
 }
 resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
@@ -100,4 +100,6 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
   gateway_arn  = local.nfs_file_gateway_id
   role_arn     = aws_iam_role.role.arn
   location_arn = var.aws_s3_bucket_arn
+  group_id     = var.group_id
+  owner_id     = var.owner_id
 }

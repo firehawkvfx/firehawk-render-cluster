@@ -79,3 +79,13 @@ variable "resourcetier" {
   description = "The resource tier speicifies a unique name for a resource based on the environment.  eg:  dev, green, blue, main."
   type        = string
 }
+variable "owner_id" {
+  description = "The default owner ID for the NFS share"
+  type = string
+  default = null
+}
+variable "group_id" {
+  description = "The default group ID for the NFS share"
+  type = string
+  default = null
+}

@@ -37,7 +37,6 @@ inputs = merge(
   {
     cloud_s3_gateway_enabled = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? true : false
     ebs_cache_volume_size = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? dependency.data.outputs.cloud_s3_gateway_size : null
-    # 
     vpc_id = dependency.data.outputs.vpc_id
     subnet_ids = length( dependency.data.outputs.private_subnet_ids ) > 0 ? [ dependency.data.outputs.private_subnet_ids[0] ] : []
     permitted_cidr_list_private = concat( dependency.data.outputs.private_subnet_cidr_blocks,  [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr] )
@@ -46,6 +45,8 @@ inputs = merge(
     key_name = get_env("TF_VAR_aws_key_name", "")
     aws_s3_bucket_arn = dependency.data.outputs.aws_s3_bucket_arn
     instance_name = "filegateway_pipeid${lookup(local.common_vars.inputs.common_tags, "pipelineid", "0")}"
+    group_id = "9001"
+    owner_id = "9001"
   }
 )
 

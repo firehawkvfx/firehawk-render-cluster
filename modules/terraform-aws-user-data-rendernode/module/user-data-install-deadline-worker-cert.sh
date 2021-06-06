@@ -152,7 +152,6 @@ if [[ $onsite_storage == "true" ]]; then
     echo "Since no cloud mounts are configured, onsite storage will be mounted to cloud nodes."
     bind="true"
     bind_source="$onsite_nfs_mount_target"
-    bind_target="$prod_mount_target"
   fi
 fi
 
