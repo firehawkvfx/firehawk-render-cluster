@@ -22,9 +22,10 @@ function has_yum {
 /opt/consul/bin/run-consul --client --cluster-tag-key "${consul_cluster_tag_key}" --cluster-tag-value "${consul_cluster_tag_value}"
 
 # clone helper scripts
-git clone https://github.com/firehawkvfx/aws-ec2-user-data-scripts.git /var/tmp/aws-ec2-user-data-scripts
+git clone --branch v0.0.1 https://github.com/firehawkvfx/aws-ec2-user-data-scripts.git /var/tmp/aws-ec2-user-data-scripts
 sudo chmod +x /var/tmp/aws-ec2-user-data-scripts/scripts/*
 mv /var/tmp/aws-ec2-user-data-scripts/scripts/* /usr/local/bin/.
+rm -fr /var/tmp/aws-ec2-user-data-scripts
 
 # If vault cli is installed we can also perform these operations with vault cli
 # The necessary environment variables have to be set
