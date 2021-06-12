@@ -13,5 +13,3 @@ dependencies {
     "../../terraform-aws-render-vpc"
     ]
 }
-
-# skip = true
