@@ -14,20 +14,10 @@ dependency "data" {
     fsx_private_ip = "fake-fsx-private-ip"
     fsx_mount_name = "fake-mount-name"
     fsx_dns_name = "fake-dns-name"
-    nfs_file_gateway = false
+    nfs_file_gateway = []
     nfs_file_share_path = "/fake-path"
   }
 }
-
-# output "nfs_file_gateway" {
-#   value = data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway
-# }
-# output "nfs_private_ip" {
-#   value = length( data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway ) ? data.terraform_remote_state.file_gateway.outputs.nfs_private_ip : null
-# }
-# output "nfs_file_share_path" {
-#   value = length( data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway ) ? data.terraform_remote_state.file_gateway.outputs.nfs_file_share_path : null
-# }
 
 inputs = merge(
   local.common_vars.inputs,
