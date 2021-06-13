@@ -15,9 +15,9 @@ dependency "data" {
   config_path = "../data"
   mock_outputs = {
     rendervpc_cidr = "fake-cidr1"
-    private_subnet_cidr_blocks = "['fake-cidr33']"
-    private_subnet_ids = "['fake-subnet-id']"
-    cloud_fsx_storage = "false"
+    private_subnet_cidr_blocks = []
+    private_subnet_ids = []
+    cloud_fsx_storage = false
     vpc_id = "fakeid"
   }
 }
@@ -31,7 +31,7 @@ dependencies {
 inputs = merge(
   local.common_vars.inputs,
   {
-    fsx_storage_enabled = ( dependency.data.outputs.cloud_fsx_storage == "true" ) ? true : false
+    fsx_storage_enabled = dependency.data.outputs.cloud_fsx_storage
     vpc_id = dependency.data.outputs.vpc_id
     subnet_ids = length( dependency.data.outputs.private_subnet_ids ) > 0 ? [ dependency.data.outputs.private_subnet_ids[0] ] : []
     permitted_cidr_list_private = concat( dependency.data.outputs.private_subnet_cidr_blocks,  [local.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr] )

@@ -34,5 +34,5 @@ output "private_subnet_ids" {
   value = [for s in data.aws_subnet.private : s.id]
 }
 output "cloud_fsx_storage" {
-  value = data.aws_ssm_parameter.cloud_fsx_storage.value
+  value = data.aws_ssm_parameter.cloud_fsx_storage.value == "true" ? true : false
 }
