@@ -1,5 +1,5 @@
 output "fsx_storage" {
-  value = data.terraform_remote_state.fsx.outputs.fsx_storage
+  value = try(data.terraform_remote_state.fsx.outputs.fsx_storage, null)
 }
 output "fsx_private_ip" {
   value = length( data.terraform_remote_state.fsx.outputs.fsx_storage ) > 0 ? data.terraform_remote_state.fsx.outputs.fsx_private_ip : null
