@@ -19,7 +19,7 @@ data "terraform_remote_state" "terraform_aws_bastion" { # read the arn with data
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension_vault}"
-    key    = "init/modules/terraform-aws-bastion/terraform.tfstate"
+    key    = "firehawk-main/modules/terraform-aws-bastion/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }
