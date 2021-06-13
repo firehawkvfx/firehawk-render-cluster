@@ -12,7 +12,7 @@ output "fsx_mount_name" {
 }
 
 output "nfs_file_gateway" {
-  value = data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway
+  value = try(data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway,null)
 }
 output "nfs_private_ip" {
   value = length( try(data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway,[]) ) > 0 ? data.terraform_remote_state.file_gateway.outputs.nfs_private_ip : null
