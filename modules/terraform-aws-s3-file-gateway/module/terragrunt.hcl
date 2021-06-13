@@ -23,7 +23,7 @@ dependency "data" {
     cloud_s3_gateway_mount_target = "/Volumes/fake_path"
     cloud_s3_gateway_size = "0"
     aws_s3_bucket_arn = "fake-arn"
-    vpc_id = "fakevpc"
+    vpc_id = null
   }
 }
 
