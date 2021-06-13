@@ -95,7 +95,7 @@ module "vault_client" {
 
   private_subnet_ids  = local.private_subnet_ids
   permitted_cidr_list = ["${local.onsite_public_ip}/32", var.remote_cloud_public_ip_cidr, var.remote_cloud_private_ip_cidr, local.onsite_private_subnet_cidr, local.vpn_cidr]
-  security_group_ids  = [data.terraform_remote_state.bastion_security_group.outputs.security_group_id]
+  security_group_ids  = [try(data.terraform_remote_state.bastion_security_group.outputs.security_group_id,null)]
 
   aws_key_name           = var.aws_key_name
   common_tags            = local.common_tags

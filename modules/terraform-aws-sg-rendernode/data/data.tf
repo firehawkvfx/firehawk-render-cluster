@@ -40,10 +40,10 @@ data "aws_subnet" "private" {
 }
 
 output "bastion_security_group" {
-  value = data.terraform_remote_state.bastion_security_group.outputs.security_group_id
+  value = try(data.terraform_remote_state.bastion_security_group.outputs.security_group_id,null)
 }
 output "vpn_security_group" {
-  value = data.terraform_remote_state.vpn_security_group.outputs.security_group_id
+  value = try(data.terraform_remote_state.vpn_security_group.outputs.security_group_id,null)
 }
 output "rendervpc_cidr" {
   value = data.aws_vpc.rendervpc.cidr_block
