@@ -14,7 +14,7 @@ locals {
 dependency "data" {
   config_path = "../data"
   mock_outputs = {
-    remote_in_vpn_arn = "fake_arn"
+    remote_in_vpn_arn = null
     bastion_public_dns = "fakepublicdns"
     vault_client_private_dns = "fakeprivatedns"
   }
