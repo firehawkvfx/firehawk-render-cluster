@@ -18,7 +18,7 @@ dependency "data" {
     vpn_security_group = "fake-sg-id"
     rendervpc_cidr = "fake-cidr1"
     vaultvpc_cidr = "fake-cidr2"
-    private_subnet_cidr_blocks = "['fake-cidr33']"
+    private_subnet_cidr_blocks = ["fake-cidr33"]
   }
 }
 
