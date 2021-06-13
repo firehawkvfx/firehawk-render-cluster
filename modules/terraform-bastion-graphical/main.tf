@@ -10,7 +10,7 @@ resource "aws_security_group" "bastion_graphical" {
   vpc_id      = var.vpc_id
   description = "bastion_graphical Security Group"
 
-  tags = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
 
   ingress {
     protocol    = "-1"
@@ -60,7 +60,7 @@ resource "aws_eip" "bastion_graphicalip" {
   count    = var.create_vpc ? 1 : 0
   vpc      = true
   instance = aws_instance.bastion_graphical[count.index].id
-  tags = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
 }
 
 resource "aws_instance" "bastion_graphical" {
@@ -75,7 +75,7 @@ resource "aws_instance" "bastion_graphical" {
   root_block_device {
     delete_on_termination = true
   }
-  tags = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
 
   user_data            = data.template_file.user_data_consul_client.rendered
   iam_instance_profile = aws_iam_instance_profile.example_instance_profile.name
