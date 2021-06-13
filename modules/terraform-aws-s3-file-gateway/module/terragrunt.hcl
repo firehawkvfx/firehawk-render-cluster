@@ -15,10 +15,10 @@ dependency "data" {
   config_path = "../data"
   mock_outputs = {
     rendervpc_cidr = "fake-cidr1"
-    private_subnet_cidr_blocks = "['fake-cidr33']"
-    private_subnet_ids = "['fake-subnet-id']"
-    public_subnet_cidr_blocks = "['fake-cidr33']"
-    public_subnet_ids = "['fake-subnet-id']"
+    private_subnet_cidr_blocks = []
+    private_subnet_ids = []
+    public_subnet_cidr_blocks = []
+    public_subnet_ids = []
     cloud_s3_gateway = "false"
     cloud_s3_gateway_mount_target = "/Volumes/fake_path"
     cloud_s3_gateway_size = "0"
