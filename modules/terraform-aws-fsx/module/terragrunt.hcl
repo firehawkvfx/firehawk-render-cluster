@@ -18,6 +18,7 @@ dependency "data" {
     private_subnet_cidr_blocks = "['fake-cidr33']"
     private_subnet_ids = "['fake-subnet-id']"
     cloud_fsx_storage = "false"
+    vpc_id = "fakeid"
   }
 }
 
