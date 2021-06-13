@@ -18,10 +18,6 @@ locals {
   cloud_s3_gateway_enabled = (!var.sleep && var.cloud_s3_gateway_enabled) ? 1 : 0
 }
 
-data "aws_vpc" "deployment_vpc" {
-  id = var.vpc_id
-}
-
 data "aws_ami" "gateway_ami" {
   most_recent = true
   owners      = ["amazon"]

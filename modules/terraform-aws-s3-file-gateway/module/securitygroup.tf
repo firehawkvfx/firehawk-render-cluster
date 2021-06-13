@@ -63,13 +63,13 @@ resource "aws_security_group_rule" "egress_all" {
 resource "aws_security_group" "storage_gateway" {
   name        = "${var.gateway_name}-security-group"
   description = "Allow inbound NFS traffic"
-  vpc_id      = data.aws_vpc.deployment_vpc.id
+  vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group" "deployment_storage_gateway_access" {
   name        = "${var.gateway_name}-access"
   description = "Attach this group to your instances to get access to the storage gateway via NFS."
-  vpc_id      = data.aws_vpc.deployment_vpc.id
+  vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group_rule" "ingress_2049_tcp_product" {
