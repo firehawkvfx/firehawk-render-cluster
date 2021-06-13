@@ -17,6 +17,7 @@ dependency "data" {
     remote_in_vpn_arn = null
     bastion_public_dns = "fakepublicdns"
     vault_client_private_dns = "fakeprivatedns"
+    vpn_security_group = null
   }
 }
 
@@ -27,8 +28,10 @@ dependencies {
 inputs = merge(
   local.common_vars.inputs,
   {
+    "security_group_ids" : [ dependency.data.outputs.vpn_security_group ]
     "sqs_remote_in_vpn" : dependency.data.outputs.remote_in_vpn_arn
     "host1" : "centos@${dependency.data.outputs.bastion_public_dns}"
     "host2" : "centos@${dependency.data.outputs.vault_client_private_dns}"
+    
   }
 )
