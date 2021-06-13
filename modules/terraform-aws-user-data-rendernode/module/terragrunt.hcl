@@ -10,7 +10,7 @@ dependency "data" {
   config_path = "../data"
   mock_outputs = {
     fsx_enabled = false
-    fsx_storage = "[]"
+    fsx_storage = []
     fsx_private_ip = "fake-fsx-private-ip"
     fsx_mount_name = "fake-mount-name"
     fsx_dns_name = "fake-dns-name"
