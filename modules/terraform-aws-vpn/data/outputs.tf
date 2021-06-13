@@ -1,5 +1,5 @@
-output "remote_in_vpn_arn" {
-  value = try(data.terraform_remote_state.terraform_aws_sqs_vpn.outputs.remote_in_vpn_arn, null)
+output "remote_in_vpn_url" {
+  value = try(data.terraform_remote_state.terraform_aws_sqs_vpn.outputs.remote_in_vpn_url, null)
 }
 output "bastion_public_dns" {
   value = try(data.terraform_remote_state.terraform_aws_bastion.outputs.public_dns, null)
