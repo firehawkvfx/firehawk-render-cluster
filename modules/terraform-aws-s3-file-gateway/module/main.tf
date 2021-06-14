@@ -19,6 +19,7 @@ locals {
 }
 
 data "aws_ami" "gateway_ami" {
+  count       = var.cloud_s3_gateway_enabled ? 1 : 0
   most_recent = true
   owners      = ["amazon"]
   filter {
@@ -34,7 +35,7 @@ locals {
 }
 resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
   count         = var.cloud_s3_gateway_enabled ? 1 : 0
-  ami           = data.aws_ami.gateway_ami.image_id
+  ami           = length(data.aws_ami.gateway_ami) > 0 ? data.aws_ami.gateway_ami[0].image_id : null
   instance_type = var.instance_type
   tags          = local.instance_tags
 
@@ -71,6 +72,7 @@ resource "aws_storagegateway_gateway" "nfs_file_gateway" {
 }
 
 data "aws_storagegateway_local_disk" "cache" {
+  count       = var.cloud_s3_gateway_enabled ? 1 : 0
   disk_path   = "/dev/xvdf"
   disk_node   = "/dev/xvdf"
   gateway_arn = local.nfs_file_gateway_id
@@ -78,7 +80,7 @@ data "aws_storagegateway_local_disk" "cache" {
 
 resource "aws_storagegateway_cache" "nfs_cache_volume" {
   count       = var.cloud_s3_gateway_enabled ? 1 : 0
-  disk_id     = data.aws_storagegateway_local_disk.cache.id
+  disk_id     = length(data.aws_storagegateway_local_disk.cache) > 0 ? data.aws_storagegateway_local_disk.cache[0].id : null
   gateway_arn = local.nfs_file_gateway_id
 }
 
@@ -100,10 +102,10 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
   squash = "NoSquash" # see https://forums.aws.amazon.com/thread.jspa?messageID=886347&tstart=0 and https://docs.aws.amazon.com/storagegateway/latest/userguide/managing-gateway-file.html#edit-nfs-client
 
   nfs_file_share_defaults {
-      directory_mode = "0777"
-      file_mode      = "0666"
-      group_id       = var.group_id
-      owner_id       = var.owner_id
+    directory_mode = "0777"
+    file_mode      = "0666"
+    group_id       = var.group_id
+    owner_id       = var.owner_id
   }
-  
+
 }
