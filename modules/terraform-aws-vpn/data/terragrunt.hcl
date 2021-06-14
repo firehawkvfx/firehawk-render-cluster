@@ -14,6 +14,7 @@ dependencies {
     "../../terraform-aws-render-vpc-vault-vpc-peering",
     "../../terraform-aws-sg-vpn",
     "../../../../firehawk-main/modules/vault",
+    "../../../../firehawk-main/modules/terraform-aws-bastion",
     "../../../../firehawk-main/modules/terraform-aws-iam-profile-openvpn"
     ]
 }
