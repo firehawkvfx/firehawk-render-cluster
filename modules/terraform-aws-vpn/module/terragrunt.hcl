@@ -30,8 +30,8 @@ inputs = merge(
   {
     "security_group_ids" : [ dependency.data.outputs.vpn_security_group ]
     "sqs_remote_in_vpn" : dependency.data.outputs.remote_in_vpn_url
-    "host1" : "centos@${dependency.data.outputs.bastion_public_dns}"
-    "host2" : "centos@${dependency.data.outputs.vault_client_private_dns}"
+    "host1" : "${dependency.data.outputs.bastion_public_dns}"
+    "host2" : "${dependency.data.outputs.vault_client_private_dns}"
     
   }
 )
