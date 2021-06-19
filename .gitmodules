@@ -11,3 +11,6 @@
 [submodule "modules/terraform-aws-user-data-rendernode/module/modules/aws-ec2-user-data-scripts"]
 	path = modules/terraform-aws-user-data-rendernode/module/modules/aws-ec2-user-data-scripts
 	url = https://github.com/firehawkvfx/aws-ec2-user-data-scripts.git
+[submodule "modules/terraform-aws-sqs-deadline-client/main/modules/firehawk-auth-scripts"]
+	path = modules/terraform-aws-sqs-deadline-client/main/modules/firehawk-auth-scripts
+	url = https://github.com/firehawkvfx/firehawk-auth-scripts.git
