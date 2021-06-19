@@ -8,6 +8,6 @@ output "vault_client_private_dns" {
   value = try( "centos@${data.terraform_remote_state.terraform_aws_vault_client.outputs.consul_private_dns}" , null)
 }
 output "deadline_db_instance_id" {
-  value = try(data.terraform_remote_state.terraform_aws_deadline_db.outputs.instance_id, null)
+  value = try(data.terraform_remote_state.terraform_aws_deadline_db.outputs.id, null)
 }
 

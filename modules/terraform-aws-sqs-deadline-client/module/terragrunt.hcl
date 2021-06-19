@@ -17,7 +17,7 @@ dependency "data" {
     remote_in_deadline_cert_url = null
     bastion_public_dns = "fakepublicdns"
     vault_client_private_dns = "fakeprivatedns"
-    deadline_db_instance_id = null
+    deadline_db_instance_id = "fake_instance_id"
   }
 }
 
@@ -32,6 +32,5 @@ inputs = merge(
     "sqs_remote_in_deadline_cert_url" : dependency.data.outputs.remote_in_deadline_cert_url
     "host1" : "${dependency.data.outputs.bastion_public_dns}"
     "host2" : "${dependency.data.outputs.vault_client_private_dns}"
-
   }
 )
