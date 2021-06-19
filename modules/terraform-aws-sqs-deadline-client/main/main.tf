@@ -12,7 +12,7 @@ resource "null_resource" "sqs_notify" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
-      ${path.module}/scripts/sqs-notify --resourcetier "${var.resourcetier}" --sqs-queue-url "${var.sqs_remote_in_deadline_cert_url}" --host1 "${var.host1}" --host2 "${var.host2}" --token-policy deadline_client --token-use-limit "${var.token_use_limit}"
+      ${path.module}/modules/firehawk-auth-scripts/sqs-notify --resourcetier "${var.resourcetier}" --sqs-queue-url "${var.sqs_remote_in_deadline_cert_url}" --host1 "${var.host1}" --host2 "${var.host2}" --token-policy deadline_client --token-use-limit "${var.token_use_limit}"
 EOT
   }
 }
