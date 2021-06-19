@@ -32,6 +32,5 @@ inputs = merge(
     "sqs_remote_in_vpn" : dependency.data.outputs.remote_in_vpn_url
     "host1" : "${dependency.data.outputs.bastion_public_dns}"
     "host2" : "${dependency.data.outputs.vault_client_private_dns}"
-    
   }
 )
