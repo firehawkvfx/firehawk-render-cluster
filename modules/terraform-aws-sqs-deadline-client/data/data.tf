@@ -27,7 +27,7 @@ data "terraform_remote_state" "terraform_aws_deadline_db" { # read the arn with 
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension}"
-    key    = "firehawk-main/modules/terraform-aws-deadline-db/terraform.tfstate"
+    key    = "firehawk-render-cluster/modules/terraform-aws-deadline-db/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }
