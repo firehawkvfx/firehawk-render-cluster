@@ -12,7 +12,7 @@ dependencies {
   paths = [
     "../../terraform-aws-render-vpc",
     "../../terraform-aws-render-vpc-vault-vpc-peering",
-    "../../terraform-aws-aws-deadline-db",
+    "../../terraform-aws-deadline-db",
     "../../../../firehawk-main/modules/vault",
     "../../../../firehawk-main/modules/terraform-aws-bastion",
     "../../../../firehawk-main/modules/terraform-aws-vault-client",
