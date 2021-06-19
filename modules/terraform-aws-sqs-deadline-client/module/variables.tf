@@ -19,3 +19,8 @@ variable "instance_id" {
   type = string
   default = ""
 }
+variable "token_use_limit" {
+  description = "The token use limit by default is enough for 10 hosts (10x4=40) to aquire a deadline certificate within 15 mins."
+  type = string
+  default = "40"
+}

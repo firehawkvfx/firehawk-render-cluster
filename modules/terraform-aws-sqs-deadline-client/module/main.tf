@@ -3,7 +3,7 @@ data "aws_instance" "verify" {
   instance_id = var.instance_id
 }
 
-resource "null_resource" "sqs_notify" { # the token provided by this operation by default is enough for 10 hosts (10x4=40) to aquire a deadline certificate within 15 mins.
+resource "null_resource" "sqs_notify" {
   count = length( data.aws_instance.verify ) > 0 ? 1 : 0 # if a valid instance was found, update the sqs data.
 
   triggers = {
