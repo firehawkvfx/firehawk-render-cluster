@@ -4,10 +4,10 @@ data "aws_instance" "verify" {
 }
 
 resource "null_resource" "sqs_notify" { # the token provided by this operation by default is enough for 10 hosts (10x4=40) to aquire a deadline certificate within 15 mins.
-  count = length( data.aws_instance ) > 0 ? 1 : 0 # if a valid instance was found, update the sqs data.
+  count = length( data.aws_instance.verify ) > 0 ? 1 : 0 # if a valid instance was found, update the sqs data.
 
   triggers = {
-    instance_dependency = length( data.aws_instance ) > 0 ? data.aws_instance[0].verify.id : null
+    instance_dependency = length( data.aws_instance.verify ) > 0 ? data.aws_instance.verify[0].id : null
   }
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
