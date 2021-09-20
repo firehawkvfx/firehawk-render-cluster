@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# mount /rendering.dev.firehawkvfx.com nfs defaults,nolock,hard,_netdev 0 0
+
+# 1st arg is ip address
+# 2nd arg is the bucket name listed by showmount -e $1 starting without /
+# 3rd args is target path
+
+showmount -e "$1"
+
+sudo mkdir -p "$3"
+
+sudo mount -t nfs -o nolock,hard $1:/$2 $3
