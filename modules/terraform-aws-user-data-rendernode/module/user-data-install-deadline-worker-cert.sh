@@ -71,7 +71,11 @@ houdini_license_server_enabled="${houdini_license_server_enabled}"
 houdini_license_server_address="${houdini_license_server_address}"
 if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_license_server_address" ]] && [[ "$houdini_license_server_address" != "0.0.0.0" ]]; then
   echo "...Wait until license server is reachable"
-  until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
+  if [[ $houdini_license_server_address == *"www.sidefx.com"* ]]; then 
+    until nc -vzw 2 www.sidefx.com 443; do sleep 2; done
+  else
+    until nc -vzw 2 $houdini_license_server_address 22; do sleep 2; done
+  fi
   echo "Set Houdini license server to: $houdini_license_server_address"
   echo "source ./houdini_setup and set hserver to: $houdini_license_server_address"
   set -x
