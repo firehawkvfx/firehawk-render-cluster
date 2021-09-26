@@ -40,6 +40,10 @@ data "aws_ssm_parameter" "houdini_license_server_address" {
   name = "/firehawk/resourcetier/${local.resourcetier}/houdini_license_server_address"
 }
 
+data "aws_ssm_parameter" "sesi_client_id" {
+  name = "/firehawk/resourcetier/${local.resourcetier}/sesi_client_id"
+}
+
 data "template_file" "user_data_auth_client" {
   template = format("%s%s",
     file("${path.module}/user-data-iam-auth-ssh-host-consul.sh"),
@@ -80,5 +84,6 @@ data "template_file" "user_data_auth_client" {
     houdini_license_server_enabled = data.aws_ssm_parameter.houdini_license_server_enabled.value
     houdini_license_server_address = data.aws_ssm_parameter.houdini_license_server_address.value
     houdini_major_version          = "18.5" # TODO: this should be aquired from an AMI tag.  This should also be passed to the ansible template in the image build.
+    sesi_client_id = data.aws_ssm_parameter.sesi_client_id.value # the sesi client id is required to use the SESI Cloud license
   }
 }
