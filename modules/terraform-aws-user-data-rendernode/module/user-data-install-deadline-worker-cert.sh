@@ -76,7 +76,33 @@ if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_licens
   echo "source ./houdini_setup and set hserver to: $houdini_license_server_address"
   set -x
   sudo -i -u $deadlineuser_name bash -c "echo \"serverhost=$houdini_license_server_address\" | sudo tee /home/$deadlineuser_name/.sesi_licenses.pref"
-  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
+
+  if [[ $houdini_license_server_address == *"www.sidefx.com"* ]]; then 
+    # If using houdini cloud license server, configure oauth2 keys.
+    echo "...Connecting Side FX Cloud License Server"
+
+    sesi_client_id="${sesi_client_id}"
+
+    # retrieve secretsmanager secrets
+    sesi_client_secret_key_path="/firehawk/resourcetier/${resourcetier}/sesi_client_secret_key"
+    get_secret_strings=$(aws secretsmanager get-secret-value --secret-id "$sesi_client_secret_key_path")
+    if [[ $? -eq 0 ]]; then
+      export sesi_client_secret_key=$(echo $get_secret_strings | jq ".SecretString" --raw-output)
+      if [[ -z "$sesi_client_secret_key" ]]; then
+        echo "Secretsmanager secret missing: sesi_client_secret_key"
+      fi
+    else
+      echo "Error retrieving: $sesi_client_secret_key_path"
+      return
+    fi
+
+    sudo -i -u $deadlineuser_name bash -c "echo \"APIKey=www.sidefx.com ${sesi_client_id} ${sesi_client_secret_key}\" | tee /home/$deadlineuser_name/houdini18.5/hserver.opt"
+    sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -S https://www.sidefx.com/license/sesinetd && hserver -q && hserver"
+  else
+    echo "...Connecting Private License Server"
+    sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
+  fi
+
   set +x
 else
   printf "\n...Skippping setting of Houdini license server: houdini_license_server_enabled: ${houdini_license_server_enabled} houdini_license_server_address:${houdini_license_server_address}\n\n"
