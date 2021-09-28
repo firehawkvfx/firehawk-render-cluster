@@ -1,7 +1,6 @@
-- name: init ubl licence info if first time install, and enable other config default to ease usage.
+- name: init ubl licence info if first time install, and enable other config default to ease usage. Also init some limit groups for UBL
   shell: | 
     cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
-
 
     cd /opt/Thinkbox/Deadline10/bin
     ./deadlinecommand -SetRepositoryOption "EnableRemoteAdministration" True
@@ -10,6 +9,8 @@
     ./deadlinecommand -SetRepositoryOption "PulseUseIPAddress" True
     ./deadlinecommand -SetRepositoryOption "UsageBasedURL" "{{ ubl_url }}"
     ./deadlinecommand -SetRepositoryOption "UsageBasedActivationCode" "{{ ubl_activation_code }}"
+    ./deadlinecommand -SetLimitGroup engine_ubl 0 "" False
+    ./deadlinecommand -SetLimitGroup mantra_ubl 0 "" False
   when: ubl_url
   no_log: true
   become: true
