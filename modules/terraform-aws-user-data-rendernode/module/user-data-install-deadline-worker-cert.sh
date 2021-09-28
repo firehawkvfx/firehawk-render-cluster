@@ -216,5 +216,10 @@ echo "...Enable: deadline10launcher"
 systemctl enable deadline10launcher
 echo "...Start: deadline10launcher"
 systemctl start deadline10launcher
+
+# Add to groups
+# hostname_short=$(echo $HOSTNAME | awk -F '.' '{print $1}')
+# sudo -i -u $deadlineuser_name bash -c "cd /opt/Thinkbox/Deadline10/bin && ./deadlinecommand -SetGroupsForSlave \"$hostname_short\" \"cloud_c2_engine\""
+
 set +x
 # Leave the following newline at the end of this template
