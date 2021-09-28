@@ -217,9 +217,14 @@ systemctl enable deadline10launcher
 echo "...Start: deadline10launcher"
 systemctl start deadline10launcher
 
-# Add to groups
-# hostname_short=$(echo $HOSTNAME | awk -F '.' '{print $1}')
-# sudo -i -u $deadlineuser_name bash -c "cd /opt/Thinkbox/Deadline10/bin && ./deadlinecommand -SetGroupsForSlave \"$hostname_short\" \"cloud_c2_engine\""
+# If add to deadline group tag is found, then add the instance to the group.
+this_instance_id=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+add_to_deadline_group="$(aws ec2 describe-tags --filters Name=resource-id,Values=$this_instance_id --out=json|jq '.Tags[]| select(.Key == "add_to_deadline_group")|.Value' --raw-output)"
+if [[ ! -z "$add_to_deadline_group" ]]; then
+  echo "Found add_to_deadline_group tag: $add_to_deadline_group.  Will add to group."
+  hostname_short=$(echo $HOSTNAME | awk -F '.' '{print $1}')
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/Thinkbox/Deadline10/bin && ./deadlinecommand -SetGroupsForSlave \"$hostname_short\" \"$add_to_deadline_group\""
+fi
 
 set +x
 # Leave the following newline at the end of this template
