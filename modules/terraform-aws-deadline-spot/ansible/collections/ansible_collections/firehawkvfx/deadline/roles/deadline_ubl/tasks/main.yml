@@ -15,9 +15,9 @@
     db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.UseThreePLE": true}})
     db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.ThreePLE": "houdini"}})
     db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.Overage": 4}})
-    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.UseThreePLE": true}})
-    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.ThreePLE": "mantra"}})
-    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.Overage": 4}})
+    db.LimitGroups.update({"_id": "mantra_ubl"},{\$set: {"Props.UseThreePLE": true}})
+    db.LimitGroups.update({"_id": "mantra_ubl"},{\$set: {"Props.ThreePLE": "mantra"}})
+    db.LimitGroups.update({"_id": "mantra_ubl"},{\$set: {"Props.Overage": 4}})
     db.LimitGroups.find().pretty()
     END
     )
