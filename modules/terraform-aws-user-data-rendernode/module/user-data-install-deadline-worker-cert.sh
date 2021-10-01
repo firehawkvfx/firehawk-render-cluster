@@ -102,11 +102,11 @@ if [[ "$houdini_license_server_enabled" == "true" ]] && [[ ! -z "$houdini_licens
     fi
 
     sudo -i -u $deadlineuser_name bash -c "echo \"APIKey=www.sidefx.com ${sesi_client_id} $sesi_client_secret_key\" | tee /home/$deadlineuser_name/houdini18.5/hserver.opt"
-    sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && sleep 10 && hserver -S https://www.sidefx.com/license/sesinetd && hserver -q && hserver && sleep 10 && hserver -l"
   else
     echo "...Connecting Private License Server"
-    sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver && hserver -l"
   fi
+
+  sudo -i -u $deadlineuser_name bash -c "cd /opt/hfs${houdini_major_version} && source ./houdini_setup && hserver"
   echo "...End license server config"
 
   set +x
