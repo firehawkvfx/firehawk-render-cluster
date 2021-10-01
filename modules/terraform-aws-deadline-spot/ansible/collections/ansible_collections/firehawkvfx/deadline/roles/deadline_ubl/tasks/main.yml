@@ -1,4 +1,4 @@
-- name: init ubl licence info if first time install, and enable other config default to ease usage. Also init some limit groups for UBL
+- name: init ubl licence info if first time install, and enable other config default to ease usage. Also init some limit groups for UBL use. Direct db calls may not be supported by Thinkbox in the future.
   shell: | 
     cd /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/
 
@@ -11,6 +11,17 @@
     ./deadlinecommand -SetRepositoryOption "UsageBasedActivationCode" "{{ ubl_activation_code }}"
     ./deadlinecommand -SetLimitGroup engine_ubl 0 "" False
     ./deadlinecommand -SetLimitGroup mantra_ubl 0 "" False
+    LINE1=$(cat <<END
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.UseThreePLE": true}})
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.ThreePLE": "houdini"}})
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.Overage": 4}})
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.UseThreePLE": true}})
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.ThreePLE": "mantra"}})
+    db.LimitGroups.update({"_id": "engine_ubl"},{\$set: {"Props.Overage": 4}})
+    db.LimitGroups.find().pretty()
+    END
+    )
+    /opt/Thinkbox/DeadlineDatabase10/mongo/application/bin/deadline_mongo --eval "$LINE1"
   when: ubl_url
   no_log: true
   become: true
