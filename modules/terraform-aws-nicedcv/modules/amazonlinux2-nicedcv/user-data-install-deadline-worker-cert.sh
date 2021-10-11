@@ -73,7 +73,7 @@ function retrieve_file {
   "vault kv get -field=value $source_path/file" \
   "Trying to read secret from vault")
 
-  echo "mkdir: $(dirname $target_path)"
+  echo "worker-cert retrieve_file mkdir: $(dirname $target_path)"
   mkdir -p "$(dirname $target_path)" # ensure the directory exists
   echo "Check file path is writable: $target_path"
   if test -f "$target_path"; then
