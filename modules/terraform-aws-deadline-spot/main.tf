@@ -82,7 +82,7 @@ locals {
   instance_profile                   = try( data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn, null )
   security_group_id                  = try( data.terraform_remote_state.rendernode_security_group.outputs.security_group_id, null )
   config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"
-  override_config_template_file_path = "/home/ec2-user/config_template.json"
+  override_config_template_file_path = "${pathexpand("~")}/config_template.json"
   ubl_url                            = data.aws_ssm_parameter.ubl_url.value
   max_spot_capacity_engine           = data.aws_ssm_parameter.max_spot_capacity_engine.value
   max_spot_capacity_mantra           = data.aws_ssm_parameter.max_spot_capacity_mantra.value

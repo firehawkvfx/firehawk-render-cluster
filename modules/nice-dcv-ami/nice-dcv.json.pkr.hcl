@@ -17,7 +17,7 @@ variable "aws_region" {
 
 variable "ca_public_key_path" {
   type    = string
-  default = "/home/ec2-user/.ssh/tls/ca.crt.pem"
+  # default = "/home/ec2-user/.ssh/tls/ca.crt.pem"
 }
 
 variable "consul_download_url" {
@@ -169,7 +169,6 @@ build {
       "wget -O ~/FirefoxSetup.tar.bz2 \"https://download.mozilla.org/?product=firefox-latest&os=linux64\"",
       "sudo tar xvjf ~/FirefoxSetup.tar.bz2 -C /opt/",
       "sudo ln -s /opt/firefox/firefox /usr/bin/firefox"
-      # "sudo ln -s /opt/firefox/firefox /home/ec2-user/Desktop"
     ]
   }
 
