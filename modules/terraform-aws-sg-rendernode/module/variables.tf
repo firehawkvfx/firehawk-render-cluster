@@ -19,10 +19,6 @@ variable "onsite_private_subnet_cidr" {
   description = "The subnet CIDR Range of your onsite private subnet. This is also the subnet where your VPN client resides in. eg: 192.168.1.0/24"
   type        = string
 }
-variable "deployer_ip_cidr" {
-  description = "The public IP of the host used to ssh, this may also potentially be a cloud 9 host.."
-  type        = string
-}
 variable "permitted_cidr_list_private" {
   description = "The list of private CIDR blocks that will be able to access the host."
   type        = list(string)

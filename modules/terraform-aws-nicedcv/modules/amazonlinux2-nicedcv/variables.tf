@@ -27,12 +27,6 @@ variable "vpc_id" {
 #   type        = string
 # }
 
-# variable "deployer_ip_cidr" {
-#   description = "The remote public address that will connect to the bastion instance and other public instances.  This is used to limit inbound access to public facing hosts like the VPN from your site's public IP."
-#   type        = string
-#   default     = null
-# }
-
 variable "common_tags" {
   description = "A map of common tags to assign to the resources created by this module"
   type        = map(string)

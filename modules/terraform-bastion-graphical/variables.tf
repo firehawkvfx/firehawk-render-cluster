@@ -9,6 +9,11 @@ variable "bastion_graphical_ami_id" {
   default = null
 }
 
+variable "deployer_sg_id" {
+  description = "The Security Group ID of the codebuild deployer."
+  type = string
+}
+
 variable "bastion_ip" {} # the address to use for the bastion to ssh into this host.  although it is also technically a bastion, it should be provisioned with ssh via a the single accesss point for the network
 
 variable "create_vpc" {}
@@ -23,12 +28,7 @@ variable "vpc_id" {
 variable "vpc_cidr" {
 }
 
-# deployer_ip_cidr is the ip address of the remote host / user intending to connect over vpn. eg '197.125.62.53/32'
-#example "125.254.24.255/32"
 variable "vpn_cidr" {
-}
-
-variable "deployer_ip_cidr" {
 }
 
 variable "remote_ip_graphical_cidr" {

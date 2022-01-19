@@ -23,7 +23,8 @@ resource "aws_security_group" "bastion_graphical" {
     protocol    = "tcp"
     from_port   = 8443
     to_port     = 8443
-    cidr_blocks = [var.deployer_ip_cidr, var.remote_ip_graphical_cidr]
+    cidr_blocks = [var.remote_ip_graphical_cidr]
+    security_groups = [var.deployer_sg_id]
     description = "NICE DCV graphical server"
   }
 
@@ -31,14 +32,16 @@ resource "aws_security_group" "bastion_graphical" {
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
-    cidr_blocks = [var.deployer_ip_cidr, var.remote_ip_graphical_cidr]
+    cidr_blocks = [var.remote_ip_graphical_cidr]
+    security_groups = [var.deployer_sg_id]
     description = "ssh"
   }
   ingress {
     protocol    = "icmp"
     from_port   = 8
     to_port     = 0
-    cidr_blocks = [var.deployer_ip_cidr, var.remote_ip_graphical_cidr]
+    cidr_blocks = [var.remote_ip_graphical_cidr]
+    security_groups = [var.deployer_sg_id]
     description = "icmp"
   }
   egress {
