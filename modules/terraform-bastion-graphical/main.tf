@@ -114,7 +114,7 @@ data "aws_iam_policy_document" "example_instance_role" {
 
 # Adds policies necessary for running consul
 module "consul_iam_policies_for_client" {
-  source = "github.com/hashicorp/terraform-aws-consul.git//modules/consul-iam-policies?ref=v0.7.7"
+  source = "github.com/hashicorp/terraform-aws-consul.git//modules/consul-iam-policies?ref=v0.8.0"
 
   iam_role_id = aws_iam_role.example_instance_role.id
 }
