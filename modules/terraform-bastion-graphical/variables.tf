@@ -1,12 +1,12 @@
 variable "name" {
   default = "bastion_graphical"
-  type = string
+  type    = string
 }
 
 variable "bastion_graphical_ami_id" {
   description = "The prebuilt AMI for the bastion host. This should be a private ami you have built with packer."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "bastion_ip" {} # the address to use for the bastion to ssh into this host.  although it is also technically a bastion, it should be provisioned with ssh via a the single accesss point for the network
@@ -82,5 +82,5 @@ variable "common_tags" {}
 
 variable "bucket_extension" {
   description = "The extension for cloud storage used to label your S3 storage buckets (eg: example.com, my-name-at-gmail.com). This can be any unique name (it must not be taken already, globally).  commonly, it is a domain name you own, or an abbreviated email adress.  No @ symbols are allowed. See this doc for naming restrictions on s3 buckets - https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
-  type = string
+  type        = string
 }

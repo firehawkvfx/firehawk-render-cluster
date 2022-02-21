@@ -17,7 +17,7 @@ resource "aws_security_group" "bastion_graphical" {
   vpc_id      = var.vpc_id
   description = "bastion_graphical Security Group"
 
-  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
+  tags = merge(tomap({ "Name" : var.name }), var.common_tags, local.extra_tags)
 
   ingress {
     protocol    = "-1"
@@ -27,29 +27,29 @@ resource "aws_security_group" "bastion_graphical" {
     description = "all incoming traffic from vpc"
   }
   ingress {
-    protocol    = "tcp"
-    from_port   = 8443
-    to_port     = 8443
-    cidr_blocks = [var.remote_ip_graphical_cidr]
+    protocol        = "tcp"
+    from_port       = 8443
+    to_port         = 8443
+    cidr_blocks     = [var.remote_ip_graphical_cidr]
     security_groups = [local.deployer_sg_id]
-    description = "NICE DCV graphical server"
+    description     = "NICE DCV graphical server"
   }
 
   ingress {
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = [var.remote_ip_graphical_cidr]
+    protocol        = "tcp"
+    from_port       = 22
+    to_port         = 22
+    cidr_blocks     = [var.remote_ip_graphical_cidr]
     security_groups = [local.deployer_sg_id]
-    description = "ssh"
+    description     = "ssh"
   }
   ingress {
-    protocol    = "icmp"
-    from_port   = 8
-    to_port     = 0
-    cidr_blocks = [var.remote_ip_graphical_cidr]
+    protocol        = "icmp"
+    from_port       = 8
+    to_port         = 0
+    cidr_blocks     = [var.remote_ip_graphical_cidr]
     security_groups = [local.deployer_sg_id]
-    description = "icmp"
+    description     = "icmp"
   }
   egress {
     protocol    = "-1"
@@ -61,7 +61,7 @@ resource "aws_security_group" "bastion_graphical" {
 }
 
 locals {
-  extra_tags = { 
+  extra_tags = {
     role  = "bastion_graphical"
     route = "public"
   }
@@ -71,7 +71,7 @@ resource "aws_eip" "bastion_graphicalip" {
   count    = var.create_vpc ? 1 : 0
   vpc      = true
   instance = aws_instance.bastion_graphical[count.index].id
-  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
+  tags     = merge(tomap({ "Name" : var.name }), var.common_tags, local.extra_tags)
 }
 
 resource "aws_instance" "bastion_graphical" {
@@ -86,7 +86,7 @@ resource "aws_instance" "bastion_graphical" {
   root_block_device {
     delete_on_termination = true
   }
-  tags = merge(tomap( {"Name" : var.name} ), var.common_tags, local.extra_tags)
+  tags = merge(tomap({ "Name" : var.name }), var.common_tags, local.extra_tags)
 
   user_data            = data.template_file.user_data_consul_client.rendered
   iam_instance_profile = aws_iam_instance_profile.example_instance_profile.name
@@ -143,19 +143,19 @@ data "template_file" "user_data_consul_client" {
 }
 
 locals {
-  public_ip = element(concat(aws_eip.bastion_graphicalip.*.public_ip, list("")), 0)
-  private_ip = element(concat(aws_instance.bastion_graphical.*.private_ip, list("")), 0)
-  id = element(concat(aws_instance.bastion_graphical.*.id, list("")), 0)
+  public_ip                           = element(concat(aws_eip.bastion_graphicalip.*.public_ip, list("")), 0)
+  private_ip                          = element(concat(aws_instance.bastion_graphical.*.private_ip, list("")), 0)
+  id                                  = element(concat(aws_instance.bastion_graphical.*.id, list("")), 0)
   bastion_graphical_security_group_id = element(concat(aws_security_group.bastion_graphical.*.id, list("")), 0)
   # bastion_graphical_vpn_security_group_id = element(concat(aws_security_group.bastion_graphical_vpn.*.id, list("")), 0)
   # vpc_security_group_ids = var.create_vpn ? [local.bastion_graphical_security_group_id, local.bastion_graphical_vpn_security_group_id] : [local.bastion_graphical_security_group_id]
-  vpc_security_group_ids = [local.bastion_graphical_security_group_id]
+  vpc_security_group_ids    = [local.bastion_graphical_security_group_id]
   bastion_graphical_address = var.route_public_domain_name ? "bastion_graphical.${var.public_domain_name}" : local.public_ip
 }
 
 
 resource "null_resource" "provision_bastion_graphical" {
-  count    = ( !var.sleep && var.create_vpc) ? 1 : 0
+  count = (!var.sleep && var.create_vpc) ? 1 : 0
   depends_on = [
     aws_instance.bastion_graphical,
     aws_eip.bastion_graphicalip,
@@ -163,13 +163,13 @@ resource "null_resource" "provision_bastion_graphical" {
   ]
 
   triggers = {
-    instanceid = local.id
+    instanceid                = local.id
     bastion_graphical_address = local.bastion_graphical_address
   }
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = <<EOT
+    command     = <<EOT
       cd $TF_VAR_firehawk_path
       echo "PWD: $PWD"
       . scripts/exit_test.sh
@@ -189,12 +189,12 @@ EOT
     inline = [
       "echo 'Instance is up.'",
       "set -x && sudo yum install -y python python3", # this line is only required if not included in the ami already.  Should only do this if instance isnt tagged as bootstrapped.
-      ]
+    ]
   }
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = <<EOT
+    command     = <<EOT
       cd $TF_VAR_firehawk_path
       echo "PWD: $PWD"
       . scripts/exit_test.sh
@@ -229,11 +229,11 @@ resource "aws_route53_record" "bastion_graphical_record" {
 
 resource "null_resource" "start_bastion" {
   depends_on = [aws_instance.bastion_graphical]
-  count = ( !var.sleep && var.create_vpc) ? 1 : 0
+  count      = (!var.sleep && var.create_vpc) ? 1 : 0
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "aws ec2 start-instances --instance-ids ${local.id}"
+    command     = "aws ec2 start-instances --instance-ids ${local.id}"
   }
 }
 
@@ -242,7 +242,7 @@ resource "null_resource" "shutdown_bastion" {
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = <<EOT
+    command     = <<EOT
       aws ec2 stop-instances --instance-ids ${local.id}
 EOT
   }
