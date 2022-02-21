@@ -1,8 +1,15 @@
 #----------------------------------------------------------------
 # This module creates all resources necessary for am Ansible Bastion instance in AWS
 #----------------------------------------------------------------
-
-variable "common_tags" {}
+data "aws_region" "current" {}
+data "terraform_remote_state" "provisioner_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension}"
+    key    = "init/modules/terraform-aws-sg-provisioner/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
+}
 
 resource "aws_security_group" "bastion_graphical" {
   count       = var.create_vpc ? 1 : 0
@@ -24,7 +31,7 @@ resource "aws_security_group" "bastion_graphical" {
     from_port   = 8443
     to_port     = 8443
     cidr_blocks = [var.remote_ip_graphical_cidr]
-    security_groups = [var.deployer_sg_id]
+    security_groups = [local.deployer_sg_id]
     description = "NICE DCV graphical server"
   }
 
@@ -33,7 +40,7 @@ resource "aws_security_group" "bastion_graphical" {
     from_port   = 22
     to_port     = 22
     cidr_blocks = [var.remote_ip_graphical_cidr]
-    security_groups = [var.deployer_sg_id]
+    security_groups = [local.deployer_sg_id]
     description = "ssh"
   }
   ingress {
@@ -41,7 +48,7 @@ resource "aws_security_group" "bastion_graphical" {
     from_port   = 8
     to_port     = 0
     cidr_blocks = [var.remote_ip_graphical_cidr]
-    security_groups = [var.deployer_sg_id]
+    security_groups = [local.deployer_sg_id]
     description = "icmp"
   }
   egress {
@@ -58,6 +65,7 @@ locals {
     role  = "bastion_graphical"
     route = "public"
   }
+  deployer_sg_id = data.terraform_remote_state.provisioner_security_group.outputs.security_group_id
 }
 resource "aws_eip" "bastion_graphicalip" {
   count    = var.create_vpc ? 1 : 0

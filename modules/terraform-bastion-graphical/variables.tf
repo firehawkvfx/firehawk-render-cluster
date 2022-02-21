@@ -9,11 +9,6 @@ variable "bastion_graphical_ami_id" {
   default = null
 }
 
-variable "deployer_sg_id" {
-  description = "The Security Group ID of the codebuild deployer."
-  type = string
-}
-
 variable "bastion_ip" {} # the address to use for the bastion to ssh into this host.  although it is also technically a bastion, it should be provisioned with ssh via a the single accesss point for the network
 
 variable "create_vpc" {}
@@ -81,4 +76,11 @@ variable "consul_cluster_tag_key" {
   description = "The tag the Consul EC2 Instances will look for to automatically discover each other and form a cluster."
   type        = string
   default     = "consul-servers"
+}
+
+variable "common_tags" {}
+
+variable "bucket_extension" {
+  description = "The extension for cloud storage used to label your S3 storage buckets (eg: example.com, my-name-at-gmail.com). This can be any unique name (it must not be taken already, globally).  commonly, it is a domain name you own, or an abbreviated email adress.  No @ symbols are allowed. See this doc for naming restrictions on s3 buckets - https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
+  type = string
 }
