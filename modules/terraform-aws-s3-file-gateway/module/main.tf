@@ -1,11 +1,9 @@
 # This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
-
 terraform {
   required_providers {
     aws = "~> 3.8" # specifically because this fix can simplify work arounds - https://github.com/hashicorp/terraform-provider-aws/pull/14314
   }
 }
-
 locals {
   name = "s3_gateway_pipeid${lookup(var.common_tags, "pipelineid", "0")}"
   extra_tags = {
@@ -13,19 +11,11 @@ locals {
     route = "private"
   }
 }
-
 locals {
   cloud_s3_gateway_enabled = (!var.sleep && var.cloud_s3_gateway_enabled) ? 1 : 0
 }
-
-data "aws_ami" "gateway_ami" {
-  count       = var.cloud_s3_gateway_enabled ? 1 : 0
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["aws-storage-gateway-1621970089"]
-  }
+data "aws_ssm_parameter" "gateway_ami" {
+  name = "/aws/service/storagegateway/ami/FILE_S3/latest"
 }
 locals {
   instance_tags = merge(var.common_tags, {
@@ -35,7 +25,7 @@ locals {
 }
 resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'admin@ip_address'
   count         = var.cloud_s3_gateway_enabled ? 1 : 0
-  ami           = length(data.aws_ami.gateway_ami) > 0 ? data.aws_ami.gateway_ami[0].image_id : null
+  ami           = data.aws_ssm_parameter.gateway_ami.value
   instance_type = var.instance_type
   tags          = local.instance_tags
 
