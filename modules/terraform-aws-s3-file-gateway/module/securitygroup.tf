@@ -1,5 +1,15 @@
 # This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
 
+resource "aws_security_group_rule" "ingress_ALL" {
+  description       = "EVERYTHING - DEBUGGING"
+  from_port         = 0
+  protocol          = "all"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 0
+  type              = "ingress"
+  cidr_blocks       = var.permitted_cidr_list_private
+}
+
 resource "aws_security_group_rule" "ingress_80" {
   description       = "For activation"
   from_port         = 80
