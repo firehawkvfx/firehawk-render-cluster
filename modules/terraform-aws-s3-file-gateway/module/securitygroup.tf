@@ -60,6 +60,16 @@ resource "aws_security_group_rule" "ingress_2222" { # see https://aws.amazon.com
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
+resource "aws_security_group_rule" "ingress_22" { # see https://aws.amazon.com/premiumsupport/knowledge-center/sg-resolve-activation-vpc-endpoint/
+  description       = "ingress_22"
+  from_port         = 22
+  protocol          = "tcp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 22
+  type              = "ingress"
+  cidr_blocks       = var.permitted_cidr_list_private
+}
+
 # resource "aws_security_group_rule" "ingress_all" {
 #   description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
 #   from_port         = 0
