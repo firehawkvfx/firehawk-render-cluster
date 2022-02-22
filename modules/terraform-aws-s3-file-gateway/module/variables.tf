@@ -9,7 +9,7 @@ variable "ebs_cache_volume_size" {
 }
 variable "instance_type" {
   description = "The type of EC2 instance to launch.  Consult the AWS Storage Gateway documentation for supported instance types"
-  default     = "m4.xlarge"
+  default     = "m5.xlarge"
 }
 variable "instance_name" {
   description = "The name for the instance"
@@ -40,7 +40,17 @@ variable "gateway_time_zone" {
   type        = string
   default     = "GMT"
 }
-variable "subnet_ids" {
+variable "use_public_subnet" {
+  description = "If true, use a public subnet for the gateway."
+  type        = bool
+  default     = false
+}
+variable "private_subnet_ids" {
+  description = "The list of subnet ID's for FSX endpoints."
+  type        = list(string)
+  default     = []
+}
+variable "public_subnet_ids" {
   description = "The list of subnet ID's for FSX endpoints."
   type        = list(string)
   default     = []

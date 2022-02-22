@@ -10,6 +10,16 @@ resource "aws_security_group_rule" "ingress_80" {
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
+resource "aws_security_group_rule" "smb_ingress_445" {
+  description       = "SMB"
+  from_port         = 445
+  protocol          = "tcp"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 445
+  type              = "ingress"
+  cidr_blocks       = var.permitted_cidr_list_private
+}
+
 resource "aws_security_group_rule" "ingress_443" {
   description       = "HTTPS"
   from_port         = 443
@@ -103,8 +113,8 @@ resource "aws_security_group" "deployment_storage_gateway_access" {
 }
 
 resource "aws_security_group_rule" "ingress_2049_tcp_product" {
-  description       = "For NFS"
-  from_port         = 2049
+  description       = "For NFS and NFSv3"
+  from_port         = 2048
   protocol          = "tcp"
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 2049
@@ -114,8 +124,8 @@ resource "aws_security_group_rule" "ingress_2049_tcp_product" {
 }
 
 resource "aws_security_group_rule" "ingress_2049_udp_product" {
-  description       = "For NFS"
-  from_port         = 2049
+  description       = "For NFS and NFSv3"
+  from_port         = 2048
   protocol          = "udp"
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 2049

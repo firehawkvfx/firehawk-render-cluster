@@ -31,7 +31,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 
   # Refer to AWS File Gateway documentation for minimum system requirements.
   ebs_optimized = true
-  subnet_id     = length(var.subnet_ids) > 0 ? var.subnet_ids[0] : null
+  subnet_id     = length(local.subnet_ids) > 0 ? local.subnet_ids[0] : null
 
   ebs_block_device {
     device_name           = "/dev/xvdf"
@@ -48,14 +48,16 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 }
 
 locals {
+  subnet_ids          = var.use_public_subnet ? var.public_subnet_ids : var.private_subnet_ids
   private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
+  public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
   nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null
   nfs_file_share_path = length(aws_storagegateway_nfs_file_share.same_account) > 0 ? aws_storagegateway_nfs_file_share.same_account[0].path : null
 }
 
 resource "aws_storagegateway_gateway" "nfs_file_gateway" {
   count              = var.cloud_s3_gateway_enabled ? 1 : 0
-  gateway_ip_address = local.private_ip
+  gateway_ip_address = var.use_public_subnet ? local.public_ip : local.private_ip
   gateway_name       = var.gateway_name
   gateway_timezone   = var.gateway_time_zone
   gateway_type       = "FILE_S3"

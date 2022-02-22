@@ -55,7 +55,6 @@ output "public_subnet_cidr_blocks" {
 output "public_subnet_ids" {
   value = [for s in data.aws_subnet.public : s.id]
 }
-
 output "vpc_id" {
   value = data.aws_vpc.rendervpc.id
 }
