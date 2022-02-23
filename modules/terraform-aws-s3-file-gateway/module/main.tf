@@ -49,6 +49,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 
 locals {
   subnet_ids          = var.use_public_subnet ? var.public_subnet_ids : var.private_subnet_ids
+  instance_id          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].id : null
   private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
   public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
   nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null
@@ -56,6 +57,10 @@ locals {
 }
 
 resource "aws_storagegateway_gateway" "nfs_file_gateway" {
+  depends_on = [aws_instance.gateway]
+  triggers = {
+    aws_instance_id = local.instance_id
+  }
   count              = var.cloud_s3_gateway_enabled ? 1 : 0
   gateway_ip_address = var.use_public_subnet ? local.public_ip : local.private_ip
   gateway_name       = var.gateway_name
