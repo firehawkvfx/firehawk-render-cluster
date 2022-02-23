@@ -58,9 +58,7 @@ locals {
 
 resource "aws_storagegateway_gateway" "nfs_file_gateway" {
   depends_on = [aws_instance.gateway]
-  triggers = {
-    aws_instance_id = local.instance_id
-  }
+
   count              = var.cloud_s3_gateway_enabled ? 1 : 0
   gateway_ip_address = var.use_public_subnet ? local.public_ip : local.private_ip
   gateway_name       = var.gateway_name
