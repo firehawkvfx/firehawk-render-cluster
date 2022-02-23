@@ -123,7 +123,7 @@ set -x
 set -e
 pathadd() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        PATH="${PATH:+"$PATH:"}$1"
+        PATH="$${PATH:+"$PATH:"}$1"
     fi
 }
 pathadd $HOME/.local/bin
@@ -146,6 +146,11 @@ printf "\n...Waiting for consul deadlinedb service before attempting to configur
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
 set -x
 set -e
+pathadd() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="$${PATH:+"$PATH:"}$1"
+    fi
+}
 pathadd $HOME/.local/bin
 echo "PATH: $PATH"
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$remote_config_output_dir/config_generated.json \
