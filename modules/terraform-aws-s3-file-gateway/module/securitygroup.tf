@@ -1,15 +1,5 @@
 # This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
 
-resource "aws_security_group_rule" "ingress_ALL" {
-  description       = "EVERYTHING - DEBUGGING"
-  from_port         = 0
-  protocol          = "all"
-  security_group_id = aws_security_group.storage_gateway.id
-  to_port           = 0
-  type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
-}
-
 resource "aws_security_group_rule" "ingress_80" {
   description       = "For activation"
   from_port         = 80
@@ -60,15 +50,15 @@ resource "aws_security_group_rule" "ingress_1031" { # see https://aws.amazon.com
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
-resource "aws_security_group_rule" "ingress_2222" { # see https://aws.amazon.com/premiumsupport/knowledge-center/sg-resolve-activation-vpc-endpoint/
-  description       = "ingress_2222"
-  from_port         = 2222
-  protocol          = "tcp"
-  security_group_id = aws_security_group.storage_gateway.id
-  to_port           = 2222
-  type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
-}
+# resource "aws_security_group_rule" "ingress_2222" { # see https://aws.amazon.com/premiumsupport/knowledge-center/sg-resolve-activation-vpc-endpoint/
+#   description       = "ingress_2222"
+#   from_port         = 2222
+#   protocol          = "tcp"
+#   security_group_id = aws_security_group.storage_gateway.id
+#   to_port           = 2222
+#   type              = "ingress"
+#   cidr_blocks       = var.permitted_cidr_list_private
+# }
 
 resource "aws_security_group_rule" "ingress_22" { # see https://aws.amazon.com/premiumsupport/knowledge-center/sg-resolve-activation-vpc-endpoint/
   description       = "ingress_22"
@@ -80,15 +70,15 @@ resource "aws_security_group_rule" "ingress_22" { # see https://aws.amazon.com/p
   cidr_blocks       = var.permitted_cidr_list_private
 }
 
-# resource "aws_security_group_rule" "ingress_all" {
-#   description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
-#   from_port         = 0
-#   protocol          = "ALL"
-#   security_group_id = aws_security_group.storage_gateway.id
-#   to_port           = 0
-#   type              = "ingress"
-#   cidr_blocks       = var.permitted_cidr_list_private
-# }
+resource "aws_security_group_rule" "ingress_all" {
+  description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
+  from_port         = 0
+  protocol          = "ALL"
+  security_group_id = aws_security_group.storage_gateway.id
+  to_port           = 65535
+  type              = "ingress"
+  cidr_blocks       = var.permitted_cidr_list_private
+}
 
 # resource "aws_security_group_rule" "ingress_all_anywhere" {
 #   description       = "WARNING: FOR TESTING AND DEBUGGING ONLY."
