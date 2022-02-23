@@ -121,6 +121,13 @@ printf "\n...Waiting for consul deadlinedb service before attempting to configur
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
 set -x
 set -e
+pathadd() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$1"
+    fi
+}
+pathadd $HOME/.local/bin
+echo "PATH: $PATH"
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -vv -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_config.yaml -v --extra-vars "ubl_url=${data.aws_ssm_parameter.ubl_url.value} \
   ubl_activation_code=${data.aws_secretsmanager_secret_version.ubl_activation_code.secret_string}"
 EOT
@@ -139,6 +146,8 @@ printf "\n...Waiting for consul deadlinedb service before attempting to configur
 until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
 set -x
 set -e
+pathadd $HOME/.local/bin
+echo "PATH: $PATH"
 ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/inventory/hosts" ansible/collections/ansible_collections/firehawkvfx/deadline/deadline_spot.yaml -v --extra-vars "config_generated_json=$remote_config_output_dir/config_generated.json \
   deadlineuser_name=${var.deadlineuser_name} \
   local_config_output_dir=$local_config_output_dir \
