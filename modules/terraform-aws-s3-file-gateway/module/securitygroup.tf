@@ -7,7 +7,7 @@ resource "aws_security_group_rule" "ingress_80" {
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 80
   type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
+  cidr_blocks       = concat(var.permitted_cidr_list_private, var.permitted_cidr_list_provisioner)
 }
 
 resource "aws_security_group_rule" "smb_ingress_445" {
@@ -67,7 +67,7 @@ resource "aws_security_group_rule" "ingress_22" { # see https://aws.amazon.com/p
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
+  cidr_blocks       = concat(var.permitted_cidr_list_private, var.permitted_cidr_list_provisioner)
 }
 
 resource "aws_security_group_rule" "ingress_all" {
@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "ingress_all" {
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 65535
   type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
+  cidr_blocks       = concat(var.permitted_cidr_list_private, var.permitted_cidr_list_provisioner)
 }
 
 # resource "aws_security_group_rule" "ingress_all_anywhere" {
@@ -97,7 +97,7 @@ resource "aws_security_group_rule" "ingress_icmp" {
   security_group_id = aws_security_group.storage_gateway.id
   to_port           = 0
   type              = "ingress"
-  cidr_blocks       = var.permitted_cidr_list_private
+  cidr_blocks       = concat(var.permitted_cidr_list_private, var.permitted_cidr_list_provisioner)
 }
 
 resource "aws_security_group_rule" "egress_all" {

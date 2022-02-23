@@ -69,6 +69,11 @@ variable "sleep" {
   type        = bool
   default     = false
 }
+variable "permitted_cidr_list_provisioner" {
+  description = "The list of CIDR blocks to allow acces to FSX"
+  type        = list(string)
+  default     = []
+}
 variable "permitted_cidr_list_private" {
   description = "The list of CIDR blocks to allow acces to FSX"
   type        = list(string)
