@@ -3,37 +3,28 @@ provider "aws" {
   # in a dev environment these version locks below can be disabled.  in production, they should be locked based on the suggested versions from terraform init.
   version = "~> 3.15.0"
 }
-locals {
-  common_tags = var.common_tags
-  # vaultvpc_tags = {
-  #   "conflictkey" : local.common_tags["conflictkey"],
-  #   "pipelineid" : local.common_tags["pipelineid"],
-  #   "projectname" : "firehawk-main",
-  #   "vpcname": var.vpcname_vaultvpc,
-  # }
-}
 data "aws_vpc" "primary" { # The primary is the VPC defined by the common tags var.
   default = false
-  tags    = local.common_tags
+  tags    = var.common_tags_rendervpc
 }
 data "aws_vpc" "secondary" { # The secondary VPC
-  id = var.vpc_id_main_cloud9
+  id = var.vpc_id_main_provisioner
 }
 resource "aws_vpc_peering_connection" "primary2secondary" {
   vpc_id      = data.aws_vpc.primary.id   # Primary VPC ID.
   peer_vpc_id = data.aws_vpc.secondary.id # Secondary VPC ID.
   auto_accept = true                      # Flags that the peering connection should be automatically confirmed. This only works if both VPCs are owned by the same account.
-  tags = merge( local.common_tags, { "peer_to" : "cloud9" } )
+  tags = merge( var.common_tags_rendervpc, { "peer_to" : "cloud9" } )
   # # AWS Account ID. This can be dynamically queried using the
   # # aws_caller_identity data resource.
   # # https://www.terraform.io/docs/providers/aws/d/caller_identity.html
   # peer_owner_id = "${data.aws_caller_identity.current.account_id}"
 }
 data "aws_route_table" "main_private" {
-  tags = merge( local.common_tags, { "area" : "private" } )
+  tags = merge( var.common_tags_rendervpc, { "area" : "private" } )
 }
 data "aws_route_table" "main_public" {
-  tags = merge( local.common_tags, { "area" : "public" } )
+  tags = merge( var.common_tags_rendervpc, { "area" : "public" } )
 }
 resource "aws_route" "primaryprivate2secondary" {
   route_table_id            = data.aws_route_table.main_private.id
