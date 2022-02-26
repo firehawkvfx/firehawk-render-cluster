@@ -21,24 +21,30 @@ resource "aws_vpc_peering_connection" "primary2secondary" {
   # # https://www.terraform.io/docs/providers/aws/d/caller_identity.html
   # peer_owner_id = "${data.aws_caller_identity.current.account_id}"
 }
-data "aws_route_table" "main_private" {
+data "aws_route_table" "rendervpc_private" {
   tags = merge( var.common_tags_rendervpc, { "area" : "private" } )
 }
-data "aws_route_table" "main_public" {
+data "aws_route_table" "rendervpc_public" {
   tags = merge( var.common_tags_rendervpc, { "area" : "public" } )
 }
+data "aws_route_table" "deployervpc_private" {
+  tags = merge( var.common_tags_deployervpc, { "area" : "private" } )
+}
+# data "aws_route_table" "deployervpc_public" {
+#   tags = merge( var.common_tags_deployervpc, { "area" : "public" } )
+# }
 resource "aws_route" "primaryprivate2secondary" {
-  route_table_id            = data.aws_route_table.main_private.id
+  route_table_id            = data.aws_route_table.rendervpc_private.id
   destination_cidr_block    = data.aws_vpc.secondary.cidr_block               # CIDR block / IP range for VPC 2.
   vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
 }
 resource "aws_route" "primarypublic2secondary" {
-  route_table_id            = data.aws_route_table.main_public.id
+  route_table_id            = data.aws_route_table.rendervpc_public.id
   destination_cidr_block    = data.aws_vpc.secondary.cidr_block               # CIDR block / IP range for VPC 2.
   vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
 }
 resource "aws_route" "secondary2primary" {
-  route_table_id            = data.aws_vpc.secondary.main_route_table_id      # ID of VPC 2 main route table.
+  route_table_id            = data.aws_route_table.deployervpc_private.id      # ID of VPC 2 main route table.
   destination_cidr_block    = data.aws_vpc.primary.cidr_block                 # CIDR block / IP range for VPC 2.
   vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
 }
