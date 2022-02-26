@@ -8,6 +8,7 @@ data "aws_vpc" "primary" { # The primary is the VPC defined by the common tags v
   tags    = var.common_tags_rendervpc
 }
 data "aws_vpc" "secondary" { # The secondary VPC
+  default = false
   id = var.vpc_id_main_provisioner
 }
 resource "aws_vpc_peering_connection" "primary2secondary" {
