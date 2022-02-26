@@ -28,3 +28,8 @@ variable "common_tags" {
   description = "Common tags for all resources in a deployment run."
   type        = map(string)
 }
+
+variable "common_tags_rendervpc" {
+  description = "Common tags for resources in the render vpc / firehawk-render-cluster project."
+  type        = map(string)
+}
