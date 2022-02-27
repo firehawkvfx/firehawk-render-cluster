@@ -9,19 +9,6 @@ data "aws_ami" "rendernode" {
     name   = "tag:ami_role"
     values = ["firehawk_centos7_rendernode_ami"]
   }
-  # filter { # This should be used in production
-  #   name   = "tag:commit_hash"
-  #   values = [var.ami_commit_hash]
-  # }
-}
-# data "aws_vpc" "rendervpc" {
-#   default = false
-#   tags    = var.common_tags_rendervpc
-# }
-# data "aws_vpc" "rendervpc" {
-#   count = length(var.rendervpc_id) > 0 ? 1 : 0
-#   id    = var.rendervpc_id
-# }
 
 data "aws_subnets" "private" {
   filter {
@@ -33,14 +20,10 @@ data "aws_subnets" "private" {
   }
 }
 data "aws_subnet" "private" {
-  for_each = data.aws_subnets.private.ids
+  for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
 
-# data "aws_subnet_ids" "private" {
-#   vpc_id = data.aws_vpc.rendervpc.id
-#   tags   = { "area" : "private" }
-# }
 data "terraform_remote_state" "rendernode_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
   config = {
