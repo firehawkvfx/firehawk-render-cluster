@@ -1,5 +1,5 @@
 data "aws_instance" "verify" {
-  count = try( length(var.instance_id), 0 ) > 0 ? 1 : 0
+  count = var.instance_id ? 1 : 0
   instance_id = var.instance_id
 }
 
