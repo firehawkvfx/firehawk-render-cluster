@@ -9,6 +9,7 @@ data "aws_ami" "rendernode" {
     name   = "tag:ami_role"
     values = ["firehawk_centos7_rendernode_ami"]
   }
+}
 
 data "aws_subnets" "private" {
   filter {
