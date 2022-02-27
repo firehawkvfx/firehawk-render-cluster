@@ -46,3 +46,8 @@ variable "user_data" {
   description = "The user data for the render node"
   type = string
 }
+variable "rendervpc_id" {
+  description = "The ID of the render VPC to deploy into."
+  type        = string
+  default     = null
+}

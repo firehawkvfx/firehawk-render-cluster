@@ -20,11 +20,20 @@ dependency "terraform-aws-deadline-db" {
   }
 }
 
+dependency "terraform-aws-render-vpc" {
+  config_path = "../terraform-aws-render-vpc"
+  mock_outputs = {
+    vpc_id = ""
+  }
+}
+
 inputs = merge(
   local.common_vars.inputs,
   {
     deadline_db_instance_id = dependency.terraform-aws-deadline-db.outputs.id
     user_data               = dependency.terraform-aws-user-data-rendernode.outputs.user_data_base64
+    rendervpc_id = dependency.terraform-aws-render-vpc.outputs.vpc_id
+    # rendervpc_id = app/modules/firehawk/deploy/firehawk-render-cluster/modules/terraform-aws-render-vpc/outputs.tf
   }
 )
 
@@ -32,6 +41,7 @@ dependencies {
   paths = [ # not strictly dependencies, but if they fail, there is no point in continuing to deploy a vpc or anything else.
     "../terraform-aws-deadline-db",
     "../terraform-aws-sg-rendernode/module",
+    "../terraform-aws-render-vpc",
     "../../../firehawk-main/modules/terraform-aws-iam-profile-rendernode"
   ]
 }

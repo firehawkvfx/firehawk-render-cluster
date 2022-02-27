@@ -14,10 +14,29 @@ data "aws_ami" "rendernode" {
   #   values = [var.ami_commit_hash]
   # }
 }
-data "aws_vpc" "rendervpc" {
-  default = false
-  tags    = var.common_tags_rendervpc
+# data "aws_vpc" "rendervpc" {
+#   default = false
+#   tags    = var.common_tags_rendervpc
+# }
+# data "aws_vpc" "rendervpc" {
+#   count = length(var.rendervpc_id) > 0 ? 1 : 0
+#   id    = var.rendervpc_id
+# }
+
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = length(var.rendervpc_id) > 0 ? [var.rendervpc_id] : []
+  }
+  tags = {
+    area = "private"
+  }
 }
+data "aws_subnet" "private" {
+  for_each = data.aws_subnets.private.ids
+  id       = each.value
+}
+
 data "aws_subnet_ids" "private" {
   vpc_id = data.aws_vpc.rendervpc.id
   tags   = { "area" : "private" }
