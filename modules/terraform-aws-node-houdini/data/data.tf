@@ -13,3 +13,11 @@ data "terraform_remote_state" "user_data" { # read the arn with data.terraform_r
     region = data.aws_region.current.name
   }
 }
+data "aws_vpc" "rendervpc" {
+  default = false
+  tags    = var.common_tags_rendervpc
+}
+data "aws_vpc" "vaultvpc" {
+  default = false
+  tags    = var.common_tags_vaultvpc
+}
