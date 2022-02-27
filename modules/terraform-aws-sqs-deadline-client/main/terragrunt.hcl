@@ -10,9 +10,9 @@ dependency "data" {
   config_path = "../data"
   mock_outputs = {
     remote_in_deadline_cert_url = null
-    bastion_public_dns = "fakepublicdns"
-    vault_client_private_dns = "fakeprivatedns"
-    deadline_db_instance_id = "fake_instance_id"
+    bastion_public_dns = ""
+    vault_client_private_dns = ""
+    deadline_db_instance_id = ""
   }
 }
 
