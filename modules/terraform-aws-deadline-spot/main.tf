@@ -37,10 +37,10 @@ data "aws_subnet" "private" {
   id       = each.value
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.rendervpc.id
-  tags   = { "area" : "private" }
-}
+# data "aws_subnet_ids" "private" {
+#   vpc_id = data.aws_vpc.rendervpc.id
+#   tags   = { "area" : "private" }
+# }
 data "terraform_remote_state" "rendernode_profile" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
   config = {
@@ -97,7 +97,7 @@ locals {
 locals {
   ami_id                             = data.aws_ami.rendernode.id
   snapshot_id                        = local.ebs_block_device["/dev/sda1"].ebs.snapshot_id
-  private_subnet_ids                 = tolist(data.aws_subnet_ids.private.ids)
+  private_subnet_ids                 = [for s in data.aws_subnet.private : s.id]
   instance_profile                   = try( data.terraform_remote_state.rendernode_profile.outputs.instance_profile_arn, null )
   security_group_id                  = try( data.terraform_remote_state.rendernode_security_group.outputs.security_group_id, null )
   config_template_file_path          = "${path.module}/ansible/collections/ansible_collections/firehawkvfx/deadline/roles/deadline_spot/files/config_template.json"

@@ -32,7 +32,7 @@ inputs = merge(
   {
     deadline_db_instance_id = dependency.terraform-aws-deadline-db.outputs.id
     user_data               = dependency.terraform-aws-user-data-rendernode.outputs.user_data_base64
-    rendervpc_id = dependency.terraform-aws-render-vpc.outputs.vpc_id
+    rendervpc_id            = dependency.terraform-aws-render-vpc.outputs.vpc_id
     # rendervpc_id = app/modules/firehawk/deploy/firehawk-render-cluster/modules/terraform-aws-render-vpc/outputs.tf
   }
 )
