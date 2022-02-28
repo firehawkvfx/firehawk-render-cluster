@@ -26,6 +26,7 @@ data "terraform_remote_state" "terraform_aws_bastion" { # read the arn with data
 
 locals {
   common_tags = var.common_tags
+  vpc_id = try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "")
 }
 
 data "terraform_remote_state" "rendervpc" {
@@ -38,17 +39,17 @@ data "terraform_remote_state" "rendervpc" {
 }
 
 data "aws_security_group" "vpn_security_group" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
-  count = length(data.terraform_remote_state.rendervpc.outputs.vpc_id) > 0 ? 1 : 0
+  count = length(local.vpc_id) > 0 ? 1 : 0
   tags = merge( local.common_tags, tomap( {
     "role": "vpn",
     "route": "public"
   } ) )
   name = "${lookup(local.common_tags, "vpcname", "default")}_openvpn_ec2_pipeid${lookup(local.common_tags, "pipelineid", "0")}" # name is important to use since tags cannot be controlled - names must be unique, so if it was already taken there would be an error.
-  vpc_id = data.terraform_remote_state.rendervpc.outputs.vpc_id
+  vpc_id = local.vpc_id
 }
 
 output "vpc_id" {
-  value = data.terraform_remote_state.rendervpc.outputs.vpc_id
+  value = local.vpc_id
 }
 
 output "vpn_security_group" {
