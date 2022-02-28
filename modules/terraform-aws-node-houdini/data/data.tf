@@ -25,7 +25,7 @@ data "terraform_remote_state" "vaultvpc" {
   backend = "s3"
   config = {
     bucket = "state.terraform.${var.bucket_extension}"
-    key    = "vault-init/modules/vpc/terraform.tfstate"
+    key    = "vault-init/firehawk-main/modules/vpc/terraform.tfstate"
     region = data.aws_region.current.name
   }
 }
