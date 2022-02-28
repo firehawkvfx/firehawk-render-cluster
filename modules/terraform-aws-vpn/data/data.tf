@@ -37,12 +37,8 @@ data "terraform_remote_state" "rendervpc" {
   }
 }
 
-# data "aws_vpc" "primary" {
-#   default = false
-#   tags    = local.common_tags
-# }
-
 data "aws_security_group" "vpn_security_group" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
+  count = length(data.terraform_remote_state.rendervpc.outputs.vpc_id) > 0 ? 1 : 0
   tags = merge( local.common_tags, tomap( {
     "role": "vpn",
     "route": "public"
@@ -56,5 +52,5 @@ output "vpc_id" {
 }
 
 output "vpn_security_group" {
-  value = try(data.aws_security_group.vpn_security_group.id,null)
+  value = try(data.aws_security_group.vpn_security_group[0].id,null)
 }
