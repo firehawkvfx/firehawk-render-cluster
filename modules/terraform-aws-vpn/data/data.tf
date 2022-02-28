@@ -28,10 +28,19 @@ locals {
   common_tags = var.common_tags
 }
 
-data "aws_vpc" "primary" {
-  default = false
-  tags    = local.common_tags
+data "terraform_remote_state" "rendervpc" {
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension}"
+    key    = "firehawk-render-cluster/modules/terraform-aws-render-vpc/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
 }
+
+# data "aws_vpc" "primary" {
+#   default = false
+#   tags    = local.common_tags
+# }
 
 data "aws_security_group" "vpn_security_group" { # Aquire the security group ID for external bastion hosts, these will require SSH access to this internal host.  Since multiple deployments may exist, the pipelineid allows us to distinguish between unique deployments.
   tags = merge( local.common_tags, tomap( {
@@ -39,11 +48,11 @@ data "aws_security_group" "vpn_security_group" { # Aquire the security group ID 
     "route": "public"
   } ) )
   name = "${lookup(local.common_tags, "vpcname", "default")}_openvpn_ec2_pipeid${lookup(local.common_tags, "pipelineid", "0")}" # name is important to use since tags cannot be controlled - names must be unique, so if it was already taken there would be an error.
-  vpc_id = data.aws_vpc.primary.id
+  vpc_id = data.terraform_remote_state.rendervpc.outputs.vpc_id
 }
 
 output "vpc_id" {
-  value = data.aws_vpc.primary.id
+  value = data.terraform_remote_state.rendervpc.outputs.vpc_id
 }
 
 output "vpn_security_group" {
