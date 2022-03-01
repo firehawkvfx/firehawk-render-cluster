@@ -15,6 +15,11 @@ variable "vpn_cidr" {
   description = "The CIDR range that the vpn will assign using DHCP.  These are virtual addresses for routing traffic."
   type        = string
 }
+variable "vpc_id" {
+  description = "The ID of the VPC to deploy into. Leave an empty string to use the Default VPC in this region."
+  type        = string
+  default     = null
+}
 variable "onsite_private_subnet_cidr" {
   description = "The subnet CIDR Range of your onsite private subnet. This is also the subnet where your VPN client resides in. eg: 192.168.1.0/24"
   type        = string
