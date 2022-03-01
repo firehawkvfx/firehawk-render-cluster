@@ -39,8 +39,8 @@ data "terraform_remote_state" "rendervpc" {
   }
 }
 locals {
-  vaultvpc_id  = length(data.terraform_remote_state.vaultvpc.outputs.vpc_id) > 0 ? data.terraform_remote_state.vaultvpc.outputs.vpc_id : ""
-  rendervpc_id = length(data.terraform_remote_state.rendervpc.outputs.vpc_id) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
+  vaultvpc_id  = length( try(data.terraform_remote_state.vaultvpc.outputs.vpc_id, "") ) > 0 ? data.terraform_remote_state.vaultvpc.outputs.vpc_id : ""
+  rendervpc_id = length( try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "") ) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
 }
 data "aws_vpc" "rendervpc" {
   default = false
