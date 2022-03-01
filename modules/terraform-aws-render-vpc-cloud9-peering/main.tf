@@ -57,7 +57,7 @@ resource "aws_route" "primaryprivate2secondary" {
   count = length(data.aws_vpc.primary) > 0 ? 1 : 0
   route_table_id            = data.aws_route_table.rendervpc_private[0].id
   destination_cidr_block    = data.aws_vpc.secondary.cidr_block               # CIDR block / IP range for VPC 2.
-  vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary.id # ID of VPC peering connection.
+  vpc_peering_connection_id = aws_vpc_peering_connection.primary2secondary[0].id # ID of VPC peering connection.
 }
 resource "aws_route" "primarypublic2secondary" {
   count = length(data.aws_vpc.primary) > 0 ? 1 : 0
