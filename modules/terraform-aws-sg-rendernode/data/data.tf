@@ -43,22 +43,28 @@ locals {
   rendervpc_id = length( try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "") ) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
 }
 data "aws_vpc" "rendervpc" {
+  count = length(local.rendervpc_id) > 0 ? 1 : 0
   default = false
   id      = local.rendervpc_id
 }
 data "aws_vpc" "vaultvpc" {
+  count = length(local.vaultvpc_id) > 0 ? 1 : 0
   default = false
   id      = local.vaultvpc_id
 }
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.rendervpc.id
-  tags   = tomap({ "area" : "private" })
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = length(local.rendervpc_id) > 0 ? [local.rendervpc_id] : []
+  }
+  tags = {
+    area = "private"
+  }
 }
 data "aws_subnet" "private" {
-  for_each = data.aws_subnet_ids.private.ids
+  for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
-
 output "bastion_security_group" {
   value = try(data.terraform_remote_state.bastion_security_group.outputs.security_group_id, null)
 }
@@ -72,10 +78,10 @@ output "vaultvpc_id" {
   value = local.vaultvpc_id
 }
 output "rendervpc_cidr" {
-  value = data.aws_vpc.rendervpc.cidr_block
+  value = length(data.aws_vpc.rendervpc) > 0 ? data.aws_vpc.rendervpc[0].cidr_block : ""
 }
 output "vaultvpc_cidr" {
-  value = data.aws_vpc.vaultvpc.cidr_block
+  value = length(data.aws_vpc.vaultvpc) > 0 ? data.aws_vpc.vaultvpc[0].cidr_block : ""
 }
 output "private_subnet_cidr_blocks" {
   value = [for s in data.aws_subnet.private : s.cidr_block]
