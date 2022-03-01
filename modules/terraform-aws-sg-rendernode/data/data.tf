@@ -2,7 +2,7 @@
 # See an example here https://github.com/gruntwork-io/terragrunt/issues/254
 
 provider "aws" {
-  version = "~> 3.15.0"
+  version = "~> 4.3.0"
 }
 data "aws_region" "current" {}
 data "terraform_remote_state" "bastion_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
