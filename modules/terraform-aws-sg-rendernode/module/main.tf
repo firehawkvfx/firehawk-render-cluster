@@ -1,7 +1,3 @@
-data "aws_vpc" "thisvpc" {
-  default = false
-  tags    = var.common_tags
-}
 locals {
   name = "${lookup(local.common_tags, "vpcname", "default")}_rendernode_ec2_pipeid${lookup(local.common_tags, "pipelineid", "0")}"
   # permitted_cidr_list = [var.combined_vpcs_cidr, var.vpn_cidr, var.onsite_private_subnet_cidr]
@@ -12,9 +8,9 @@ locals {
   }
 }
 resource "aws_security_group" "node_centos7_houdini" {
-  # count       = var.create_vpc ? 1 : 0
+  count       = length(var.vpc_id) > 0 ? 1 : 0
   name        = local.name
-  vpc_id      = data.aws_vpc.thisvpc.id
+  vpc_id      = var.vpc_id
   description = "Vault client security group"
   tags        = merge(map("Name", local.name), var.common_tags, local.extra_tags)
 
