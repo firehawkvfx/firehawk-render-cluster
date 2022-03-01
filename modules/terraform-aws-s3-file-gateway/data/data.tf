@@ -69,7 +69,7 @@ data "aws_subnets" "public" {
   }
 }
 data "aws_subnet" "public" {
-  for_each = data.aws_subnets.public.ids
+  for_each = toset(data.aws_subnets.public.ids)
   id       = each.value
 }
 
