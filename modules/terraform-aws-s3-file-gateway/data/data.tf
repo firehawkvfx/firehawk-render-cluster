@@ -32,25 +32,44 @@ locals {
 }
 
 data "aws_vpc" "rendervpc" {
+  count = length(local.rendervpc_id) > 0 ? 1 : 0
   default = false
   id = local.rendervpc_id
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.rendervpc.id
-  tags   = tomap({ "area" : "private" })
+# data "aws_subnet_ids" "private" {
+#   vpc_id = data.aws_vpc.rendervpc.id
+#   tags   = tomap({ "area" : "private" })
+# }
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = length(local.rendervpc_id) > 0 ? [local.rendervpc_id] : []
+  }
+  tags = {
+    area = "private"
+  }
 }
 data "aws_subnet" "private" {
-  for_each = data.aws_subnet_ids.private.ids
+  for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
 
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.rendervpc.id
-  tags   = tomap({ "area" : "public" })
+# data "aws_subnet_ids" "public" {
+#   vpc_id = data.aws_vpc.rendervpc.id
+#   tags   = tomap({ "area" : "public" })
+# }
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = length(local.rendervpc_id) > 0 ? [local.rendervpc_id] : []
+  }
+  tags = {
+    area = "public"
+  }
 }
 data "aws_subnet" "public" {
-  for_each = data.aws_subnet_ids.public.ids
+  for_each = data.aws_subnets.public.ids
   id       = each.value
 }
 
@@ -68,10 +87,10 @@ output "public_subnet_ids" {
   value = [for s in data.aws_subnet.public : s.id]
 }
 output "vpc_id" {
-  value = data.aws_vpc.rendervpc.id
+  value = local.rendervpc_id
 }
 output "rendervpc_cidr" {
-  value = data.aws_vpc.rendervpc.cidr_block
+  value = length(data.aws_vpc.rendervpc) > 0 ? data.aws_vpc.rendervpc[0].cidr_block : ""
 }
 output "cloud_s3_gateway" {
   value = data.aws_ssm_parameter.cloud_s3_gateway.value
