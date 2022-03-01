@@ -19,9 +19,21 @@ data "aws_s3_bucket" "rendering_bucket" {
 
 data "aws_region" "current" {}
 
+data "terraform_remote_state" "rendervpc" {
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension}"
+    key    = "firehawk-render-cluster/modules/terraform-aws-render-vpc/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
+}
+locals {
+  rendervpc_id = length( try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "" ) ) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
+}
+
 data "aws_vpc" "rendervpc" {
   default = false
-  tags    = var.common_tags_rendervpc
+  id = local.rendervpc_id
 }
 
 data "aws_subnet_ids" "private" {
