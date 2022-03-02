@@ -34,7 +34,7 @@ data "aws_subnets" "private" {
   }
 }
 data "aws_subnet" "private" {
-  for_each = length(data.aws_subnets.private) > 0 ? data.aws_subnets.private.ids : []
+  for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
 output "vpc_id" {
