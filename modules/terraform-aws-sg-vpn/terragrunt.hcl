@@ -9,7 +9,11 @@ locals {
 inputs = local.common_vars.inputs
 
 dependencies {
-  paths = ["../terraform-aws-render-vpc"]
+  paths = [
+    "../terraform-aws-render-vpc"
+    "../terraform-aws-render-vpc-vault-vpc-peering",
+    "../terraform-aws-render-vpc-cloud9-peering",
+    ]
 }
 
 terraform {
