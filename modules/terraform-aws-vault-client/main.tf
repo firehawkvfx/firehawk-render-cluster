@@ -15,23 +15,30 @@ data "aws_vpc" "vaultvpc" { # vault vpc
   default = false
   tags    = local.vaultvpc_tags
 }
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.primary.id
-  tags   = merge(local.common_tags, { "area" : "public" })
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.primary.id]
+  }
+  tags = {
+    area = "public"
+  }
 }
-
 data "aws_subnet" "public" {
-  for_each = data.aws_subnet_ids.public.ids
+  for_each = toset(data.aws_subnets.public.ids)
   id       = each.value
 }
-
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.primary.id
-  tags   = merge(local.common_tags, { "area" : "private" })
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.primary.id]
+  }
+  tags = {
+    area = "private"
+  }
 }
-
 data "aws_subnet" "private" {
-  for_each = data.aws_subnet_ids.private.ids
+  for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
 
@@ -77,7 +84,7 @@ locals {
   vpn_cidr                   = var.vpn_cidr
   onsite_private_subnet_cidr = var.onsite_private_subnet_cidr
 
-  private_subnet_ids         = tolist(data.aws_subnet_ids.private.ids)
+  private_subnet_ids         = tolist(data.aws_subnets.private.ids)
   private_subnet_cidr_blocks = [for s in data.aws_subnet.private : s.cidr_block]
   onsite_public_ip           = var.onsite_public_ip
   private_route_table_ids    = data.aws_route_tables.private.ids

@@ -36,11 +36,6 @@ data "aws_vpc" "rendervpc" {
   default = false
   id = local.rendervpc_id
 }
-
-# data "aws_subnet_ids" "private" {
-#   vpc_id = data.aws_vpc.rendervpc.id
-#   tags   = tomap({ "area" : "private" })
-# }
 data "aws_subnets" "private" {
   filter {
     name   = "vpc-id"
@@ -54,11 +49,6 @@ data "aws_subnet" "private" {
   for_each = toset(data.aws_subnets.private.ids)
   id       = each.value
 }
-
-# data "aws_subnet_ids" "public" {
-#   vpc_id = data.aws_vpc.rendervpc.id
-#   tags   = tomap({ "area" : "public" })
-# }
 data "aws_subnets" "public" {
   filter {
     name   = "vpc-id"

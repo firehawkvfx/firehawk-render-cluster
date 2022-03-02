@@ -23,13 +23,18 @@ data "aws_vpc" "rendervpc" {
   id = data.terraform_remote_state.rendervpc.outputs.vpc_id
   # tags    = var.common_tags_rendervpc
 }
-data "aws_subnet_ids" "private" {
-  count = length(data.aws_vpc.rendervpc) > 0 ? 1 : 0
-  vpc_id = data.aws_vpc.rendervpc[0].id
-  tags   = tomap({ "area" : "private" })
+
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = length(data.aws_vpc.rendervpc) > 0 ? [data.aws_vpc.rendervpc[0].id] : []
+  }
+  tags = {
+    area = "private"
+  }
 }
 data "aws_subnet" "private" {
-  for_each = length(data.aws_subnet_ids.private) > 0 ? data.aws_subnet_ids.private[0].ids : []
+  for_each = length(data.aws_subnets.private) > 0 ? data.aws_subnets.private.ids : []
   id       = each.value
 }
 output "vpc_id" {
