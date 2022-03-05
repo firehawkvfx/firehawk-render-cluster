@@ -49,7 +49,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 
 locals {
   subnet_ids          = var.use_public_subnet ? var.public_subnet_ids : var.private_subnet_ids
-  instance_id          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].id : null
+  instance_id         = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].id : null
   private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
   public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
   nfs_file_gateway_id = length(aws_storagegateway_gateway.nfs_file_gateway) > 0 ? aws_storagegateway_gateway.nfs_file_gateway[0].id : null
