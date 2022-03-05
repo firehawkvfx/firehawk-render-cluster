@@ -39,7 +39,7 @@ inputs = merge(
     cloud_s3_gateway_enabled = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? true : false
     ebs_cache_volume_size = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? dependency.data.outputs.cloud_s3_gateway_size : null
     vpc_id = dependency.data.outputs.vpc_id
-    use_public_subnet = true
+    use_public_subnet = false
     private_subnet_ids = length( dependency.data.outputs.private_subnet_ids ) > 0 ? [ dependency.data.outputs.private_subnet_ids[0] ] : []
     public_subnet_ids = length( dependency.data.outputs.public_subnet_ids ) > 0 ? [ dependency.data.outputs.public_subnet_ids[0] ] : []
     permitted_cidr_list_provisioner = [ local.remote_cloud_public_ip_cidr, local.remote_cloud_private_ip_cidr ]
