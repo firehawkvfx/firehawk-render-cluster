@@ -59,23 +59,13 @@ variable "common_tags" {
   description = "Common tags for all resources in a deployment run."
   type        = map(string)
 }
-variable "vpc_id" {
-  description = "The ID of the VPC to deploy into. Leave an empty string to use the Default VPC in this region."
-  type        = string
-  default     = null
-}
 variable "sleep" {
   description = "Sleep if true may temporarily be used to destroy some resources to reduce idle costs."
   type        = bool
   default     = false
 }
-variable "permitted_cidr_list_provisioner" {
-  description = "The list of CIDR blocks to allow acces to FSX"
-  type        = list(string)
-  default     = []
-}
 variable "permitted_cidr_list_private" {
-  description = "The list of CIDR blocks to allow acces to FSX"
+  description = "The list of CIDR blocks to allow acces to Filegateway"
   type        = list(string)
   default     = []
 }

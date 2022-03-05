@@ -1,5 +1,17 @@
 # This module originated from https://github.com/davebuildscloud/terraform_file_gateway/blob/master/terraform
 
+resource "aws_security_group" "storage_gateway" {
+  name        = "${var.gateway_name}-security-group"
+  description = "Allow inbound NFS traffic"
+  vpc_id      = var.vpc_id
+}
+
+resource "aws_security_group" "deployment_storage_gateway_access" {
+  name        = "${var.gateway_name}-access"
+  description = "Attach this group to your instances to get access to the storage gateway via NFS."
+  vpc_id      = var.vpc_id
+}
+
 resource "aws_security_group_rule" "ingress_80" {
   description       = "For activation"
   from_port         = 80
@@ -108,18 +120,6 @@ resource "aws_security_group_rule" "egress_all" {
   to_port           = 65535
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group" "storage_gateway" {
-  name        = "${var.gateway_name}-security-group"
-  description = "Allow inbound NFS traffic"
-  vpc_id      = var.vpc_id
-}
-
-resource "aws_security_group" "deployment_storage_gateway_access" {
-  name        = "${var.gateway_name}-access"
-  description = "Attach this group to your instances to get access to the storage gateway via NFS."
-  vpc_id      = var.vpc_id
 }
 
 resource "aws_security_group_rule" "ingress_2049_tcp_product" {
