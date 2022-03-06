@@ -43,7 +43,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
   key_name = var.key_name
 
   vpc_security_group_ids = [
-    aws_security_group.storage_gateway.id
+    var.storage_gateway_sg_id
   ]
 }
 

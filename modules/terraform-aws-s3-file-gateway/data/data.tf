@@ -3,6 +3,8 @@
 
 provider "aws" {}
 
+data "aws_region" "current" {}
+
 data "aws_ssm_parameter" "cloud_s3_gateway" {
   name = "/firehawk/resourcetier/${var.resourcetier}/cloud_s3_gateway"
 }
@@ -17,8 +19,6 @@ data "aws_s3_bucket" "rendering_bucket" {
   bucket        = var.s3_bucket_name
 }
 
-data "aws_region" "current" {}
-
 data "terraform_remote_state" "rendervpc" {
   backend = "s3"
   config = {
@@ -27,10 +27,17 @@ data "terraform_remote_state" "rendervpc" {
     region = data.aws_region.current.name
   }
 }
+data "terraform_remote_state" "storage_gateway_sg" {
+  backend = "s3"
+  config = {
+    bucket = "state.terraform.${var.bucket_extension}"
+    key    = "firehawk-render-cluster/modules/terraform-aws-s3-file-gateway-sg/terraform.tfstate"
+    region = data.aws_region.current.name
+  }
+}
 locals {
   rendervpc_id = length( try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "" ) ) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
 }
-
 data "aws_vpc" "rendervpc" {
   count = length(local.rendervpc_id) > 0 ? 1 : 0
   default = false
@@ -61,36 +68,4 @@ data "aws_subnets" "public" {
 data "aws_subnet" "public" {
   for_each = toset(data.aws_subnets.public.ids)
   id       = each.value
-}
-
-output "private_subnet_cidr_blocks" {
-  value = [for s in data.aws_subnet.private : s.cidr_block]
-}
-output "private_subnet_ids" {
-  value = [for s in data.aws_subnet.private : s.id]
-}
-
-output "public_subnet_cidr_blocks" {
-  value = [for s in data.aws_subnet.public : s.cidr_block]
-}
-output "public_subnet_ids" {
-  value = [for s in data.aws_subnet.public : s.id]
-}
-output "vpc_id" {
-  value = local.rendervpc_id
-}
-output "rendervpc_cidr" {
-  value = length(data.aws_vpc.rendervpc) > 0 ? data.aws_vpc.rendervpc[0].cidr_block : ""
-}
-output "cloud_s3_gateway" {
-  value = data.aws_ssm_parameter.cloud_s3_gateway.value
-}
-output "cloud_s3_gateway_mount_target" {
-  value = data.aws_ssm_parameter.cloud_s3_gateway_mount_target.value
-}
-output "cloud_s3_gateway_size" {
-  value = data.aws_ssm_parameter.cloud_s3_gateway_size.value
-}
-output "aws_s3_bucket_arn" {
-  value = data.aws_s3_bucket.rendering_bucket.arn
 }

@@ -94,3 +94,9 @@ variable "group_id" {
   type        = string
   default     = null
 }
+
+variable "storage_gateway_sg_id" {
+  description = "The Security Group ID for the storage gateway"
+  type        = string
+  default     = null
+}

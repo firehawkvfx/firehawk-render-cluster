@@ -23,6 +23,7 @@ dependency "data" {
     cloud_s3_gateway_mount_target = "/Volumes/fake_path"
     cloud_s3_gateway_size = "0"
     aws_s3_bucket_arn = "fake-arn"
+    storage_gateway_sg_id = ""
     # vpc_id = null
   }
 }
@@ -36,6 +37,7 @@ dependencies {
 inputs = merge(
   local.common_vars.inputs,
   {
+    storage_gateway_sg_id = dependency.data.outputs.storage_gateway_sg_id
     cloud_s3_gateway_enabled = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? true : false
     ebs_cache_volume_size = ( dependency.data.outputs.cloud_s3_gateway == "true" ) ? dependency.data.outputs.cloud_s3_gateway_size : null
     # vpc_id = dependency.data.outputs.vpc_id
