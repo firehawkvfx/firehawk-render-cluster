@@ -37,6 +37,7 @@ data "terraform_remote_state" "storage_gateway_sg" {
 }
 locals {
   rendervpc_id = length( try(data.terraform_remote_state.rendervpc.outputs.vpc_id, "" ) ) > 0 ? data.terraform_remote_state.rendervpc.outputs.vpc_id : ""
+  storage_gateway_sg_id = length( try(data.terraform_remote_state.storage_gateway_sg.outputs.storage_gateway_sg_id, "" ) ) > 0 ? data.terraform_remote_state.storage_gateway_sg.outputs.storage_gateway_sg_id : ""
 }
 data "aws_vpc" "rendervpc" {
   count = length(local.rendervpc_id) > 0 ? 1 : 0

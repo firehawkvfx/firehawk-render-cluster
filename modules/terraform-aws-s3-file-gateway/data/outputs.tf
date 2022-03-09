@@ -1,5 +1,5 @@
 output "storage_gateway_sg_id" {
-  value = data.terraform_remote_state.storage_gateway_sg.outputs.storage_gateway_sg_id
+  value = local.storage_gateway_sg_id
 }
 output "private_subnet_cidr_blocks" {
   value = [for s in data.aws_subnet.private : s.cidr_block]
