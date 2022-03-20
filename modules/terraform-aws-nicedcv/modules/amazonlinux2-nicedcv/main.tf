@@ -129,8 +129,8 @@ locals {
     role  = "workstation_amazonlinux2_nicedcv"
     route = "private"
   }
-  private_ip                                         = element(concat(aws_instance.workstation_amazonlinux2_nicedcv.*.private_ip, list("")), 0)
-  id                                                 = element(concat(aws_instance.workstation_amazonlinux2_nicedcv.*.id, list("")), 0)
-  workstation_amazonlinux2_nicedcv_security_group_id = element(concat(aws_security_group.workstation_amazonlinux2_nicedcv.*.id, list("")), 0)
+  private_ip                                         = element(concat(aws_instance.workstation_amazonlinux2_nicedcv.*.private_ip, tolist([""])), 0)
+  id                                                 = element(concat(aws_instance.workstation_amazonlinux2_nicedcv.*.id, tolist([""])), 0)
+  workstation_amazonlinux2_nicedcv_security_group_id = element(concat(aws_security_group.workstation_amazonlinux2_nicedcv.*.id, tolist([""])), 0)
   vpc_security_group_ids                             = [local.workstation_amazonlinux2_nicedcv_security_group_id]
 }

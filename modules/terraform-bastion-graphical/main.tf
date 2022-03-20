@@ -79,7 +79,7 @@ resource "aws_instance" "bastion_graphical" {
   ami           = var.bastion_graphical_ami_id
   instance_type = var.instance_type
   key_name      = var.aws_key_name
-  subnet_id     = element(concat(var.public_subnet_ids, list("")), 0)
+  subnet_id     = element(concat(var.public_subnet_ids, tolist([""])), 0)
 
   vpc_security_group_ids = local.vpc_security_group_ids
 
@@ -143,11 +143,11 @@ data "template_file" "user_data_consul_client" {
 }
 
 locals {
-  public_ip                           = element(concat(aws_eip.bastion_graphicalip.*.public_ip, list("")), 0)
-  private_ip                          = element(concat(aws_instance.bastion_graphical.*.private_ip, list("")), 0)
-  id                                  = element(concat(aws_instance.bastion_graphical.*.id, list("")), 0)
-  bastion_graphical_security_group_id = element(concat(aws_security_group.bastion_graphical.*.id, list("")), 0)
-  # bastion_graphical_vpn_security_group_id = element(concat(aws_security_group.bastion_graphical_vpn.*.id, list("")), 0)
+  public_ip                           = element(concat(aws_eip.bastion_graphicalip.*.public_ip, tolist([""])), 0)
+  private_ip                          = element(concat(aws_instance.bastion_graphical.*.private_ip, tolist([""])), 0)
+  id                                  = element(concat(aws_instance.bastion_graphical.*.id, tolist([""])), 0)
+  bastion_graphical_security_group_id = element(concat(aws_security_group.bastion_graphical.*.id, tolist([""])), 0)
+  # bastion_graphical_vpn_security_group_id = element(concat(aws_security_group.bastion_graphical_vpn.*.id, tolist([""])), 0)
   # vpc_security_group_ids = var.create_vpn ? [local.bastion_graphical_security_group_id, local.bastion_graphical_vpn_security_group_id] : [local.bastion_graphical_security_group_id]
   vpc_security_group_ids    = [local.bastion_graphical_security_group_id]
   bastion_graphical_address = var.route_public_domain_name ? "bastion_graphical.${var.public_domain_name}" : local.public_ip
@@ -209,7 +209,7 @@ EOT
 }
 
 locals {
-  bastion_graphical_dependency = element(concat(null_resource.provision_bastion_graphical.*.id, list("")), 0)
+  bastion_graphical_dependency = element(concat(null_resource.provision_bastion_graphical.*.id, tolist([""])), 0)
 }
 
 variable "route_zone_id" {
@@ -220,8 +220,8 @@ variable "public_domain_name" {
 
 resource "aws_route53_record" "bastion_graphical_record" {
   count   = var.route_public_domain_name && var.create_vpc ? 1 : 0
-  zone_id = element(concat(list(var.route_zone_id), list("")), 0)
-  name    = element(concat(list("bastion_graphical.${var.public_domain_name}"), list("")), 0)
+  zone_id = element(concat(list(var.route_zone_id), tolist([""])), 0)
+  name    = element(concat(list("bastion_graphical.${var.public_domain_name}"), tolist([""])), 0)
   type    = "A"
   ttl     = 300
   records = [local.public_ip]

@@ -26,7 +26,7 @@ locals {
 # Route tables to send traffic to the remote subnet are configured once the vpn is provisioned.
 resource "aws_route" "private_openvpn_remote_subnet_gateway" {
   count = length(local.private_route_table_ids)
-  route_table_id         = element(concat(local.private_route_table_ids, list("")), count.index)
+  route_table_id         = element(concat(local.private_route_table_ids, tolist([""])), count.index)
   destination_cidr_block = var.onsite_private_subnet_cidr
   vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
   timeouts {
@@ -35,7 +35,7 @@ resource "aws_route" "private_openvpn_remote_subnet_gateway" {
 }
 resource "aws_route" "public_openvpn_remote_subnet_gateway" {
   count = length(local.public_route_table_ids)
-  route_table_id         = element(concat(local.public_route_table_ids, list("")), count.index)
+  route_table_id         = element(concat(local.public_route_table_ids, tolist([""])), count.index)
   destination_cidr_block = var.onsite_private_subnet_cidr
   vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
   timeouts {
@@ -46,7 +46,7 @@ resource "aws_route" "public_openvpn_remote_subnet_gateway" {
 ### routes may be needed for traffic going back to open vpn dhcp adresses
 resource "aws_route" "private_openvpn_remote_subnet_vpndhcp_gateway" {
   count = length(local.private_route_table_ids)
-  route_table_id         = element(concat(local.private_route_table_ids, list("")), count.index)
+  route_table_id         = element(concat(local.private_route_table_ids, tolist([""])), count.index)
   destination_cidr_block = var.vpn_cidr
   vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
   timeouts {
@@ -55,7 +55,7 @@ resource "aws_route" "private_openvpn_remote_subnet_vpndhcp_gateway" {
 }
 resource "aws_route" "public_openvpn_remote_subnet_vpndhcp_gateway" {
   count = length(local.public_route_table_ids)
-  route_table_id         = element(concat(local.public_route_table_ids, list("")), count.index)
+  route_table_id         = element(concat(local.public_route_table_ids, tolist([""])), count.index)
   destination_cidr_block = var.vpn_cidr
   vpc_peering_connection_id = data.aws_vpc_peering_connection.primary2secondary.id
   timeouts {
