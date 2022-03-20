@@ -6,7 +6,7 @@ resource "aws_security_group" "workstation_amazonlinux2_nicedcv" {
   name        = var.name
   vpc_id      = var.vpc_id
   description = "Vault client security group"
-  tags        = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags        = merge(tomap({"Name": var.name}), var.common_tags, local.extra_tags)
 
   # this should be further restricted in a production environment
   ingress {
@@ -116,7 +116,7 @@ resource "aws_instance" "workstation_amazonlinux2_nicedcv" {
   instance_type          = var.instance_type
   key_name               = var.aws_key_name # The PEM key is disabled for use in production, can be used for debugging.  Instead, signed SSH certificates should be used to access the host.
   subnet_id              = tolist(var.private_subnet_ids)[0]
-  tags                   = merge(map("Name", var.name), var.common_tags, local.extra_tags)
+  tags                   = merge(tomap({"Name": var.name}), var.common_tags, local.extra_tags)
   user_data              = data.template_file.user_data_auth_client.rendered
   iam_instance_profile   = data.terraform_remote_state.workstation_profile.outputs.instance_profile_name
   vpc_security_group_ids = local.vpc_security_group_ids
