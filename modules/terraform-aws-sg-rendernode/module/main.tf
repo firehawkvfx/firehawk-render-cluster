@@ -12,7 +12,7 @@ resource "aws_security_group" "node_centos7_houdini" {
   name        = local.name
   vpc_id      = var.vpc_id
   description = "Vault client security group"
-  tags        = merge(map("Name", local.name), var.common_tags, local.extra_tags)
+  tags        = merge(tomap({"Name": local.name}), var.common_tags, local.extra_tags)
 
   # this should be further restricted in a production environment
   ingress {
