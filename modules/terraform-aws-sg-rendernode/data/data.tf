@@ -1,8 +1,17 @@
 # This is a module example of how to use data resources as variable inputs to other modules.
 # See an example here https://github.com/gruntwork-io/terragrunt/issues/254
 
-provider "aws" {
-  version = "~> 4.3.0"
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~> 4.3.0"
+    }
+    null = {
+      version = "~> 3.0"
+    }
+  }
+  required_version = ">= 0.13"
 }
 data "aws_region" "current" {}
 data "terraform_remote_state" "bastion_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
