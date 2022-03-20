@@ -50,11 +50,11 @@ data "aws_subnet" "private" {
 }
 data "aws_route_tables" "public" {
   vpc_id = data.aws_vpc.rendervpc.id
-  tags   = map("area", "public")
+  tags   = tomap({"area": "public"})
 }
 data "aws_route_tables" "private" {
   vpc_id = data.aws_vpc.rendervpc.id
-  tags   = map("area", "private")
+  tags   = tomap({"area": "private"})
 }
 data "terraform_remote_state" "bastion_security_group" { # read the arn with data.terraform_remote_state.packer_profile.outputs.instance_role_arn, or read the profile name with data.terraform_remote_state.packer_profile.outputs.instance_profile_name
   backend = "s3"
