@@ -21,12 +21,15 @@ output "rendervpc_cidr" {
 }
 output "cloud_s3_gateway" {
   value = data.aws_ssm_parameter.cloud_s3_gateway.value
+  sensitive = true
 }
 output "cloud_s3_gateway_mount_target" {
   value = data.aws_ssm_parameter.cloud_s3_gateway_mount_target.value
+  sensitive = true
 }
 output "cloud_s3_gateway_size" {
   value = data.aws_ssm_parameter.cloud_s3_gateway_size.value
+  sensitive = true
 }
 output "aws_s3_bucket_arn" {
   value = data.aws_s3_bucket.rendering_bucket.arn
