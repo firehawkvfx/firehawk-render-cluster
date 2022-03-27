@@ -26,25 +26,26 @@ variable "aws_key_name" {
   default     = null
 }
 variable "bucket_extension_vault" {
-    description = "The bucket extension where the terraform remote state resides"
-    type = string
+  description = "The bucket extension where the terraform remote state resides"
+  type        = string
 }
 variable "bucket_extension" {
-    description = "The bucket extension where the software installers reside"
-    type = string
+  description = "The bucket extension where the software installers reside"
+  type        = string
 }
 variable "deadlineuser_name" {
   description = "The deadline user name for render nodes and deadline DB"
-  type = string
-  default = "deadlineuser"
+  type        = string
+  default     = "deadlineuser"
 }
 variable "deadline_db_instance_id" {
   description = "The instance ID running deadline DB.  When this changes it must be provisioned again."
-  type = string
+  type        = string
 }
 variable "user_data" {
   description = "The user data for the render node"
-  type = string
+  type        = string
+  sensitive   = true
 }
 variable "rendervpc_id" {
   description = "The ID of the render VPC to deploy into."
