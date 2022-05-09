@@ -47,11 +47,12 @@ fi
 printf "\n...Waiting for consul deadlinedb service before attempting to retrieve Deadline remote cert.\n\n"
 
 tries=0
-until [ $tries -gt 60 ] || consul catalog services | grep -m 1 "deadlinedb"; do
+max_tries=90
+until [ $tries -gt $max_tries ] || consul catalog services | grep -m 1 "deadlinedb"; do
   tries=$(( $tries + 1 ))
   sleep 10
 done
-if [ $tries -gt 5 ]; then
+if [ $tries -gt $max_tries ]; then
   echo "Command timed out before service arrived"
   exit 1
 fi
