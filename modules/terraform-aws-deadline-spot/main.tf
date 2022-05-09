@@ -114,20 +114,34 @@ resource "null_resource" "provision_deadline_spot" {
     user_data               = var.user_data
   }
 
-  provisioner "local-exec" { # configure deadline groups and UBL
+  provisioner "local-exec" { # wait for deadline service to arrive (means user data config complete)
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
 export SHOWCOMMANDS=true; set -x
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline groups / UBL"
 cd ${path.module}
 printf "\n...Waiting for consul deadlinedb service before attempting to configure groups / UBL.\n\n"
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
-set -x
+
+tries=0
+until [ $tries -gt 60 ] || consul catalog services | grep -m 1 "deadlinedb"; do
+  tries=$(( $tries + 1 ))
+  sleep 10
+done
+if [ $tries -gt 5 ]; then
+  echo "Command timed out before service arrived"
+  exit 1
+fi
+EOT
+  }
+
+  provisioner "local-exec" { # configure deadline groups and UBL
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<EOT
 set -e
 pathadd() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        PATH="$${PATH:+"$PATH:"}$1"
-    fi
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$${PATH:+"$PATH:"}$1"
+  fi
 }
 pathadd $HOME/.local/bin
 echo "PATH: $PATH"
@@ -145,10 +159,10 @@ export remote_config_output_dir="/home/${var.deadlineuser_name}/firehawk"
 mkdir -p "$local_config_output_dir"
 echo "Ensure SSH Certs are configured correctly with the current instance for the Ansible playbook to configure Deadline Spot Plugin"
 cd ${path.module}
-printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
-set -x
-set -e
+# printf "\n...Waiting for consul deadlinedb service before attempting to configure spot event plugin.\n\n"
+# until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
+# set -x
+# set -e
 pathadd() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="$${PATH:+"$PATH:"}$1"

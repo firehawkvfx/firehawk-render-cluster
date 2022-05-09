@@ -137,7 +137,15 @@ add_sudo_user $deadlineuser_name
 
 printf "\n...Waiting for consul deadlinedb service before attempting to retrieve Deadline remote cert.\n\n"
 
-until consul catalog services | grep -m 1 "deadlinedb"; do sleep 10 ; done
+tries=0
+until [ $tries -gt 60 ] || consul catalog services | grep -m 1 "deadlinedb"; do
+  tries=$(( $tries + 1 ))
+  sleep 10
+done
+if [ $tries -gt 5 ]; then
+  echo "Command timed out before service arrived"
+  exit 1
+fi
 
 echo "Ensure Required Directories exist with valid permissions"
 mkdir -p $(dirname $client_cert_file_path)                                                                
