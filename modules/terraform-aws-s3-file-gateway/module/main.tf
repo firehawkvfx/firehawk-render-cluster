@@ -48,7 +48,7 @@ resource "aws_instance" "gateway" { # To troubleshoot, the ssh with username 'ad
 }
 
 locals {
-  subnet_ids          = var.use_public_subnet ? var.public_subnet_ids : var.private_subnet_ids
+  subnet_ids = var.use_public_subnet ? var.public_subnet_ids : var.private_subnet_ids
   # instance_id         = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].id : null
   private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
   public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
@@ -64,6 +64,7 @@ resource "aws_storagegateway_gateway" "nfs_file_gateway" {
   gateway_name       = var.gateway_name
   gateway_timezone   = var.gateway_time_zone
   gateway_type       = "FILE_S3"
+  smb_guest_password = "MYSMBPASSWORD"
 }
 
 data "aws_storagegateway_local_disk" "cache" {
@@ -103,4 +104,12 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
     owner_id       = var.owner_id
   }
 
+}
+
+resource "aws_storagegateway_smb_file_share" "smb_share" {
+  count          = var.cloud_s3_gateway_enabled ? 1 : 0
+  authentication = "GuestAccess"
+  gateway_arn    = local.nfs_file_gateway_id
+  location_arn   = var.aws_s3_bucket_arn
+  role_arn       = aws_iam_role.role.arn
 }
