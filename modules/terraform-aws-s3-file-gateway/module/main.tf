@@ -103,13 +103,12 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
     group_id       = var.group_id
     owner_id       = var.owner_id
   }
-
 }
 
-resource "aws_storagegateway_smb_file_share" "smb_share" {
-  count          = var.cloud_s3_gateway_enabled ? 1 : 0
-  authentication = "GuestAccess"
-  gateway_arn    = local.nfs_file_gateway_id
-  location_arn   = var.aws_s3_bucket_arn
-  role_arn       = aws_iam_role.role.arn
-}
+# resource "aws_storagegateway_smb_file_share" "smb_share" {
+#   count          = var.cloud_s3_gateway_enabled ? 1 : 0
+#   authentication = "GuestAccess"
+#   gateway_arn    = local.nfs_file_gateway_id
+#   location_arn   = var.aws_s3_bucket_arn
+#   role_arn       = aws_iam_role.role.arn
+# }
