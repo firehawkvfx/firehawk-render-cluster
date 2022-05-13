@@ -11,13 +11,13 @@ output "fsx_mount_name" {
   value = length(try(data.terraform_remote_state.fsx.outputs.fsx_storage, [])) > 0 ? data.terraform_remote_state.fsx.outputs.fsx_mount_name : null
 }
 
-output "nfs_file_gateway" {
-  value     = try(data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway, null)
+output "file_gateway_object" {
+  value     = try(data.terraform_remote_state.file_gateway.outputs.file_gateway_object, null)
   sensitive = true
 }
-output "nfs_private_ip" {
-  value = length(try(data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway, [])) > 0 ? data.terraform_remote_state.file_gateway.outputs.nfs_private_ip : null
+output "file_gateway_private_ip" {
+  value = length(try(data.terraform_remote_state.file_gateway.outputs.file_gateway_object, [])) > 0 ? data.terraform_remote_state.file_gateway.outputs.file_gateway_private_ip : null
 }
 output "nfs_file_share_path" {
-  value = length(try(data.terraform_remote_state.file_gateway.outputs.nfs_file_gateway, [])) > 0 ? data.terraform_remote_state.file_gateway.outputs.nfs_file_share_path : null
+  value = length(try(data.terraform_remote_state.file_gateway.outputs.file_gateway_object, [])) > 0 ? data.terraform_remote_state.file_gateway.outputs.nfs_file_share_path : null
 }
