@@ -52,7 +52,7 @@ locals {
   # instance_id         = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].id : null
   private_ip          = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].private_ip : null
   public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
-  file_gateway_id = length(aws_storagegateway_gateway.storage_gateway_resource) > 0 ? aws_storagegateway_gateway.storage_gateway_resource[0].id : null
+  file_gateway_id     = length(aws_storagegateway_gateway.storage_gateway_resource) > 0 ? aws_storagegateway_gateway.storage_gateway_resource[0].id : null
   nfs_file_share_path = length(aws_storagegateway_nfs_file_share.same_account) > 0 ? aws_storagegateway_nfs_file_share.same_account[0].path : null
 }
 
