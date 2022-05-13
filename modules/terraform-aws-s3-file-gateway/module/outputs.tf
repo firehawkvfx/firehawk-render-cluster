@@ -1,5 +1,5 @@
 output "file_gateway_object" {
-  value     = aws_storagegateway_gateway.nfs_file_gateway
+  value     = aws_storagegateway_gateway.storage_gateway_resource
   sensitive = true
 }
 output "file_gateway_private_ip" {
