@@ -54,6 +54,7 @@ locals {
   public_ip           = length(aws_instance.gateway) > 0 ? aws_instance.gateway[0].public_ip : null
   file_gateway_id     = length(aws_storagegateway_gateway.storage_gateway_resource) > 0 ? aws_storagegateway_gateway.storage_gateway_resource[0].id : null
   nfs_file_share_path = length(aws_storagegateway_nfs_file_share.same_account) > 0 ? aws_storagegateway_nfs_file_share.same_account[0].path : null
+  smb_file_share_path = length(aws_storagegateway_smb_file_share.smb_share) > 0 ? aws_storagegateway_smb_file_share.smb_share[0].path : null
 }
 
 resource "aws_storagegateway_gateway" "storage_gateway_resource" {
@@ -89,7 +90,7 @@ resource "aws_storagegateway_cache" "storage_gateway_cache_resource" {
 # }
 
 resource "aws_storagegateway_nfs_file_share" "same_account" {
-  count        = var.cloud_s3_gateway_enabled ? 1 : 0
+  count        = (var.cloud_s3_gateway_nfs_export_enabled && var.cloud_s3_gateway_enabled) ? 1 : 0
   client_list  = var.permitted_cidr_list_private
   gateway_arn  = local.file_gateway_id
   role_arn     = aws_iam_role.role.arn
@@ -105,10 +106,10 @@ resource "aws_storagegateway_nfs_file_share" "same_account" {
   }
 }
 
-# resource "aws_storagegateway_smb_file_share" "smb_share" {
-#   count          = var.cloud_s3_gateway_enabled ? 1 : 0
-#   authentication = "GuestAccess"
-#   gateway_arn    = local.file_gateway_id
-#   location_arn   = var.aws_s3_bucket_arn
-#   role_arn       = aws_iam_role.role.arn
-# }
+resource "aws_storagegateway_smb_file_share" "smb_share" {
+  count          = (var.cloud_s3_gateway_smb_export_enabled && var.cloud_s3_gateway_enabled) ? 1 : 0
+  authentication = "GuestAccess"
+  gateway_arn    = local.file_gateway_id
+  location_arn   = var.aws_s3_bucket_arn
+  role_arn       = aws_iam_role.role.arn
+}

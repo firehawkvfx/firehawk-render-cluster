@@ -8,3 +8,6 @@ output "file_gateway_private_ip" {
 output "nfs_file_share_path" {
   value = local.nfs_file_share_path
 }
+output "smb_file_share_path" {
+  value = local.smb_file_share_path
+}

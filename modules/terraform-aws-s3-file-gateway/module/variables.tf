@@ -1,7 +1,17 @@
 variable "cloud_s3_gateway_enabled" {
-  description = "Bool enabling FSX storage"
+  description = "Bool enabling file gateway storage"
   type        = bool
   default     = true
+}
+variable "cloud_s3_gateway_nfs_export_enabled" {
+  description = "Bool enabling NFS export storage"
+  type        = bool
+  default     = true
+}
+variable "cloud_s3_gateway_smb_export_enabled" {
+  description = "Bool enabling NFS export storage"
+  type        = bool
+  default     = false
 }
 variable "ebs_cache_volume_size" {
   description = "The size, in GB, for the cache volume associated with this file gateway"
