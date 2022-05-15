@@ -5,7 +5,7 @@ variable "cloud_s3_gateway_enabled" {
 }
 variable "cloud_s3_gateway_export_type" {
   description = "String enabling export.  Can be 'SMB' or 'NFS'."
-  type        = bool
+  type        = string
   # default     = false
 }
 variable "ebs_cache_volume_size" {
