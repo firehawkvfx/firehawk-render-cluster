@@ -53,6 +53,7 @@ inputs = merge(
     instance_name = "filegateway_pipeid${lookup(local.common_vars.inputs.common_tags, "pipelineid", "0")}"
     group_id = "9001"
     owner_id = "9001"
+    cloud_s3_gateway_export_type = "NFS"
   }
 )
 
