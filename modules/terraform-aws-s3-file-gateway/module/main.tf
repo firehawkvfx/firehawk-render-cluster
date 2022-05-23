@@ -57,6 +57,14 @@ locals {
   smb_file_share_path = length(aws_storagegateway_smb_file_share.smb_share) > 0 ? aws_storagegateway_smb_file_share.smb_share[0].path : null
 }
 
+resource "aws_ssm_parameter" "nfs_file_share_path" {
+  name      = "/firehawk/resourcetier/${var.resourcetier}/cloud_nfs_filegateway_export"
+  type      = "String"
+  overwrite = true
+  value     = "${local.public_ip}:${local.nfs_file_share_path}"
+  tags      = merge(tomap({ "Name" : "cloud_nfs_filegateway_export" }), var.common_tags)
+}
+
 resource "aws_storagegateway_gateway" "storage_gateway_resource" {
   depends_on = [aws_instance.gateway]
 
