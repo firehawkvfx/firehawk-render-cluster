@@ -4,8 +4,8 @@
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": {{ max_spot_capacity_engine }},
     "SpotPrice": "5.568",
-    "ValidFrom": "2021-05-02T00:24:46Z",
-    "ValidUntil": "2022-05-02T00:24:46Z",
+    "ValidFrom": "{{ valid_from }}",
+    "ValidUntil": "{{ valid_until }}",
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
       {
@@ -151,8 +151,8 @@
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": {{ max_spot_capacity_engine }},
     "SpotPrice": "0.696",
-    "ValidFrom": "2021-05-02T00:24:46Z",
-    "ValidUntil": "2022-05-02T00:24:46Z",
+    "ValidFrom": "{{ valid_from }}",
+    "ValidUntil": "{{ valid_until }}",
     "TerminateInstancesWithExpiration": true,
     "InstanceInterruptionBehavior": "terminate",
     "LaunchSpecifications": [
@@ -301,8 +301,8 @@
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": {{ max_spot_capacity_mantra }},
     "SpotPrice": "5.568",
-    "ValidFrom": "2021-05-02T00:24:46Z",
-    "ValidUntil": "2022-05-02T00:24:46Z",
+    "ValidFrom": "{{ valid_from }}",
+    "ValidUntil": "{{ valid_until }}",
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
       {
@@ -448,8 +448,8 @@
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": {{ max_spot_capacity_mantra }},
     "SpotPrice": "0.696",
-    "ValidFrom": "2021-05-02T00:24:46Z",
-    "ValidUntil": "2022-05-02T00:24:46Z",
+    "ValidFrom": "{{ valid_from }}",
+    "ValidUntil": "{{ valid_until }}",
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
       {
@@ -706,8 +706,8 @@
     "AllocationStrategy": "capacityOptimized",
     "TargetCapacity": {{ max_spot_capacity_mantra }},
     "SpotPrice": "0.696",
-    "ValidFrom": "2021-05-02T00:24:46Z",
-    "ValidUntil": "2022-05-02T00:24:46Z",
+    "ValidFrom": "{{ valid_from }}",
+    "ValidUntil": "{{ valid_until }}",
     "TerminateInstancesWithExpiration": true,
     "LaunchSpecifications": [
       {

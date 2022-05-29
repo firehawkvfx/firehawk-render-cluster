@@ -187,6 +187,8 @@ ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook -i "${path.module}/ansible/invent
   aws_region=${data.aws_region.current.name} \
   aws_key_name=${var.aws_key_name} \
   account_id=${lookup(var.common_tags, "accountid", "0")} \
+  valid_from=${timeadd(timestamp(), "-48h")} \
+  valid_until=${timeadd(timestamp(), "8760h")} \
   user_data=${var.user_data}"
 
 EOT
