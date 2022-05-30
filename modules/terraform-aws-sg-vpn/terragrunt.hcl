@@ -17,7 +17,7 @@ dependencies {
 }
 
 terraform {
-  source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-sg-vpn?ref=v0.0.10"
+  source = "${get_env("TF_VAR_firehawk_path", "")}/modules/terraform-aws-sg-vpn"
 }
 
 # skip = false

@@ -3,7 +3,6 @@ include {
 }
 
 terraform {
-  # source = "github.com/firehawkvfx/firehawk-main.git//modules/terraform-aws-vpn?ref=v0.0.22"
   source = "${get_env("TF_VAR_firehawk_path", "")}/modules/terraform-aws-vpn"
 }
 
